@@ -1,5 +1,5 @@
 # Generators
-Collection of generators, mostly for IP Pro (NBOS), as .txt files
+Collection of generators, mostly for IP Pro (NBOS), as formatted .txt files
 # License — Table Content and Weightings
 
 Copyright (c) 2026 [Troy Winfrey]
@@ -33,4 +33,31 @@ Human-readable summary: https://creativecommons.org/licenses/by-nc-sa/4.0/
 If this repository also contains code (e.g. scripts, tooling, or an
 expression engine), that code is licensed separately — see `LICENSE-CODE.md`
 or the relevant file header for its terms.
+
+**About**
+These tables are for use with NBOS Software's Inspiration Pad Pro 3 software, which may be downloaded at https://www.nbos.com/products/inspiration-pad-pro (Windows or Android only). They are intended to provide comprehensive support for hex-based campaign design, mostly including random generation of hex contents. While they are not tied to any particular clone or edition of the world's most popular role-playing game, they will probably be most helpful to players of OSR (old-school revival) clones and editions. (My own long-running campaign, the testbed for this work, is Old School Essentials Advanced Fantasy. B/X, BECMI/RC, and 1e-2e will also work well.) 
+Once the IP Pro software is installed, navigate to the NBOS folder (usually in x86 Program Files) and go to the Common file beneath it. Install the Longform Games generator .txt files here and they should show up in the IP Pro's menu interface when that program is opened. 
+
+**User Guide**
+These tables will support generation and maintenance of a longform, hex-based, exploration-heavy game. While they will work for any game like that, they were designed with the following assumptions:
+  -The campaign is generally low-magic and "realistic" in terms of population distribution, terrain characteristics, political behavior, etc. Casters and magic are generally uncommon at best; most monsters are creatures of legend, living in places that normal folk are too smart to venture into. At some point the world was better off than it is now. There were more people, even if the current residents don't know much about them, who have left their buildings and other traces across the landscape. Though their relics are rare, they're generally better-made and more powerful than what we can manage today.
+  -These tables were built for my own campaign; gnomes, halflings, hobgoblins, and kobolds are not in that game, so they're not here. (Drow probably aren't either, but I haven't made up my mind 100%.) The "Eery" is the realm of the fey, and can be defined as you wish or just left out of a table result.
+
+  **Mapping and Terrain**
+   -A "campaign hex" 24 miles across, with subhexes of 6 miles each
+   -A "100-mile map" as a base mapping unit. This map is 4 24-mile hexes deep and 6 24-mile hexes wide.
+       --The map includes the 24-mile hexes, numbered 1-21b, and individually numbered 6-mile hexes (0101, etc) within them.
+   -A "Wildness" rating for each 24-mile megahex (MH).
+       --A "major terrain feature" is a terrain type (Mountains, Forest, Hills, Swamp, Desert) at least two megahexes big (and usually named by the GM: the Gnarley Forest in Greyhawk, Anauroch in the Forgotten Realms, etc.)
+      --Border hexes are hexes touching a major terrain feature
+      --Wild hexes are any megahexes touching a Border hex (i.e., two hexes from a Border hex)
+      --Wilderness hexes are any megahexes touching a Wild hex (i.e. three hexes from a Border hex)
+      --A GM may decide that a megahex or megahexes is wilder than it "should" be. This should be fairly unusual--it makes the world more consistent, which makes for better games--but of course a good reason for the anomaly can also be great for a game.
+      --Settled hexes are any other megahexes, typically within a kingdom's borders. They are usually patrolled, at least moderately inhabited, or both. They aren't supported by these generators, as most of a GM's work happens outside such "civilized" places. (Monster threats in these hexes are usually swiftly killed...or kill the inhabitants, making the hex wilder. Relatively few Settled hexes are "in crisis" at any given time. The system models this kind of stasis.) 
+
+  **Term Definitions**
+  -An "Overrun" hex has a substantial humanoid population, enough that it will "control" that hex. It is very rare to find demi-humans in an Overrun hex, and rare to find human settlements.
+  -A Sylvan hex is like an Overrun hex, but for demi-humans. Humanoids are never found in Sylvan hexes. Human communities are very rare there.
+
+      
 
