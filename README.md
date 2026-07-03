@@ -58,6 +58,15 @@ These tables will support generation and maintenance of a longform, hex-based, e
   **Term Definitions**
   -An "Overrun" hex has a substantial humanoid population, enough that it will "control" that hex. It is very rare to find demi-humans in an Overrun hex, and rare to find human settlements.
   -A Sylvan hex is like an Overrun hex, but for demi-humans. Humanoids are never found in Sylvan hexes. Human communities are very rare there.
+  -An "Apex" result means that the hex contains a lair or dwelling of an Apex monster, typically a creature that is larger or more powerful than the norm for the hex.
+  -A "Hero" result means that the hex contains an NPC in a dwelling or stronghold. The NPC type varies by terrain and wildness. Level, alignment, friendliness, etc. are up to the GM.
+  -A "Faction" result indicates the presence of a faction. 
+    -A Cabal is a special-interest group that doesn't fit neatly into other categories. A stereotypical example might be a circle of wizards, an adventuring band, or a group of alchemists trying to create a Philosopher's Stone.
+    -A Criminal faction is a faction that, um, commits crimes. In wilder areas, these are typically well-organized bandits or brigands, perhaps with a permanent base, but a group of assassins or even a Thieves' Guild might work.
+    -A Military faction is an organized armed group, either independent or connected to a government. It has a chain of command and formal leaders; its members believe themselves to be part of a formal unit. This cohesiveness may be all that distinguishes them from a bandit rabble, or they may be fearsome opponents with sophisticated tactics, good gear, and high morale. In the wild, they are often a garrison or exploratory force sent by some ruler, perhaps even a hostile ruler.
+    --A Political faction is associated with the government of an area. This might be a provincial court, a band of rival claimants to the throne, or one of a group of warlords vying for control.
+    -A Religious faction is a group organized around revering a particular deity, deities, or creed. They will typically have a fixed place of worship, even if that's just a sacred clearing in the woods. Suitably outre religious (those trying to summon Cthulhu or destroy the world) might be Cabals. 
+    
 
       
 
