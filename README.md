@@ -50,16 +50,17 @@ These tables will support nearly any rules system, but they were designed with t
   - These tables were built for my own campaign; gnomes, halflings, hobgoblins, and kobolds are not in that game, so they're not here. (Drow probably aren't either, but I haven't made up my mind 100%.) The "Eery" is the realm of the fey, and can be defined as you wish or just left out of a table result.
 
   **Mapping and Terrain**
+  The tables are designed to fit a hex grid with the following characteristics (this scale is recommended, but 20, 25, or 30 miles per megahex are almost as good):
    - A "campaign hex" 24 miles across, with subhexes of 6 miles each
    - A "100-mile map" as a base mapping unit. This map is 4 24-mile hexes deep and 6 24-mile hexes wide.
-       --The map includes the 24-mile hexes, numbered 1-21b, and individually numbered 6-mile hexes (0101, etc) within them.
+       - The map includes the 24-mile hexes, numbered 1-21b, and individually numbered 6-mile hexes (0101, etc) within them.
    - A "Wildness" rating for each 24-mile megahex (MH).
        - A "major terrain feature" is a terrain type (Mountains, Forest, Hills, Swamp, Desert) at least two megahexes big (and usually named by the GM: the Gnarley Forest in Greyhawk, Anauroch in the Forgotten Realms, etc.)
-      - Border hexes are hexes touching a major terrain feature
+      - Border hexes are hexes touching a major terrain feature, or a major terrain feature "sticks into them" partway
         -  Wild hexes are any megahexes touching a Border hex (i.e., two hexes from a Border hex)
         -  Wilderness hexes are any megahexes touching a Wild hex (i.e. three hexes from a Border hex)
           - A GM may decide that a megahex or megahexes is wilder than it "should" be. This should be fairly unusual--it makes the world more consistent, which makes for better games--but of course a good reason for the anomaly can also be great for a game.
-        - Settled hexes are any other megahexes, typically within a kingdom's borders. They are usually patrolled, at least moderately inhabited, or both. They aren't supported by these generators, as most of a GM's work happens outside such "civilized" places. (Monster threats in these hexes are usually swiftly killed...or kill the inhabitants, making the hex wilder. Relatively few Settled hexes are "in crisis" at any given time. The system models this kind of stasis.) 
+        - Settled hexes are any other megahexes, typically within a kingdom's borders. They are usually patrolled, at least moderately inhabited, or both. They aren't supported by these generators, as most of a GM's work happens outside such "civilized" places. (Monster threats in these hexes are usually swiftly killed...or kill the inhabitants, making the hex wilder. Relatively few Settled hexes are "in crisis" at any given time. The system models this kind of stasis. Any dungeons or ruins in settled hexes are assumed to be inactive threats, as long as you're not foolish enough to go into them.) 
 
   **Term Definitions**
   - An "Overrun" hex has a substantial humanoid population, enough that it will "control" that hex. It is very rare to find demi-humans in an Overrun hex, and rare to find human settlements.
