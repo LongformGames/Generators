@@ -1,0 +1,3307 @@
+; AnnualEventGenerator.ipt
+; created 4/10/2026 12:20:40 PM
+;NOTE format Roll: {{1d3}+10} will work for lookup; double vars doesn't
+;table measures intensity of event PCs hear about
+;table assumes most events happen where PCs aren't: it's a big world
+;table assumes remote events that PCs hear about will be noteworthy 
+;local distance may occasionally be area, v rarely distant; visitors always local, for instance
+;every job object needs patron, distance (custom?), pay (custom?), twist check (custom?), notification date,
+;job due date UP TO GM, except for winter jobs; extrapolate/negotiate for other seasons
+set: LongMonthDay = {1d31}
+set: ShortMonthDay = {1d30}
+set: FebDay = {1d28}
+use: common\OSEAdvancedTreasure.ipt
+Prompt: Thaarn Year/RL Year {405/2025|406/2026|407/2027|408/2028|409/2029|430|2030} 405/2025
+
+Table:Results
+ <b>Year {$prompt1}</b> \n &nbsp; &nbsp; &nbsp; Year of the [@YearSymbol] \n \n &
+<b>Global Events</b> \n \n &nbsp; [@GlobalEventDetails] \n  &
+<b>Events by Month</b> \n &
+\n <b>January</b> &nbsp; [RightDay=={1d31}] <b> [@WinterMonthlyCheck]</b>  &
+\n &nbsp; &nbsp; <b>January Hometown Events</b>: [@WinterHometownCheck] &
+\n <b>February</b> [RightDay=={1d28}] &
+<b>[@WinterMonthlyCheck]</b> &
+\n &nbsp; &nbsp; <b>February Hometown Events</b>: [@WinterHometownCheck] &
+\n <b>March</b> [RightDay=={1d31}] &
+\n <b>[@SpringMonthlyCheck]</b>  &
+\n &nbsp; &nbsp; <b>March Hometown Events</b>: [@SpringHometownCheck] &
+\n <b>April</b> <b>[RightDay=={1d30}]</b> &
+<b>[@SpringMonthlyCheck]</b> &
+\n &nbsp; &nbsp; <b>April Hometown Events</b>: [@SpringHometownCheck] &
+\n <b>May</b> [RightDay=={1d31}] &
+\n <b>[@SpringMonthlyCheck]</b> &
+\n &nbsp; &nbsp; <b>May Hometown Events</b>: [@SpringHometownCheck] &
+\n <b>June</b> [RightDay=={1d30}]  &
+\n <b>[@JuneMonthlyCheck]</b> \n &
+\n &nbsp; <b>[@SummerMonthlyCheck]</b>  &
+\n &nbsp; &nbsp; <b>June Hometown Events</b>: [@SummerHometownCheck] &
+\n <b>July</b> [RightDay=={1d31}] &
+\n <b>[@SummerMonthlyCheck]</b>  &
+\n &nbsp; &nbsp; <b>July Hometown Events</b>: [@SummerHometownCheck] &
+\n <b>August</b> [RightDay=={1d31}] &
+\n <b>[@SummerMonthlyCheck]</b> &
+\n &nbsp; &nbsp; <b>August Hometown Events</b>: [@SummerHometownCheck] &
+\n<b>September</b>  [RightDay=={1d30}] &
+\n <b>[@FallMonthlyCheck]</b> &
+\n &nbsp; &nbsp; <b>September Hometown Events</b>: [@FallHometownCheck] &
+\n <b>October</b> \n <b>[@FallMonthlyCheck]</b> \n &
+\n &nbsp; &nbsp; [@OctoberMonthlyEvents] &
+\n &nbsp; &nbsp; <b>October Hometown Events</b>: \n [@FallHometownCheck] &
+\n <b>November</b>  [RightDay=={1d31}] &
+\n <b>[@FallMonthlyCheck]</b> &
+\n &nbsp; &nbsp; <b>November Hometown Events</b>: [@FallHometownCheck] &
+\n <b>December</b> &
+\n &nbsp; &nbsp; [@DecemberMonthlyEvents] &
+\n &nbsp; &nbsp; <b>December Hometown Events</b>: [@WinterHometownCheck]
+
+Table:WinterHometownCheck
+Type: Lookup
+Roll: 1d100
+01-30: None \n
+31-65: \n [@WinterHometownEvents] 
+66-85: \n [@2 WinterHometownEvents] 
+86-100: \n [@3 WinterHometownEvents]
+
+Table:SpringHometownCheck
+Type: Lookup
+Roll: 1d100
+01-20: None \n 
+21-100: \n [@3 SpringHometownEvents]
+ 
+Table:SummerHometownCheck
+Type: Lookup
+Roll: 1d100
+01-15: None \n 
+16-100: \n [@5 SummerHometownEvents] 
+
+Table:FallHometownCheck
+Type: Lookup
+Roll: 1d100
+01-15: None 
+16-100: [@4 FallHometownEvents]
+
+Table:WinterHometownEvents
+Type: Lookup
+Roll: 1d100
+; add News, Rumor, Visitor back in, that order after Job; % are correct
+01-04: \n &nbsp; <b>Day {1d28}</b>: [@WinterJob] \n
+05-44: \n &nbsp;<b>Day {1d28}</b>: [@WinterNews] \n
+45-90: \n &nbsp; <b>Day {1d28}</b>: [@Rumor] \n
+91-100: \n &nbsp; <b>Day {1d28}</b>: [@WinterVisitorType] \n
+
+Table:SpringHometownEvents
+Type: Lookup
+Roll: 1d100
+; add News, Rumor, Visitor back in, that order after Job % are correct
+;news and visitor somewhat more common; news older
+01-10: \n &nbsp; <b>Day {1d30}</b>: \n [@SpringJob] \n
+11-70: \n &nbsp;<b>Day {1d30}</b>: \n [@SpringNews] \n
+71-80: \n &nbsp; <b>Day {1d30}</b>: \n [@Rumor] \n
+81-100: \n &nbsp; <b>Day {1d30}</b>: \n [@SpringVisitorType]
+
+Table:SummerHometownEvents
+Type: Lookup
+Roll: 1d100
+; add News, Rumor, Visitor back in, that order after Job % are correct
+;news and visitor somewhat more common; news fresher
+;jobs *should* be rarer, but it's a design decision, more b/c PCs most active
+01-14: \n &nbsp;  <b>Day {1d30}</b> \n  [@SummerJob] \n
+15-60: \n &nbsp; <b>Day {1d30}</b> \n [@SummerNews] \n
+61-80: \n &nbsp; <b>Day {1d30}</b> \n [@Rumor] \n
+81-100: \n &nbsp; <b>Day {1d30}</b> \n [@SummerVisitorType] 
+
+Table:FallHometownEvents
+Type: Lookup
+Roll: 1d100
+; add News, Rumor, Visitor back in, that order after Job % are correct
+;news normal, rumor and visitor much more common (rumor from visitors)
+01-06: \n &nbsp;; <b>Day {1d30}</b> \n [@FallJob] \n
+07-42: \n &nbsp; <b>Day {1d30}</b> \n [@FallNews] \n
+43-75: \n &nbsp; <b>Day {1d30}</b> \n [@Rumor] \n
+76-100: \n &nbsp; <b>Day {1d30}</b> \n [@FallVisitorType] \n
+
+Table: WinterNews
+Type: Lookup
+set: NewsRoll={{1d12}+2}
+\n <b>News</b>: [#{NewsRoll} NewsDistance] [@NewsTopic] \n <b>Date</b>: [#{NewsRoll}  NewsDate] &
+ \n <b>News Source</b>: [@NewsNotification] \n  <b>Veracity</b>: [#{NewsRoll} NewsVeracity][@ConnectionFlag] 
+
+Table:SpringNews
+Type: Lookup
+set: NewsRoll={{1d10}+2}
+1: \n <b>News</b>: [#{NewsRoll} NewsDistance] [@NewsTopic] \n <b>Date</b>: [#{NewsRoll} NewsDate] &
+ \n <b>News Source</b>: [@NewsNotification] \n <b>Veracity</b>: [#{NewsRoll} NewsVeracity][@ConnectionFlag]  
+
+Table:SummerNews
+Type:Lookup
+set: NewsRoll={1d10}
+1: \n <b>News</b>: [#{NewsRoll} NewsDistance] [@NewsTopic] \n <b>Date</b>: [#{NewsRoll} NewsDate] &
+ \n <b>News Source</b>: [@NewsNotification] \n <b>Veracity</b>:[#{NewsRoll} NewsVeracity] [@ConnectionFlag] 
+
+Table:FallNews
+Type: Lookup
+set: NewsRoll={1d12}
+1: \n <b>News</b>: [#{NewsRoll} NewsDistance] [@NewsTopic] \n <b>Date</b>: [#{NewsRoll} NewsDate] &
+\n <b>News Source</b>: [@NewsNotification] \n <b>Veracity</b>: [#{NewsRoll} NewsVeracity] [@ConnectionFlag] 
+
+Table: NewsTopic
+Type:Lookup
+Roll: 1d100
+01-24: [@NewsClash] 
+25-49: [@NewsDiscovery]
+50-74: [@NewsDenizen]   
+75-100: [@NewsPolitical] 
+
+Table:NewsClash
+Type:Lookup
+Roll: 1d10
+1-5: [@MonthlyClash] \n
+6-7: Feud between [|individual|faction] and [|individual|faction]
+8: Plunder of settlement by [|monsters|adventurers|human group|humanoids|demihumans|unknown forces] \n
+9: Plunder of humanoid settlement \n
+10: Plunder of adventure location \n
+
+Table: NewsDiscovery
+1-3: <b> Location Discovery</b>: [@AdventureLocationDiscovery]
+4: <b>Anomaly discovery</b>:
+5-7: <b>Crime discovery</b>:
+8: <b>Faction action discovery</b>:
+9: <b>Hoard discovery</b>:
+10: <b>Item or object discovery</b>:
+11-14: <b>Lair discovery</b>:
+15-17: <b>Beast or monster signs discovery</b>:
+18-20: <b>Scandal/secret about [|faction|political|criminal|civic|military|prominent|religious] figure
+
+Table: AdventureLocationDiscovery
+Type: Lookup
+Roll: 1d12
+1-4: Lair
+5-6: Monster cluster
+7: Lair: [@NewsHero]
+8: Apex lair
+9-10: Ruin
+11: Dungeon
+12: Anomaly
+
+Table:NewsHero
+Type:Lookup
+Roll: 1d100
+01-35: Fighter hero 
+36-45: Magic-User hero 
+46-60: Ranger hero 
+61-65: Thief hero 
+66-85: Cleric hero 
+86-91: Druid hero 
+92-97: Knight hero 
+98-100: Assassin hero 
+
+Table: NewsDenizen
+Type: Lookup
+Roll: 1d100
+01-12: [@AdventurerNews]
+13-24: Bandit activity
+25-36: Activity of named bandit
+37-50: Monster encounter
+51-64: Monster sighting
+65-68: Crime
+69-72: Monster attack
+73-75: Humanoid attack
+76-78: Humanoid defeat
+79-82: Humanoid sighting
+83-85: Human disappearance
+86-88: Specific criminal's act
+89-92: Monster slaying
+93-96: Demihuman sighting 
+97: Eery sighting
+98: Eery activity
+99: Demihuman attack
+100: Demihuman defeat
+
+Table: AdventurerNews
+Type:Lookup
+Roll: 1d20
+1-4: <b>Location Discovery</b>:[@AdventureLocationDiscovery]
+5-6: <b>Anomaly discovery</b>:
+7: <b>Faction action discovery</b>:
+8-9: <b>Hoard discovery</b>:
+10-11: <b>Item or object discovery</b>:
+12-15: <b>Lair discovery</b>:
+16-20: <b>Beast or monster signs discovery</b>:
+
+Table: NewsPolitical
+Type: Lookup
+Roll: 1d16
+set: NewsRoll={1d6}
+1: Proclamation: alliance
+2: Proclamation: banishment/exile
+3: Proclamation: bounty offer
+4: Proclamation: execution
+5-6: Proclamation: feast/festival
+7: Proclamation: muster
+8: Proclamation: sentence of outlawry
+9: Proclamation: tax
+10: Proclamation: tournament
+11: Proclamation: trial or test
+12: Proclamation: visit
+13-16: Political scandal involving [|honor|cheating|money|debt|inheritance|position|infidelity|parentage|treason]
+
+Table: NewsDistance
+Type:Lookup
+1-3: Local
+4-6: Area
+7-9: Distant
+10-14: Very distant
+
+Table: NewsDate
+Type:Lookup
+1-3: {1d16} days ago
+4-6: {1d24} days ago
+7: {{1d19}+41} days ago
+8: {{6d10}+30} days ago
+9-10: {10d18} days ago
+11-13: {{1d6}+6} months ago
+14: uncertain
+
+Table: NewsNotification
+Anomalous [|Dream|Vision|Messenger]
+Child 
+[|Civic|Military|Political|Religious] representative or agent
+First-degree source (brother, wife of informant)
+Second-degree source (friend of friend of informant)
+Court gossip
+Hunter/fisher/miner/woodcutter
+Local chatter
+Local busybody/gaffer
+Message or Letter
+Military report
+Minor/other NPC
+[|Noble|Noble agent|Noble agent]
+Participant
+Pasquinade or mysterious posting
+Survivor or refugee
+Named NPC
+Witness
+
+Table:NewsVeracity
+Type: Lookup
+1: True
+2-6: Mostly true
+7-10: Mix of true and false
+11-12: Mostly false
+13-14: False
+ 
+Table: WinterJob
+[@WinterJobPatron]  [@ConnectionFlag] \n
+
+Table: SpringJob
+1: \n [@SpringJobPatron] [@ConnectionFlag] \n
+
+Table: SummerJob
+1: \n [@SummerJobPatron] [@ConnectionFlag] \n
+
+Table:FallJob
+1: \n [@FallJobPatron] [@ConnectionFlag] \n
+
+Table: WinterJobPatron
+Type: Lookup
+Roll: 1d100
+01-15: [@EncounterWhere] Adventurer (solo)[@AdventurerJob]
+16-19: [@EncounterWhere] Adventurer with retinue [@AdventurerJob]
+20-23: [@EncounterWhere] Adventurers (party)[@AdventurerJob]
+24-27: [|(Anywhere)|(Settlement|(Settlement)|(Urban)|(Urban)|(Urban)] Criminal [@CriminalJob]
+28: [|(Anywhere)|(Anywhere)|(Anywhere)|(Settlement)|(Settlement)] Crone [@CroneJob]
+29-32: [@EncounterWhere] Faction Representative [@FactionRepJob]
+33-34: [@EncounterWhere] Knight [@KnightJob]
+35-36: [@EncounterWhere] Mage [@MageJob]
+37-56: [|(Anywhere)|(Settlement)|(Settlement)|(Settlement)] Merchant [@MerchantJob] 
+57: [@EncounterWhere] Military Company [@MilitaryCompanyJob] 
+58-60: [@EncounterWhere] Military Leader [@MilitaryLeaderJob] 
+61-92: [@EncounterWhere] Noble [@NobleJob]
+93-94: [@EncounterWhere] Pilgrim [@PilgrimJob]
+95: [@EncounterWhere] Pilgrim group [@PilgrimGroupJob]
+96-97: [@EncounterWhere] Priest [@PriestJob]
+98: [@EncounterWhere] Ranger [@RangerJob]
+99-100: [@EncounterWhere] Sage [@SageJob]
+
+Table:SpringJobPatron
+Type: Lookup
+Roll: 1d100
+;military, "setting out" types more likely to show
+;business/noble types are closing loops on winter, a bit less frequent
+01-15: [@EncounterWhere] Job: Adventurer (solo)[@AdventurerJob]
+16-19: [@EncounterWhere] Job: Adventurer with retinue [@AdventurerJob]
+20-28: [@EncounterWhere] Job: Adventurers (party)[@AdventurerJob]
+24-26: [|(Anywhere)|(Settlement|(Settlement)|(Urban)|(Urban)|(Urban)][@CriminalJob]
+27: [|(Anywhere)|(Anywhere)|(Anywhere)|(Settlement)|(Settlement)] Crone [@CroneJob]
+28-30: [@EncounterWhere] Job: Faction Representative [@FactionRepJob]
+31-35: [@EncounterWhere] Job: Knight [@KnightJob]
+36-37: [@EncounterWhere] Job: Mage [@MageJob]
+38-50: [|(Anywhere)|(Settlement)|(Settlement)|(Settlement)] Merchant [@MerchantJob] 
+51-53: [@EncounterWhere] Job: Military Company [@MilitaryCompanyJob] 
+54-60: [@EncounterWhere] Job: Military Leader [@MilitaryLeaderJob] 
+61-84: &nbsp; &nbsp; &nbsp; [@EncounterWhere] Job: Noble [@NobleJob]
+85-88: [@EncounterWhere] Job: Pilgrim [@PilgrimJob]
+89-94: [@EncounterWhere] Job: Pilgrim group [@PilgrimGroupJob]
+95-96: [@EncounterWhere] Job: Priest [@PriestJob]
+97-98: [@EncounterWhere] Job: Ranger [@RangerJob]
+99-100: [@EncounterWhere] Job: Sage [@SageJob]
+
+Table:SummerJobPatron
+Type: Lookup
+Roll: 1d100
+;"setting out" is now "out and doing": quest types, military fall off
+01-08: [@EncounterWhere] Adventurer (solo)[@AdventurerJob]
+09-12: [@EncounterWhere] Adventurer with retinue [@AdventurerJob]
+13-22: [@EncounterWhere] Adventurers (party)[@AdventurerJob]
+23-25: [|(Anywhere)|(Settlement|(Settlement)|(Urban)|(Urban)|(Urban)][@CriminalJob]
+26: [|(Anywhere)|(Anywhere)|(Anywhere)|(Settlement)|(Settlement)] Crone [@CroneJob]
+27-31: [@EncounterWhere] Faction Representative [@FactionRepJob]
+32: [@EncounterWhere] Knight [@KnightJob]
+33-35: [@EncounterWhere] Mage [@MageJob]
+36-50: [|(Anywhere)|(Settlement)|(Settlement)|(Settlement)] Merchant [@MerchantJob] 
+51-52: [@EncounterWhere] Military Company [@MilitaryCompanyJob] 
+53-58: [@EncounterWhere] Military Leader [@MilitaryLeaderJob] 
+58-84: [@EncounterWhere] Noble [@NobleJob]
+85-87: [@EncounterWhere] Pilgrim [@PilgrimJob]
+88-91: [@EncounterWhere] Pilgrim group [@PilgrimGroupJob]
+92-95: [@EncounterWhere] Priest [@PriestJob]
+96-97: [@EncounterWhere] Ranger [@RangerJob]
+98-100: [@EncounterWhere] Sage [@SageJob]
+
+Table:FallJobPatron
+Type: Lookup
+Roll: 1d100
+;beginning to return; late merchants; mil ops largely over
+01-05: [@EncounterWhere] Adventurer (solo)[@AdventurerJob]
+06-10: [@EncounterWhere] Adventurer with retinue [@AdventurerJob]
+11-20: [@EncounterWhere] Adventurers (party)[@AdventurerJob]
+23-25: [|(Anywhere)|(Settlement|(Settlement)|(Urban)|(Urban)|(Urban)] Criminal [@CriminalJob]
+26-27: [|(Anywhere)|(Anywhere)|(Anywhere)|(Settlement)|(Settlement)] Crone [@CroneJob]
+28-30: [@EncounterWhere] Faction Representative [@FactionRepJob]
+31: [@EncounterWhere] Knight [@KnightJob]
+32-33: [@EncounterWhere] Mage [@MageJob]
+34-44: [|(Anywhere)|(Settlement)|(Settlement)|(Settlement)] Merchant [@MerchantJob] 
+45: [@EncounterWhere] Military Company [@MilitaryCompanyJob] 
+46-47: [@EncounterWhere] Military Leader [@MilitaryLeaderJob] 
+48-82: [@EncounterWhere] Noble [@NobleJob]
+83-86: [@EncounterWhere] Pilgrim [@PilgrimJob]
+87-92: [@EncounterWhere] Pilgrim group [@PilgrimGroupJob]
+93-95: [@EncounterWhere] Priest [@PriestJob]
+96-97: [@EncounterWhere] Ranger [@RangerJob]
+98-100: [@EncounterWhere] Sage [@SageJob]  
+
+Table:EncounterWhere
+Type: Lookup
+Roll: 1d10
+;provides qualifier for where patron can be encountered
+1-3: (Anywhere)
+4-8: (Settlement)
+9-10: (Urban)
+
+Table:JobDistance
+Type:Lookup
+Roll: 1d20
+1-9: Local
+10-15: Area
+16-19: Distant ([@PickMegahex])
+20: Very Distant ([@PickMegahex])
+
+Table:LongerJobDistance      
+Type:Lookup
+Roll: 1d20
+1-2: Local
+3-5: Area
+6-15: Distant ([@PickMegahex])
+16-20: Very Distant ([@PickMegahex])
+
+Table:JobTwistCheck
+Type:Lookup
+Roll: 1d10
+;use for non-crim jobs
+1-9: \z
+10: \n [@JobTwist]
+
+Table:JobTwist
+\n <b>Twist</b>: Actual patron is nonhuman or monster \n
+\n <b>Twist</b>: Contractor intended as bait \n
+\n &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <b>Twist</b>: Betrayal/delivery to player enemy \n
+\n <b>Twist</b>: Betrayal/delivery to employer enemy \n
+\n <b>Twist</b>: Betrayal/delivery to third party \n
+\n <b>Twist</b>: Patron not authorized to offer job \n
+\n <b>Twist</b>: Job is something patron has been forbidden to do \n
+\n <b>Twist</b>: Job is con or swindle \n
+\n <b>Twist</b>: Job is doublecross or trap \n
+\n <b>Twist</b>: Job patron is being framed/set up \n
+\n <b>Twist</b>: Purported patron is actually agent for real patron \n
+\n <b>Twist</b>: Job patron is lying about their motive \n
+\n <b>Twist</b>: Job patron is lying about the reward \n
+\n <b>Twist</b>: Job patron is lying about the job target \n 
+\n <b>Twist</b>: Job patron is lying about the job target's allegiance or identity
+\n <b>Twist</b>: Job patron is lying about the consequences \n
+\n <b>Twist</b>: Job patron is lying about their allegiance \n 
+\n <b>Twist</b>: Job patron is lying about success conditions \n 
+\n <b>Twist</b>: Job patron is lying about necessary requirements \n 
+\n <b>Twist</b>: Job patron is lying about their role or standing \n
+\n <b>Twist</b>: Crucial detail omitted about job difficulty \n
+\n <b>Twist</b>: Crucial detail omitted about job danger \n
+\n <b>Twist</b>: Crucial detail omitted about likely consequences \n
+\n <b>Twist</b>: Crucial detail omitted about job target \n
+\n <b>Twist</b>: Crucial detail omitted about other contractors \n 
+\n <b>Twist</b>: Crucial detail omitted about the interested part(ies) \n
+\n <b>Twist</b>: Job target warned or alerted somehow \n
+\n <b>Twist</b>: Third party will intervene vs. PCs \n
+
+Table: JobPay
+Type:Lookup
+Roll: 1d10
+1-3: \n <b>Pay</b>: Low {{1d3}*10} gp /job level) [|apiece|apiece|apiece|total]
+4-7: \n <b>Pay</b>: Average ({{1d3}*100} gp/job level) [|apiece|apiece|apiece|total]
+8-9: \n <b>Pay</b>: High (500 gp/job level) [|apiece|apiece|apiece|apiece|total]
+10: \n <b>Pay</b>: Munificent (1000 gp/job level) [|apiece|apiece|apiece|apiece|apiece|total]
+
+Table:JobLevel
+Type: Lookup
+Roll: 1d6
+1-2: Party level
+3-4: Low level ({1d3})
+5: Midlevel ({1d3}+3})
+6: High level ({1d4}+6})
+
+Table:SkewsLowLevel
+Type: Lookup
+Roll: 1d6
+1: Party level
+2-4: Low level ({1d3})
+5: Midlevel ({1d3}+3})
+6: High level ({1d4}+6})
+
+Table:SkewsMidLevel
+Type: Lookup
+Roll: 1d6
+1: Party level
+2: Low level ({1d3})
+3-5: Midlevel ({1d3}+3})
+6: High level  ({1d4}+6})
+
+Table:SkewsHighLevel
+Type: Lookup
+Roll: 1d6 
+1: Party level 
+2: Low level ({1d3})
+3-4: Midlevel ({1d3}+3})
+5-6: High level ({1d4}+6})
+ 
+Table: AdventurerJob
+Type:Lookup
+Roll: 1d10
+1: \n [|Party-level|Low-level|Low-level|Mid-level|High-level] &
+ <b>[@JobDistance] Job</b>: Deliver Item  [@JobPay]
+2: \n <b>[@JobDistance] Job</b>: Deliver Message [@JobPay] &
+\n <b>Job Level</b>: [|Party-level|Low-level|Low-level|Mid-level|High-level]  
+3-7: \n [|Party-level|Low-level|Mid-level|High-level] <b>Job</b>: Enlist 
+8: \n <b>[@JobDistance] Job</b>: Escort person or party [@JobPay] &
+\n <b>Job Level</b>: [|Party-level|Low-level|Mid-level|Mid-level|High-level]
+9: \n <b>[@JobDistance] Job</b>: Retrieve Item  [@JobPay] &
+\n <b>Job Level</b> [|Party-level|Low-level|Mid-level|Mid-level|High-level] 
+10:\n <b>[@JobDistance] Job</b>: Retrieve Person [@JobPay] &
+ \n <b>Job Level</b>: [|Party-level|Low-level|Mid-level|Mid-level|High-level] 
+
+Table:CriminalJob
+; note higher chance of “twist” when Criminal; the ‘retrieval’ might actually be a theft, for instance, or a setup/doublecross
+\n  <b>[@CriminalJobDistance] Job</b>: Attack Faction &
+ [@JobPay] \n  [@SkewsMidLevel]
+\n  <b>[@CriminalJobDistance] Job</b>: & 
+Attack Location [@JobPay] [@SkewsMidLevel]
+\n  <b>[@CriminalJobDistance] Job</b>: &
+ Attack Person (nonfatal)[@CriminalJobDistance] \n [@JobPay] &
+ \n  [@JobLevel] 
+\n <b>[@CriminalJobDistance] Job</b>: &
+ Capture/Kidnap Person  \n &nbsp; &nbsp; &nbsp; &nbsp; [@JobPay] &
+ \n [@JobLevel] 
+\n <b>[@CriminalJobDistance] Job</b>: &
+ Destroy Location \n [@JobPay] &
+  \n [@SkewsMidLevel]
+\n <b>[@CriminalJobDistance] Job</b>: &
+ Escort Party (e.g. as bodyguards) [@CriminalJobPay] &
+\n \n [@JobLevel]
+\n <b>[@CriminalJobDistance] Job</b>: &
+ Escort Person (e.g. as bodyguards) \n &nbsp; &nbsp; &nbsp; &nbsp; [@CriminalJobPay] &
+ \n [@JobLevel]
+\n <b>[@CriminalJobDistance] Job</b>: &
+ Guard Location \n [@CriminalJobPay] &
+  \n [@JobLevel]
+\n <b>[@CriminalJobDistance] Job</b>: &
+ Investigate Group/Faction \n &nbsp; &nbsp; &nbsp; &nbsp; [@CriminalJobPay] &
+  \n [@SkewsMidLevel]
+\n <b>[@CriminalJobDistance] Job</b>: &
+ Kill Person \n [@CriminalJobPay] &
+ \n [@SkewsHighLevel]
+\n  <b>[@CriminalJobDistance] Job</b>: &
+ Plunder Location (why?) \n [@JobPay] &
+  \n [@SkewsMidLevel]
+\n <b>[@JobDistance] Job</b>: &
+ Retrieve Item \n [@CriminalJobPay] &
+  \n [@JobLevel]
+\n <b>[@CriminalJobDistance] Job</b>: &
+ Retrieve Person \n [@CriminalJobPay] &
+ \n <b>[@CriminalJobDistance] Job</b>: Rob Item  &
+ [@CriminalJobPay] \n [@JobLevel]
+\n <b>[@CriminalJobDistance] Job</b>: Steal Item &
+ [@CriminalJobPay] \n  [@JobLevel]
+
+Table:CriminalTwistCheck
+Type:Lookup
+Roll: 1d100
+;increased chance of twist on table
+01-75: \z
+76-85: \n <b>Twist</b>: Job presented as if legal/not a crime
+86-100: [@JobTwist] 
+
+Table:CriminalJobDistance
+Type:Lookup
+Roll: 1d10
+1-7: Local
+8-9: Area
+10: Distant [@PickMegahex]
+
+Table:CriminalJobPay
+Type:Lookup
+Roll: 1d10
+;crim jobs tend to pay more, but riskier
+1: \n Pay: Low ({1d3}*10}) gp./job level) [|apiece|apiece|apiece|total]
+2-4: \n Pay: Average ({1d3}*100}) gp.job/level) [|apiece|apiece|apiece|total]
+5-7: \n Pay: High (500 gp. job/level) [|apiece|apiece|apiece|apiece|total]
+8-9: \n Pay: Munificent (1000 gp. job/level) [|apiece|apiece|apiece|apiece|apiece|total]
+10: \n Pay: Munificent (1000 gp. job/level) [|apiece|apiece|apiece|apiece|apiece|total], with special reward
+
+Table: CroneJob
+;crones tend to pay less, but reward may be unusual
+;they use criminal distance, roughly equivalent
+01-09: \n <b>[@CriminalJobDistance] Job</b>: Deliver Goods [@CroneJobPay]
+10-19: \n <b>[@CriminalJobDistance] Job</b>: Deliver Item [@CroneJobPay]
+20-51: \n <b>[@CriminalJobDistance] Job</b>: Escort Person (crone/other)[@CroneJobPay]
+52-84: \n <b>[@CriminalJobDistance] Job</b>: Retrieve Ingredient [@CroneJobPay]
+85-100: \n <b>[@CriminalJobDistance] Job</b>: Retrieve Item [@CroneJobPay]
+
+Table:CroneJobPay
+Type:Lookup
+Roll: 1d12
+1-6: \n Pay: Low ({{1d3}*10}) gp./job level) [|apiece|apiece|apiece|total]
+7: \n Pay: Low ({{1d3}*10}) gp./job level) [|apiece|apiece|apiece|total][|\z|\z|\z|\z|, minor special reward|]
+8-9: \n Pay: Average ({{1d3}*100}) gp.job/level) [|apiece|apiece|apiece|total]
+10: \n Pay: Average ({{1d3}*100}) gp.job/level) [|apiece|apiece|apiece|total][|\z|\z|\z|\z|, average special reward|]
+11: \n Pay: High (500 gp. job/level) [|apiece|apiece|apiece|apiece|total][|\z|\z|\z|\z|, valuable special reward|]
+12: \n Pay: High (500 gp. job/level) [|apiece|apiece|apiece|apiece|total][@MageSpecialPay] 
+
+Table:FactionRepJob    
+Type: Lookup
+Roll: 1d12
+1: \n <b>[@JobDistance] Job</b>: Attack Faction [@JobPay] [@JobTwistCheck] 
+2: \n <b>[@JobDistance] Job</b>: Attack Location [@JobPay] [@JobTwistCheck] 
+3: \n <b>[@JobDistance] Job</b>: Avenge [|Attack|Rival's Move|Rival's Move|Insult|Insult] [@JobPay] [@JobTwistCheck]
+4: \n <b>[@JobDistance] Job</b>: Escort Person  [@JobPay] [@JobTwistCheck]
+5: \n <b>[@JobDistance] Job</b>: Escort Party  [@JobPay] [@JobTwistCheck]
+6: \n <b>[@JobDistance] Job</b>: Defeat Monster [@JobPay] [@JobTwistCheck]
+7: \n <b>[@JobDistance] Job</b>: Deliver Message  [@JobPay] [@JobTwistCheck]
+8: \n <b>[@JobDistance] Job</b>: Deliver Item  [@JobPay] [@JobTwistCheck]
+9: \n <b>[@JobDistance] Job</b>: Guard Location [@JobPay] [@JobTwistCheck]
+10:\n <b>[@JobDistance] Job</b>: Investigate Group/Faction [@JobPay] [@JobTwistCheck]
+11: \n <b>[@JobDistance] Job</b>: Investigate Crime/Mystery  [@JobPay] [@JobTwistCheck]
+12: \n <b>[@JobDistance] Job</b>: Retrieve Item [@JobPay] [@JobTwistCheck]
+
+Table: KnightJob
+ \n <b>[@JobDistance] Job</b>: Discover Location [@KnightPay] [@JobTwistCheck]
+ \n <b>[@JobDistance] Job</b>: Discover Monster [@KnightPay] [@JobTwistCheck]
+ \n <b>[@JobDistance] Job</b>: Discover Person [@KnightPay] [@JobTwistCheck]
+ \n <b>[@JobDistance] Job</b>: Enlist [@KnightPay] [@JobTwistCheck]
+ \n <b>[@JobDistance] Job</b>: Escort Person [@KnightPay] [@JobTwistCheck]
+ \n <b>[@JobDistance] Job</b>: Retrieve Person (e.g. mad knight)[@KnightPay] [@JobTwistCheck]
+ \n <b>[@JobDistance] Job</b>: Retrieve Item [@KnightPay] [@JobTwistCheck]
+
+Table:KnightPay
+Type:Lookup
+Roll: 1d12
+1: \n Pay: Service for one month
+2-3: \n Pay: Sheer honor/esteem of helping
+4-5: \n Pay: Favor
+5-7: \n Pay: Lore ([|not very|somewhat|\z|very|extremely] useful)
+8: \n Pay: Recommendation (powerful connection)
+9: \n Pay: Training/skill knowledge
+10: \n Pay: Low ({{1d3}*10}) gp./job level) [|apiece|apiece|apiece|total]
+11: \n Pay: Average ({{1d3}*100}) gp.job/level) [|apiece|apiece|apiece|total]
+12: \n Pay: High (500 gp. job/level) [|apiece|apiece|apiece|apiece|total]
+
+Table: MageJob
+01-21: \n <b>[@JobDistance] Job</b>: Plunder Location (why?) [@MageTwistCheck] [@MagePay] [@MageSpecialConditions]
+22-43: \n <b>[@JobDistance] Job</b>: Retrieve Ingredient [@MageTwistCheck] [@MagePay] [@MageSpecialConditions]
+44-65: \n <b>[@JobDistance] Job</b>: Retrieve Item [@MageTwistCheck] [@MagePay] [@MageSpecialConditions]
+66-75: \n <b>[@JobDistance] Job</b>: Investigate Mystery [@MageTwistCheck][@MagePay]
+76-85: \n <b>[@JobDistance] Job</b>: Investigate Phenomenon [@MageTwistCheck][@MagePay]
+86-91: \n <b>[@JobDistance] Job</b>: Deliver Item [@MageTwistCheck] [@MagePay]
+92-96: \n <b>[@JobDistance] Job</b>: Investigate Rival
+97-100: \n <b>[@JobDistance] Job</b>: Escort Person [@MageTwistCheck][@MagePay]
+
+Table:MageTwistCheck
+Type:Lookup
+Roll: 1d100
+01-85: \z
+86-100: [@MageTwist]
+
+Table:MageTwist
+Type:Lookup
+Roll: 1d20
+1: \n  <b>Twist</b>: Actual patron is nonhuman or monster
+2: \n  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b>Twist</b>: Contractor intended as bait
+3: \n <b>Twist</b>: Betrayal/delivery to player enemy
+4: \n <b>Twist</b>: Betrayal/delivery to employer enemy
+5-6:\n  <b>Twist</b>: Job is something patron has been forbidden to do
+7-8: \n <b>Twist</b>: Job patron is lying about their motive
+9: \n <b>Twist</b>: Job patron is lying about the job target 
+10: \n <b>Twist</b>: Job patron is lying about the consequences
+11: \n <b>Twist</b>: Third party will intervene vs. PCs
+12-13: \n <b>Twist</b>: Crucial detail omitted about job difficulty
+14-15: \n <b>Twist</b>: Crucial detail omitted about job danger
+16: \n <b>Twist</b>: Crucial detail omitted about likely consequences
+17: \n <b>Twist</b>: Crucial detail omitted about job target
+18: \n <b>Twist</b>: Doing job will have magical/curse effect
+19: \n <b>Twist</b>: Crucial detail omitted about other contractors 
+20: \n  <b>Twist</b>: Crucial detail omitted about the interested part(ies)
+
+Table:MagePay
+Type:Lookup
+Roll: 1d100
+;idea is, they are richer, offer more special rewards, often want the real goodies though
+01-06: \n  <b>Pay</b>: Low ({1d3}*10) gp./job level) &
+ [|apiece|apiece|apiece|total]
+07-11: \n <b>Pay</b>: Low ({1d3}*10) gp./job level) &
+ [|apiece|apiece|apiece|total] and [@MageSpecialPay]
+12-46: \n <b>Pay</b>: Average ({1d3}*100) gp.job/level) &
+ [|apiece|apiece|apiece|total]
+47-77: \n <b>Pay</b>: Average ({1d3}*100) gp.job/level) &
+ [|apiece|apiece|apiece|total] and [@MageSpecialPay]
+78-87: \n <b>Pay</b>: High (500 gp. job/level) &
+ [|apiece|apiece|apiece|apiece|total]
+88-96: \n <b>Pay</b>: High (500 gp. job/level) &
+ [|apiece|apiece|apiece|apiece|total] and [@MageSpecialPay]
+97-98: \n <b>Pay</b>: Munificent (1000 gp. job/level) &
+ [|apiece|apiece|apiece|apiece|apiece|total]
+99: \n <b>Pay</b>: Munificent (1000 gp. job/level) [|apiece|apiece|apiece|apiece|apiece|total] [@MageSpecialPay]
+100: \n <b>Pay</b>: Munificent (1000 gp. job/level) &
+ [|apiece|apiece|apiece|apiece|apiece|total] and [!2 MageSpecialPay]
+
+Table:MageSpecialConditions
+Type:Lookup
+Roll: 1d100
+01-85: \z
+86: \n <b>Rider</b>: Mage must have full share
+87: \n <b>Rider</b>: Mage must have half share
+88: \n <b>Rider</b>: Mage must have half of any gains
+89-91:\n <b>Rider</b>: Mage gets choice of item
+92:\n <b>Rider</b>: Mage gets first refusal of choice of item
+93-94:\n <b>Rider</b>: Party must surrender items
+95:\n <b>Rider</b>: Party must surrender all gains
+96-97:\n <b>Rider</b>: Party must surrender potions
+98-99: \n <b>Rider</b> Party must surrender scrolls
+100:\n <b>Rider</b>: Party must surrender gems
+
+Table:MageSpecialPay
+Type:Lookup
+Roll: 1d100
+01-12: [@Jewelry]
+13: [@MagicItem]
+14: [@MagicMiscType]
+15-27: [@MagicPotion]
+28-40: [@1stMUSpells] scroll
+41-48: [@2ndMUSpells] scroll
+49-54: [@3rdMUSpells] scroll
+55: [@4thMUSpells] scroll
+56-62: favor
+63-75: Mage will <i>identify</i> item
+76: Mage offers to trade [@MagicItem]
+77-87: Mage answers sage-level question
+88-100: Mage offers lore about [|item|location|monster|person]
+
+Table: MerchantJob
+Type:Lookup
+Roll:1d100
+01-06: \n <b>[@JobDistance] Job</b>: Deliver Item [@JobPay] [@MerchantJobTwistCheck] 
+07-12: \n <b>[@JobDistance] Job</b>: Deliver Message[@JobPay] [@MerchantJobTwistCheck] 
+13-50: \n <b>[@JobDistance] Job</b>: Escort Goods [@JobPay] [@MerchantJobTwistCheck] 
+51-69: \n <b>[@JobDistance] Job</b>: Escort Party [@JobPay] [@MerchantJobTwistCheck] 
+70-84: \n <b>[@JobDistance] Job</b>: Escort Person [@JobPay] [@MerchantJobTwistCheck] 
+85-91: \n <b>[@JobDistance] Job</b>: Guard Item [@JobPay] [@MerchantJobTwistCheck] 
+92-96: \n <b>[@JobDistance] Job</b>: Retrieve [|Stolen|Stolen|Lost|Desirable] Item (often stolen from merchant) &
+[@JobPay][@MerchantJobTwistCheck]
+97-100: \n <b>[@JobDistance] Job</b>: Investigate Group/Faction (usually rival) [@JobDistance][@JobPay] &
+[@MerchantJobTwistCheck] 
+ 
+Table:MerchantJobTwistCheck
+Type: Lookup
+Roll: 1d10                                                                           &
+1-9: <b>Twist</b>: None
+10: \n [@MerchantJobTwist]
+
+Table:MerchantJobTwist
+Type: Lookup
+Roll: 1d100
+01-04: \n <b>Twist</b>: Patron not authorized to offer job
+05-08: \n <b>Twist</b>: Job is something patron has been forbidden to do
+9-11: \n <b>Twist</b>: Job is con or swindle
+12-13: \n <b>Twist</b>: Job patron is being framed/set up
+14-16: \n <b>Twist</b>: Job patron is lying about the reward
+17-18: \n <b>Twist</b>: &
+ Job patron is lying about the job target's allegiance or identity
+19-21: \n <b>Twist</b>: Job patron is lying about the consequences
+22-24: \n <b>Twist</b>: Job patron is lying about their allegiance 
+25-26: \n <b>Twist</b>: Job patron is lying about their role or standing
+27-48: \n <b>Twist</b>: Crucial detail omitted about job difficulty
+49-70: \n <b>Twist</b>: Crucial detail omitted about job danger
+71-74: \n <b>Twist</b>: Crucial detail omitted about likely consequences
+75-95: \n <b>Twist</b>: Crucial detail omitted about job target
+96-98: \n <b>Twist</b>: Crucial detail omitted about the interested part(ies)]
+99-100: <b>Twist</b>: Third party will intervene vs. PCs
+
+Table: MilitaryCompanyJob
+Type:Lookup
+Roll: 1d100
+01-25: \n <b>[@JobDistance] Job</b>: Attack Faction ([@JobDistance]) \n [@MilitaryJobPay]
+26-50: \n <b>[@JobDistance] Job</b>: Attack Location ([@JobDistance]) \n [@MilitaryJobPay]
+51-75: \n <b>[@JobDistance] Job</b>: Attack (because of)[@ClashCause] \n [@JobDistance] [@MilitaryJobPay]
+76-100: \n <b>[@JobDistance] Job</b>: Enlist \n [@EnlistMilitaryJobPay]
+
+Table: MilitaryLeaderJob
+Type:Lookup
+Roll: 1d100
+;military jobs pay little, but have plunder/ransom opportunities
+01-02: [@JobDistance] Job: Attack Faction (Group) like bandits/orcs too, not just official Factions &
+ [|[@MilitaryJobPay]|[@JobPay]]
+03: \n <b>[@JobDistance] Job</b>: Avenge Attack \n [@MilitaryJobPay]
+04: \n <b>[@JobDistance] Job</b>: Avenge [@ClashCause] \n [@MilitaryJobPay]
+05-25: \n <b>[@JobDistance] Job</b>: Deliver Goods \n  [@MilitaryJobPay]
+26-34: \n <b>[@JobDistance] Job</b>: Deliver Item/Object \n  [@MilitaryJobPay]
+35-56: \n <b>[@JobDistance] Job</b>: Deliver Message \n   [@MilitaryJobPay]
+57-78: \n <b>[@JobDistance] Job</b> Enlist \n   [@EnlistMilitaryJobPay]
+79-88: \n <b>[@JobDistance] Job</b>: Escort Person \n  [@JobPay]
+89-92: \n <b>[@JobDistance] Job</b>: Explore Area \n  [@MilitaryJobPay]
+93-94:  \n <b>[@JobDistance] Job</b>: Explore Location \n   [@MilitaryJobPay]
+95-96:  \n <b>[@JobDistance] Job</b>: Defeat Monster \n   [@JobPay]
+97:  \n <b>[@JobDistance] Job</b>: Investigate Group/Faction \n  [@JobPay]
+98:  \n <b>[@JobDistance] Job</b>: Kill Person [@JobDistance] \n [@JobPay]
+99-100:  \n <b>[@JobDistance] Job</b>: Capture/Kidnap Person  \n [@JobPay]
+
+Table:EnlistMilitaryJobPay
+\n Pays {{1d3}*10} gp./player level per month
+
+Table:MilitaryJobPay
+\n Pays {{1d3}*10} gp./player level per month \n &
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[@PlunderChance] chance of plunder
+
+Table:PlunderChance
+Type:Lookup
+Roll: 1d10
+1-3: Doubtful
+4-7: Poor
+5-8: Average
+9: High
+10: Exceptional/near guaranteed
+
+Table: NobleJob
+Type: Lookup
+Roll: 1d100
+01-12: \n <b>[@JobDistance] Job</b>: Explore Area  [@JobPay] [@NobleTwistCheck]
+13-25: \n <b>[@JobDistance] Job</b>: Explore Location [@JobPay] [@NobleTwistCheck]
+26-38: \n <b>[@JobDistance] Job</b>: Defeat Monster [@JobPay] [@NobleTwistCheck]
+39-51: \n <b>[@JobDistance] Job</b>: Escort Person [@JobPay] [@NobleTwistCheck]
+52-64: \n <b>[@JobDistance] Job</b>: Deliver Message  [@JobPay] [@NobleTwistCheck]
+65-69: \n <b>[@JobDistance] Job</b>: Guard Area [@JobPay] [@NobleTwistCheck]
+70-74: \n <b>[@JobDistance] Job</b>: Guard Location [@JobPay] [@NobleTwistCheck]
+75-79: \n <b>[@JobDistance] Job</b>: Deliver Message [@JobPay] [@NobleTwistCheck]
+80-84: \n <b>[@JobDistance] Job</b>: Deliver Item [@JobPay] [@NobleTwistCheck]
+85: \n <b>[@JobDistance] Job</b>: Destroy [|Faction|Faction|Humanoid|Humanoid|Monster|Monster] Group &
+ [@JobPay] [@NobleTwistCheck]
+86-87: \n <b>[@JobDistance] Job</b>: Destroy Location [@JobPay] [@NobleTwistCheck]
+88-89: \n <b>[@JobDistance] Job</b>: Guard Item [@JobDistance]  [@NobleTwistCheck]
+90-91: \n <b>[@JobDistance] Job</b>: Attack [|Faction|Faction|Faction|Humanoid|Humanoid|Monster] &
+ Group [@JobPay] [@NobleTwistCheck]
+92-93: \n <b>[@JobDistance] Job</b>: Plunder Location [@JobPay] [@NobleTwistCheck]
+94-95: \n <b>[@JobDistance] Job</b>: Retrieve Item [@JobPay] [@NobleTwistCheck]
+96: \n <b>[@JobDistance] Job</b>: Investigate Group/Faction [@JobPay] [@NobleTwistCheck]
+97: \n <b>[@JobDistance] Job</b>: Investigate Mystery (political usually) [@JobPay] [@NobleTwistCheck]
+98: \n <b>[@JobDistance] Job</b>: Investigate Person [@JobPay] [@NobleTwistCheck]
+99-100: \n <b>[@JobDistance] Job</b>: Investigate Mystery (political usually) [@JobPay] [@NobleTwistCheck]
+
+Table: NobleTwistCheck
+Type: Lookup
+Roll: 1d100
+01-85: \z
+86-100: \n [@NobleTwist]
+
+Table: NobleTwist
+Type: Lookup
+Roll: 1d100
+01-04: <b>Twist</b>: Contractor intended as bait/provocation
+05-06:  <b>Twist</b>: Betrayal/delivery to player enemy
+07: <b>Twist</b>: Betrayal/delivery to employer enemy
+08: <b>Twist</b>: Betrayal/delivery to third party
+09-11: <b>Twist</b>: Patron not authorized to offer job
+12-22: <b>Twist</b>: Job is something patron has been forbidden to do
+23-24: <b>Twist</b>: Job is doublecross or trap
+25: <b>Twist</b>: Job patron is being framed/set up
+26-36: <b>Twist</b>: Job patron is lying about their motive
+37-38: <b>Twist</b>: Job patron is lying about the reward
+39-41: <b>Twist</b>: Job patron is lying about the job target 
+42-43: <b>Twist</b>: Job patron is lying about the job target's allegiance or identity
+44-54: <b>Twist</b>: Job patron is lying about the consequences
+55-56: <b>Twist</b>: Job patron is lying about their allegiance 
+57-60: <b>Twist</b>: Job patron is lying about payment 
+61-63: <b>Twist</b>: Job patron is lying about their role or standing
+64-73: <b>Twist</b>: Crucial detail omitted about job difficulty
+74-84: <b>Twist</b>: Crucial detail omitted about job danger
+85-95: <b>Twist</b>: Crucial detail omitted about likely consequences
+96: <b>Twist</b>: Crucial detail omitted about other contractors 
+97-99: <b>Twist</b>: Crucial detail omitted about the interested part(ies)]
+100: <b>Twist</b>: Third party will intervene vs. PCs
+
+Table: PilgrimJob
+Type: Lookup
+Roll: 1d100
+01-65: <b>[@LongerJobDistance] Job</b>: Escort Person [@JobPay]
+66-76: <b>[@LongerJobDistance] Job</b>: Retrieve Person [@JobPay]
+77-87: <b>[@LongerJobDistance] Job</b>: Discover Group [@JobPay]
+88-96: <b>[@JobDistance] Job</b>: Avenge Person [@JobPay]
+97-100: <b>[@JobDistance] Job</b>: Avenge Group [@JobPay]
+
+Table: PilgrimGroupJob
+Type: Lookup
+Roll: 1d100
+01-20: <b>[@LongerJobDistance] Job</b>: Escort Person [@JobPay]
+21-85: <b>[@LongerJobDistance] Job</b>: Escort Party [@JobPay]
+86-90: <b>[@LongerJobDistance] Job</b>: Retrieve Person [@JobPay]
+91-92: <b>[@JobDistance] Job</b>: Discover Person(s [@JobPay]
+93-98: <b>[@JobDistance] Job</b>: Avenge Person [@JobPay]
+99-100: <b>[@JobDistance] Job</b>: Avenge Group [@JobPay]
+
+Table: PriestJob
+Type: Lookup
+Roll: 1d100
+01-22: <b>[@LongerJobDistance] Job</b>: Escort Person [@JobTwistCheck][@JobPay]
+23-44: <b>[@LongerJobDistance] Job</b>: Escort Party [@JobTwistCheck] [@JobPay]
+45-65: <b>[@JobDistance] Job</b>: Guard Location [@JobDistance] [@JobTwistCheck] [@JobPay]
+66-68: <b>[@LongerJobDistance] Job</b>: Deliver Item [@JobTwistCheck] [@JobPay]
+69-72: <b>[@LongerJobDistance] Job</b>: Deliver Message [@JobTwistCheck]  [@JobPay]
+73-74: <b>[@JobDistance] Job</b>: Discover Faction [@JobTwistCheck] @JobPay]
+75-77: <b>[@JobDistance] Job</b>: Discover Person  [@JobTwistCheck]  [@JobPay]
+78-80: <b>[@LongerJobDistance] Job</b>: Escort Goods [@JobTwistCheck] [@JobPay] 
+81-85: <b>[@JobDistance] Job</b>: Guard Item  [@JobTwistCheck] [@JobPay] [@JobTwistCheck] 
+86-87: <b>[@JobDistance] Job</b>: Desecrate [@JobTwistCheck] [@JobPay]
+88-90: <b>[@LongerJobDistance] Job</b>: Retrieve Item [@JobTwistCheck] [@JobPay]
+91-92: <b>[@JobDistance] Job</b> Job: Destroy Location [@JobTwistCheck] [@JobPay]
+93-94: <b>[@JobDistance] Job</b>: Investigate Group/Faction  [@JobTwistCheck]  [@JobPay]
+95-96: <b>[@JobDistance] Job</b>: Investigate Mystery [@JobTwistCheck] [@JobPay]
+97: <b>[@JobDistance] Job</b>: Investigate Person [@JobTwistCheck] [@JobPay]
+98: <b>[@LongerJobDistance] Job</b>: Plunder Location [@JobTwistCheck] [@JobPay]
+99: <b>[@JobDistance] Job</b>: Destroy Faction [@JobTwistCheck] [@JobPay]
+100: <b>[@JobDistance] Job</b>: Consecrate [@JobTwistCheck] [@JobPay]
+
+Table: RangerJob 
+Type: Lookup
+Roll: 1d100
+01-21: <b>[@JobDistance] Job</b>: Attack [|Faction|Humanoid|Humanoid|Monster|Monster] Group [|with|with|without] &
+ ranger [@RangerJobPay]
+22-42: <b>[@JobDistance] Job</b>: Discover Monster [|with|with|without] ranger [@JobDistance][@JRangerJobPay] 
+43-64: <b>[@JobDistance] Job</b>: Defeat Monster [|with|with|without] ranger [@JobDistance] [@RangerJobPay]
+65-71: <b>[@JobDistance] Job</b>: Destroy [|Humanoid|Humanoid|Monster|Monster|Monster|Faction] Group &
+ [|with|with|without] ranger [@JobDistance] [@RangerJobPay]
+72-77: <b>[@JobDistance] Job</b>: Discover (missing) Person [|with|with|without] ranger [@JobDistance][@RangerJobPay]
+78-84: <b>[@JobDistance] Job</b>: Explore Location [|with|with|without] ranger [@JobDistance] [@RangerJobPay]
+85-87: Job: Enlist (pays ({1d3}*10) gp./level/month)
+88-91: <b>[@JobDistance] Job</b>: Retrieve Person [|with|with|without] ranger [@JobDistance] [@RangerJobPay]
+92-96: <b>[@JobDistance] Job</b>: Explore Area [|with|with|without] ranger  [@JobDistance] [@RangerJobPay]
+97-98: <b>[@JobDistance] Job</b>: Guard Location [|with|with|without] ranger [@JobDistance][@RangerJobPay]
+99-100: <b>[@JobDistance] Job</b>: Retrieve Item [|with|with|without] ranger [@JobDistance]  [@RangerJobPay]
+
+Table:RangerJobTwistCheck
+Type: Lookup
+Roll: 1d100
+;rangers are good, but may misread situations
+01-90: \z
+91-100: \n [@RangerTwist]
+
+Table:RangerTwist
+<b>Twist</b>: Contractor intended as bait
+<b>Twist</b>: Patron not authorized to offer job
+<b>Twist</b>: Job is something patron has been forbidden to do
+<b>Twist</b>: Ranger unaware job is doublecross or trap
+<b>Twist</b>: Ranger's patron is being framed/set up
+<b>Twist</b>: Job patron is lying about their motive
+<b>Twist</b>: Ranger unaware of target's true allegiance/identity
+<b>Twist</b>: Ranger unaware of consequences
+<b>Twist</b>: Ranger's patron is lying about their role or standing
+<b>Twist</b>: Ranger unaware of important detail about job difficulty
+<b>Twist</b>: Ranger unaware of important detail about job danger
+<b>Twist</b>: Ranger unaware of important detail about job target
+<b>Twist</b>: Ranger unaware of other interested part(ies)
+<b>Twist</b>: Ranger unaware job target warned or alerted somehow
+
+Table:RangerJobPay
+Type:Lookup
+Roll: 1d10
+1-5: <b>Pay</b>: Low ({{1d3}*10}) gp./job level) [|apiece|apiece|apiece|total], any proceeds
+6: <b>Pay</b>: Low ({{1d3}*10}) gp./job level) [|apiece|apiece|apiece|total], &
+ranger asks [|share|share|share|item choice] 
+7-9: <b>Pay</b>: Average ({{1d3}*100}) gp.job/level) [|apiece|apiece|apiece|total], any proceeds
+10: <b>Pay</b>: Average ({{1d3}*100}) gp.job/level) [|apiece|apiece|apiece|total], &
+ ranger asks [|share|share|share|item choice] 
+
+Table: SageJob
+01-50: \n <b>[@JobDistance] Job</b>: Investigate Legend or Mystery [@SagePay]
+51-75:\n  <b>[@JobDistance] Job</b>: Investigate Phenomenon [@SagePay]
+76-85: \n <b>[@JobDistance] Job</b>: Retrieve Ingredient [@SagePay]
+86-100: \n <b>[@JobDistance]Job</b>: Retrieve Item [@SagePay]
+
+Table:SagePay
+Type:Lookup
+Roll: 1d100
+;idea is, they are richer, offer more special rewards, often want the real goodies though
+01-06: \n <b>Pay</b>: Low ({{1d3}*10}) gp./job level) [|apiece|apiece|apiece|total]
+07-11: \n  <b>Pay</b>: Low ({{1d3}*10}) gp./job level) [|apiece|apiece|apiece|total] [@SageSpecialPay]
+12-76: \n <b>Pay</b>: Average ({{1d3}*100}) gp.job/level) [|apiece|apiece|apiece|total]
+77-89: \n <b>Pay</b>: Average ({{1d3}*100}) gp.job/level) [|apiece|apiece|apiece|total] [@SageSpecialPay]
+90-95: \n <b>Pay</b>: High (500 gp. job/level) [|apiece|apiece|apiece|apiece|total]
+96: \n <b>Pay</b>: High (500 gp. job/level) [|apiece|apiece|apiece|apiece|total] [@SageSpecialPay]
+97-98: \n <b>Pay</b>: Munificent (1000 gp. job/level) [|apiece|apiece|apiece|apiece|apiece|total]
+99: \n <b>Pay</b>: Munificent (1000 gp. job/level) [|apiece|apiece|apiece|apiece|apiece|total] [@SageSpecialPay]
+100: \n  <b>Pay</b>: Munificent (1000 gp. job/level) [|apiece|apiece|apiece|apiece|apiece|total] [!2 SageSpecialPay]
+
+Table:SageSpecialPay
+Type:Lookup
+Roll: 1d100
+01-04: [@Jewelry]
+05: [@MagicItem]
+06: [@MagicMiscType]
+07-20: [@MagicPotion]
+21-30: [@1stMUSpells] scroll
+31: [@2ndMUSpells] scroll
+32-36: Favor
+37-40: Sage will <i>identify</i> item
+41-42: Sage offers to trade [@MagicItem]
+43-86: Sage offers true, useful lore about some [|item|location|monster|person]
+87-96: Sage answers question for free
+97-100: Sage does detailed research for free
+      
+Table:WinterDue
+Type:Lookup
+Roll: 1d100
+01-65: <b>Due</b>: by spring
+66-85: <b>Due</b>: within a month 
+86-96: <b>Due</b>: within a week
+97-100: <b>Due</b>: as soon as possible 
+
+Table: Rumor
+1: \n <b>Rumor</b>: [@RumorDistance] [@RumorDate] \n <b>Topic</b>: [@RumorTopic] [@ConnectionFlag]
+
+Table:RumorDistance
+Type:Lookup
+Roll: 1d20
+1-5: Local origin, 
+6-14: Area origin, 
+15-18: Distant origin, 
+20: Very distant origin, 
+
+Table:RumorDate
+Type:Lookup
+Roll: 1d20
+1-3: unknown date
+4-10: within the last month
+11-15: within the last three months
+16-19: within a year
+20: more than a year ago
+
+Table:RumorTopic
+Type: Lookup
+Roll: 1d100
+01-30: Local gossip [@RumorSource]
+31-34: [@AdventureLocationRumor], location known to PCs
+35-50: [@AdventureLocationRumor], location unknown to PCs
+51-54: Local crime [@RumorSource]
+55-57: Local criminal [@RumorSource]
+58-64: Monster sighting [@RumorSource]
+65-69: Demihuman sighting [@RumorSource]
+70-74: Humanoid sighting [@RumorSource]
+75-79: Missing [|person|goods|animal|item][@RumorSource]
+80-84: Monster encounter [@RumorSource]
+85-89: Feud between [|individual|faction] and [|individual|faction] [@RumorSource]
+90-93: Scandal/secret about [|political|criminal|civic|military|prominent|religious] figure [@RumorSource]
+94-96: Treasure location, [@RumorDistance] [@RumorSource]
+97-98: Supernatural sighting of [|fey|apparition|ghost|phenomenon|unknown entity] [@RumorSource]
+99-100: Supernatural encounter with [|fey|apparition|ghost|phenomenon|unknown entity] [@RumorSource]
+
+Table:AdventureLocationRumor
+Type:Lookup
+Roll:1d100
+;normally an include
+01-12: Adventure Location Characteristic: [|Entrance|Hazard|Treasure|Trick|Size|Secret] &
+\n [@AdventureLocationRumorSource]
+13-25: Adventure Location Content(s) &
+\n [@AdventureLocationRumorSource]
+26-38: Adventure Location Danger(s) &
+\n [@AdventureLocationRumorSource]
+39-51: Adventure Location Denizen(s) [|General|General|Specific Group|Specific Creature/Entity] &
+\n [@AdventureLocationRumorSource]
+52-64: Adventure Location Site, [@AdventureLocationDiscovery] &
+ \n [@AdventureLocationRumorSource]
+65-71: Adventure Location History &
+\n [@AdventureLocationRumorSource]
+72-78: Adventure Location Denizen encounter &
+\n [@AdventureLocationRumorSource]
+79-86: Adventure Location Denizen sighting &
+\n [@AdventureLocationRumorSource]
+87-90: Area Denizen(s) [|General|General|Specific Group|Specific Creature/Entity] &
+\n [@AdventureLocationRumorSource]
+91-93: Local Interest/Involvement with Location &
+\n [@AdventureLocationRumorSource]
+94-97: A [|recent|recent|old|old|very old] location exploration attempt &
+\n [@AdventureLocationRumorSource]
+98: Location Setting Characteristic &
+\n [@AdventureLocationRumorSource]
+99: Location Setting Denizen(s) &
+\n [@AdventureLocationRumorSource] 
+100: Location Setting History 
+
+Table: RumorSource
+Type:Lookup
+Roll: 1d100
+01-10: \n <b>Source</b>:Civic (guardsman) <b>Veracity</b>: [|[@LowVeracity]|[@AverageVeracity]|[@HighVeracity]]
+11-20: \n <b>Source</b>: Overheard &nbsp; &nbsp;  <b>Veracity</b> [|[@LowVeracity]|[@AverageVeracity]|[@HighVeracity]] 
+21-59: \n <b>Source</b>: General gossip &nbsp; &nbsp;  <b>Veracity</b> [@LowVeracity]
+60-74: \n <b>Source</b>: Local [|gaffer|busybody] &nbsp; &nbsp;  <b>Veracity</b> [|[@LowVeracity]|[@LowVeracity]|[@AverageVeracity]]
+75-86: \n <b>Source</b>: Minor NPC &nbsp; &nbsp;  <b>Veracity</b> [|[@LowVeracity]|[@AverageVeracity]|[@HighVeracity]]
+87-96: \n <b>Source</b>: Major NPC &nbsp; &nbsp;  <b>Veracity</b> [|[@AverageVeracity]|[@HighVeracity]]
+97-98: \n <b>Source</b>: Political official &nbsp; &nbsp;  <b>Veracity</b> [|[@AverageVeracity]|[@AverageVeracity]|[@HighVeracity]]
+99-100: \n <b>Source</b>: Professional NPC &nbsp; &nbsp;  <b>Veracity</b> [@AverageVeracity]
+
+Table:AdventureLocationRumorSource
+01-32: <b>Source</b>: Local busybody &nbsp; &nbsp;  <b>Veracity</b>: [@LowVeracity]
+33-64: <b>Source</b>: General gossip &nbsp; &nbsp;  <b>Veracity</b>: [@LowVeracity]
+65-74: <b>Source</b>: Minor NPC &nbsp; &nbsp; <b>Veracity</b>: [@AverageVeracity] 
+75-84: <b>Source</b>: Major NPC  &nbsp; &nbsp; <b>Veracity</b>:[@AverageVeracity]
+85-90: <b>Source</b>: Witness &nbsp; &nbsp; <b>Veracity</b>: [@HighVeracity]
+91-96: <b>Source</b>: Survivor &nbsp; &nbsp; <b>Veracity</b>: [@HighVeracity]
+97-100: <b>Source</b>:  Military Official &nbsp; &nbsp; <b>Veracity</b>: [@AverageVeracity]
+
+Table:LowVeracity
+Type:Lookup
+Roll:1d6
+1: [|True|Mostly true]
+2-4: Mostly false
+5-6: False
+
+Table:AverageVeracity
+Type:Lookup
+Roll:1d6
+1: True
+2-3: Mostly true
+4-5: Mostly false
+6: False
+
+Table:HighVeracity
+Type:Lookup
+Roll:1d6
+1-2: True
+3-5: Mostly true
+6: [|Mostly false|False]
+
+Table: ConnectionFlag
+Type: Lookup
+Roll: 1d6
+1-5: \n <b>Connection</b>:None
+6: \n [@ConnectionType]
+
+Table:ConnectionType
+Type:Lookup
+Roll:1d100
+;DM-only means players don’t know
+01-04: <b>Connection</b>: Faction 
+05-10: <b>Connection</b>: Faction (DM-Only)
+11-30: <b>Connection</b>: Lore
+31-75: <b>Connection</b>: Lore (DM-Only)
+76-78: <b>Connection</b>: Prior Party Encounter
+79-82: <b>Connection</b>: Prior Party Encounter (DM-Only)
+83-85: <b>Connection</b>: Prior Event
+86-89: <b>Connection</b>: Prior Event (DM-Only)
+90-92: <b>Connection</b>: Prior NPC
+93-96: <b>Connection</b>: Prior NPC (DM-Only)
+97-98: <b>Connection</b>: Player
+99-100: <b>Connection</b>: Player (DM-Only)
+
+Table:WinterVisitorType
+Type:Lookup  
+Roll: 1d100
+01-50: \n <b>Visitor</b>:Bard/Minstrel &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{1d22} BardMission] [@BardInfoRating]
+51-64: \n <b>Visitor</b>:Ranger/borderer &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{1d20} RangerMission]  [@RangerInfoRating]
+65-70: \n <b>Visitor</b>:Crone &nbsp; &nbsp; &nbsp; <b>Mission</b>: [@CroneMission] [@CroneInfoRating]
+71-76: \n <b>Visitor</b>:Noble &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{1d20} NobleMission] [@NobleInfoRating]
+77-84: \n <b>Visitor</b>:Trader &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{1d20} TraderMission] [@TraderInfoRating]
+85-87: \n <b>Visitor</b>:[@Mercenary] &nbsp; &nbsp; &nbsp; <b>Mission</b> [#{1d20} MercenaryMission] [@MercenaryInfoRating]
+88-90: \n <b>Visitor</b>:Adventurer (solo) &nbsp; &nbsp; &nbsp; <b>Mission</b>:[#{1d20} AdventurerSoloMission] [@AdventurerInfoRating]
+91-95: \n <b>Visitor</b>:Priest &nbsp; &nbsp; &nbsp; <b>Mission</b>:  [#{1d22} PriestMission]  [@PriestInfoRating]
+96: \n <b>Visitor</b>:Criminal &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{1d24} CriminalMission] [@CriminalInfoRating]
+97-98: \n <b>Visitor</b>:Fey &nbsp; &nbsp; &nbsp; <b>Mission</b>: [@EeryMissionTable]  [@EeryInfoRating]
+99-100: \n <b>Visitor</b>:Military company &nbsp; &nbsp; &nbsp;   <b>Mission</b>:  [#{1d21} MilitaryMission]  [@MilitaryInfoRating]
+ 
+Table:SpringVisitorType
+Type:Lookup
+Roll: 1d100
+01-19: \n <b>Visitor</b>:Adventuring Party  &nbsp; &nbsp; &nbsp; <b>Mission</b>:[#{1d26} AdventuringPartyMission]  [@AdventurerInfoRating]
+20-42: \n <b>Visitor</b>:Noble &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{{1d17}+20} NobleMission]  [@NobleInfoRating]
+43-45: \n <b>Visitor</b>:Criminal &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{{1d17}+20} CriminalMission]  [@CriminalInfoRating]
+46-56: \n <b>Visitor</b>:Priest &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{{1d22}+28} PriestMission]  [@PriestInfoRating]
+57-60: \n  <b>Visitor</b>:Civic Representative/Agent &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{1d100} CivicMission]  [@CivicInfoRating]
+61-64: \n <b>Visitor</b>:Military company &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{{1d20}+21 } MilitaryMission] [@MilitaryInfoRating]
+65-68: \n <b>Visitor</b>:Bard/minstrel &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{22+{1d18}} BardMission]  [@BardInfoRating]
+69-71: \n <b>Visitor</b>:Knight &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{1d26} KnightMission]  [@KnightInfoRating]
+72-75: \n <b>Visitor</b>:Merchant &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{1d20} MerchantMission]  [@MerchantInfoRating]
+76-77: \n <b>Visitor</b>:Pilgrim &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{1d20} PilgrimMission]  [@PilgrimInfoRating]
+78-79: \n <b>Visitor</b>:Pilgrim Group &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{{1d20}+5} PilgrimMission]  [@PilgrimInfoRating]
+80-81: \n <b>Visitor</b>:Ranger/borderer &nbsp; &nbsp; &nbsp;  <b>Mission</b>: [#{{1d20}+20} RangerMission]  [@RangerInfoRating]
+82-84: \n <b>Visitor</b>:Trader &nbsp; &nbsp; &nbsp;   <b>Mission</b>: [#{{1d20}+20} TraderMission]  [@TraderInfoRating]
+85-86: \n <b>Visitor</b>:[@Mercenary] &nbsp; &nbsp; &nbsp;<b>Mission</b> [#{{1d20}+20} MercenaryMission]  [@MercenaryInfoRating]
+87-88: \n <b>Visitor</b>:Adventurer (solo) &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{1d20} AdventurerSoloMission]  [@AdventurerInfoRating]
+89: \n <b>Visitor</b>:Barbarian/Rustic &nbsp; &nbsp; &nbsp; <b>Mission</b>: [@BarbarianMission]  [@BarbarianInfoRating]
+90-91: \n <b>Visitor</b>:Criminal &nbsp; &nbsp; &nbsp; <b>Mission</b>: [# {{1d24}+24} CriminalMission][@CriminalInfoRating]
+92-93: \n <b>Visitor</b>:Mage &nbsp; &nbsp; &nbsp; <b>Mission</b>: [@MageMission] [@MageInfoRating]
+94-95: \n <b>Visitor</b>:Political representative/agent &nbsp; &nbsp; &nbsp;  <b>Mission</b>: [#{1d100} PoliticalMission] [@PoliticalInfoRating]
+96-98: \n <b>Visitor</b>:Sage/scholar &nbsp; &nbsp; &nbsp; <b>Mission</b>: [@SageMission] [@SageInfoRating]
+99-100: \n <b>Visitor</b>:Fey &nbsp; &nbsp; &nbsp;  <b>Mission</b>:  [@EeryMission] [@EeryInfoRating]
+
+Table:SummerVisitorType
+Type: Lookup
+Roll: 1d100
+01-07: \n <b>Visitor</b>:Civic Representative/Agent &nbsp; &nbsp; &nbsp; <b>Mission</b>:  [#{{1d100} +100} CivicMission]  [@CivicInfoRating]
+08-15: \n <b>Visitor</b>:Guild/artisan/tradesman &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{1d20} GuildMission]  [@GuildInfoRating]
+16-23: \n <b>Visitor</b>:Knight &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{{1d32}+22} KnightMission] [@KnightInfoRating]
+24-32: \n <b>Visitor</b>:Merchant &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{{1d14} +20} MerchantMission] [@MerchantInfoRating]
+33-38: \n <b>Visitor</b>:Noble &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{{1d28}+37} NobleMission] [@NobleInfoRating]
+39-40: \n <b>Visitor</b>:Mercenary &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{{1d20}+40} MercenaryMission] [@MercenaryInfoRating]
+41-45: \n <b>Visitor</b>:Ranger/borderer &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{{1d20}+40} RangerMission] [@RangerInfoRating]
+46-48: \n <b>Visitor</b>:Pilgrim &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{1d20} PilgrimMission] [@PilgrimInfoRating]
+49-56: \n <b>Visitor</b>:Pilgrim Group &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{5d4} PilgrimMission] [@PilgrimInfoRating]
+57-63: \n <b>Visitor</b>:Priest &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{{1d32}+50} PriestMission] [@PriestInfoRating]
+64: \n <b>Visitor</b>:Military company &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{{1d18}+41} MilitaryMission] [@MilitaryInfoRating]
+65-68: \n <b>Visitor</b>:Barbarian/Rustic &nbsp; &nbsp; &nbsp; <b>Mission</b>: [@BarbarianMission] [@BarbarianInfoRating]
+69-72: \n <b>Visitor</b>:Criminal &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{{1d47} + 33} CriminalMission] [@CriminalInfoRating]
+73-76: \n <b>Visitor</b>:Demihuman ([|Dwarf|Elf]) &nbsp; &nbsp; &nbsp; <b>Mission</b>: [@DemihumanMission] [@DemihumanInfoRating]
+77-80: \n <b>Visitor</b>:Mage &nbsp; &nbsp; &nbsp; <b>Mission</b>: [@MageMission]  [@MageInfoRating]
+81-84: \n <b>Visitor</b>:Trader &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{{1d20}+40} TraderMission] [@TraderInfoRating]
+85-88: \n <b>Visitor</b>:Bard/Minstrel &nbsp; &nbsp; &nbsp;  <b>Mission</b>: [#{{1d25}+40} BardMission] [@BardInfoRating]
+89-91: \n <b>Visitor</b>:Political representative/agent &nbsp; &nbsp; &nbsp;   <b>Mission</b>: [#{{1d100}+100} PoliticalMission] [@PoliticalInfoRating]
+92-93: \n <b>Visitor</b>:Adventuring party &nbsp; &nbsp; &nbsp;  <b>Mission</b>:[#{{1d26} +22} AdventuringPartyMission] [@AdventurerInfoRating]
+94: \n <b>Visitor</b>:Adventurer (solo) &nbsp; &nbsp; &nbsp;  <b>Mission</b>:[#{{1d11} +40}} AdventurerSoloMission] [@AdventurerInfoRating]
+95-96: \n <b>Visitor</b>:Sage/scholar &nbsp; &nbsp; &nbsp;  <b>Mission</b>: [@SageMission] [@SageInfoRating]
+97-98: \n <b>Visitor</b>:Crone &nbsp; &nbsp; &nbsp;  <b>Mission</b>: [@EeryMission] [@CroneInfoRating]
+99-100: \n <b>Visitor</b>:Fey &nbsp; &nbsp; &nbsp;  <b>Mission</b>: [@EeryMission] [@EeryInfoRating]
+
+Table:FallVisitorType
+Type:Lookup
+Roll: 1d100
+01-15: \n <b>Visitor</b>:Guild/artisan/tradesman &nbsp; &nbsp; &nbsp;   <b>Mission</b>: [#{1d35}+20} GuildMission]  [@GuildInfoRating]
+16-29: \n <b>Visitor</b>:Merchant &nbsp; &nbsp; &nbsp;   <b>Mission</b>: [#{{1d26} +34} MerchantMission]  [@MerchantInfoRating]
+31-32: \n <b>Visitor</b>:Adventuring Party &nbsp; &nbsp; &nbsp;   <b>Mission</b>: [#{{1d22} +48} AdventuringPartyMission][@AdventurerInfoRating]
+33-48: \n <b>Visitor</b>:Priest &nbsp; &nbsp; &nbsp;   <b>Mission</b>: [#{{1d18}+82} PriestMission]  [@PriestInfoRating]
+49-64: \n <b>Visitor</b>:Trader  &nbsp; &nbsp; &nbsp;   <b>Mission</b>: [#{{1d20}+60} TraderMission]  [@TraderInfoRating]
+65-66: \n <b>Visitor</b>:Bard/Minstrel &nbsp; &nbsp; &nbsp;   <b>Mission</b>: [#{{1d24}+65} BardMission]  [@BardInfoRating]
+67-68: \n <b>Visitor</b>:Civic Representative/Agent &nbsp; &nbsp; &nbsp;   <b>Mission</b>:  [#{{1d100}+200} CivicMission]  [@CivicInfoRating]
+69-70: \n <b>Visitor</b>:Criminal &nbsp; &nbsp; &nbsp;   <b>Mission</b>: [#{{1d34}+80} CriminalMission] [@CriminalInfoRating]
+71-72: \n <b>Visitor</b>:Demihuman, ([|Dwarf|Elf]) &nbsp; &nbsp; &nbsp;   <b>Mission</b>: [@DemihumanMission]  [@DemihumanInfoRating]
+73-74: \n <b>Visitor</b>:Knight &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{{1d41}+27} KnightMission]  [@KnightInfoRating]
+75-76: \n <b>Visitor</b>:Mage &nbsp; &nbsp; &nbsp;   <b>Mission</b>: [@MageMission]  [@MageInfoRating]
+77: \n <b>Visitor</b>:Military company &nbsp; &nbsp; &nbsp;   <b>Mission</b>: [#{{1d24}+59} MilitaryMission]  [@MilitaryInfoRating]
+79:  \n<b>Visitor</b>:Military leader &nbsp; &nbsp; &nbsp;   <b>Mission</b>:   [#{{1d24}+59} MilitaryMission]  [@MilitaryInfoRating]
+80: \n <b>Visitor</b>:[@Mercenary] &nbsp; &nbsp; &nbsp;  <b>Mission</b>: [#{{1d20}+60} MercenaryMission]  [@MercenaryInfoRating]
+81-82: \n <b>Visitor</b>:Noble  &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{{1d24}+65} NobleMission]  [@NobleInfoRating]
+83: \n <b>Visitor</b>:Pilgrim &nbsp; &nbsp; &nbsp; <b>Mission</b>: [#{1d20} PilgrimMission]  [@PilgrimInfoRating]
+84: \n <b>Visitor</b>:Pilgrim Group &nbsp; &nbsp; &nbsp;   <b>Mission</b>: [#{{1d20}+5} PilgrimMission]  [@PilgrimInfoRating]
+85-86: \n <b>Visitor</b>:Adventurer (solo) &nbsp; &nbsp; &nbsp;   <b>Mission</b>: [#{{1d16}+51} AdventurerSoloMission]  [@AdventurerInfoRating]
+87-88: \n <b>Visitor</b>:Barbarian/Rustic &nbsp; &nbsp; &nbsp;   <b>Mission</b>: [@BarbarianMission]  [@BarbarianInfoRating]
+89-91: \n <b>Visitor</b>:Crone &nbsp; &nbsp; &nbsp;   <b>Mission</b>: [@CroneMission]  [@CroneInfoRating]
+92-93: \n <b>Visitor</b>:Political representative/agent &nbsp; &nbsp; &nbsp;   <b>Mission</b>: [#{{1d100}+200} PoliticalMission] [@PoliticalInfoRating]
+94-95: \n <b>Visitor</b>:Ranger/borderer &nbsp; &nbsp; &nbsp;   <b>Mission</b>: [#{{1d20}+60} RangerMission] [@RangerInfoRating]
+96-98: \n <b>Visitor</b>:Fey &nbsp; &nbsp; &nbsp;   <b>Mission</b>:  [@EeryMission] [@EeryInfoRating]
+99-100: \n S<b>Visitor</b>:age/Scholar &nbsp; &nbsp; &nbsp;   <b>Mission</b>: [@SageMission] [@SageInfoRating]
+
+Table: AdventurerInfoRating
+\n <b>Info Ratings</b>: [@NewsDistance] News: {1d10} &nbsp; &nbsp; Lore: {{1d10}+5} &nbsp; &nbsp; Rumors: {2d6} &nbsp; &nbsp; &
+Trade: {{2d6}+3} \n
+
+Table: BarbarianInfoRating
+\n <b>Info Ratings</b>:[@NewsDistance] News: {1d6+12}   &nbsp;  &nbsp; Lore: {1d12}  &nbsp; &nbsp; Rumors: {{1d6}+12}  &nbsp; &nbsp; & 
+Trade: {12+{1d8}}  \n
+
+Table: BardInfoRating
+\n <b>Info Ratings</b>: [@NewsDistance] News: {1d4}   &nbsp;  &nbsp; Lore: {1d4} &nbsp; &nbsp; Rumors: {1d6} &nbsp; &nbsp; &  
+Trade: {10+{1d10}}  \n
+
+Table: CivicInfoRating
+\n <b>Info Ratings</b>: [@NewsDistance] News: {1d4}   &nbsp;  &nbsp; Lore: {1d4}  &nbsp; &nbsp; Rumors: {1d6}  &nbsp; &nbsp; &  
+Trade: {10+{1d10}}  \n
+
+Table: CriminalInfoRating
+\n <b>Info Ratings</b>: [@NewsDistance] News: {1d8} &nbsp;  &nbsp; Lore: {1d12} &nbsp; &nbsp; Rumors: {1d6} &nbsp; &nbsp; & 
+Trade: {2d6} \n
+
+Table: CroneInfoRating
+\n <b>Info Ratings</b>: [@NewsDistance] News: {1d6+12} &nbsp;  &nbsp; Lore: {1d5} &nbsp; &nbsp; Rumors: {3d6} &nbsp; &nbsp; &   
+Trade (usually bargain/pact): {2d6} \n
+
+Table: DemihumanInfoRating
+\n <b>Info Ratings</b>: ([#{1d10} NewsDistance]) News: {{1d6}+12}   &nbsp;  &nbsp; Lore: {2d6}  &nbsp; &nbsp; Rumors: {{1d10}+10} &nbsp; &nbsp; &  
+Trade:  {1d6+14}  \n
+
+Table: EeryInfoRating
+\n <b>Info Ratings</b>: [|([#{1d8} NewsDistance])|(Eery)|(Eery)|(Eery)|(Eery)] News: {{1d6}+14}  &nbsp; &nbsp; Lore: {1d8}  &nbsp; &nbsp; & 
+Rumors: {{1d6}+14}, Eery {1d6} &nbsp; &nbsp;  Trade: {{1d10}+10}  \n
+
+Table: GuildInfoRating
+\n <b>Info Ratings</b>: ([#{1d8-1} NewsDistance]) News: {2d6}  &nbsp;  &nbsp; Lore: {1d5+15}  &nbsp; &nbsp; Rumors: {1d5+10}  &nbsp; &nbsp;  Trade: {1d5+15}  \n
+
+Table: KnightInfoRating
+\n <b>Info Ratings</b>: ([#{1d8} NewsDistance]) News: {1d6+10}  &nbsp;  &nbsp; Lore: {2d6+3} &nbsp; &nbsp; Rumors:{2d6+8}  &nbsp; &nbsp; Trade: 20   \n
+
+Table: MageInfoRating
+\n <b>Info Ratings</b>: ([#{{1d8}+2} NewsDistance]) News: {{2d6}+8}  &nbsp;  &nbsp; Lore: {1d8} &nbsp; &nbsp; Rumors: {{1d8}+12} &nbsp; &nbsp; &  
+Trade: {{1d6}+10} \n
+
+Table: MercenaryInfoRating
+\n <b>Info Ratings</b>: ([#{{1d8}+1} NewsDistance]) News: {2d6}   &nbsp;  &nbsp; Lore:{{2d6}+3}  &nbsp; &nbsp; Rumors:{2d6}  &nbsp; &nbsp; &   
+Trade (usually bit of plunder): {{1d10}+5} \n
+
+Table: MerchantInfoRating
+\n <b>Info Ratings</b>: ([#{{1d8}+1} NewsDistance]) News: {2d6}  &nbsp;  &nbsp; Lore: {{2d6}+3} &nbsp; &nbsp; Rumors: {{1d6}+{1d8}}  &nbsp; &nbsp; & 
+Trade: {{1d6}+{1d10}} \n
+
+Table: MilitaryInfoRating
+\n <b>Info Ratings</b>: ([#{1d8+1} NewsDistance]) News: {2d6} &nbsp;  &nbsp; Lore: {{2d6}+4}  &nbsp; &nbsp; Rumors: {{1d6} + {1d8}}  &nbsp; &nbsp;  Trade: {5d4}  \n
+
+Table: NobleInfoRating
+\n <b>Info Ratings</b>: ([#{1d8+1} NewsDistance]) News: {2d8}   &nbsp;  &nbsp; Lore: {2d6}  &nbsp; &nbsp; Rumors: {{2d6}+3} &nbsp; &nbsp; Trade: {12+{1d8}}  \n
+
+Table: PilgrimInfoRating
+\n <b>Info Ratings</b>: ([#{1d8+1} NewsDistance]): {4d4}   &nbsp;  &nbsp; Lore: {3d4} &nbsp; &nbsp; Rumors: {{3d4}+4}  &nbsp; &nbsp; Trade: {{1d10}+10}  \n
+
+Table: PoliticalInfoRating
+\n <b>Info Ratings</b>: ([#{1d8} NewsDistance]): {2d6+2}  &nbsp;  &nbsp; Lore: {1d10+10} &nbsp; &nbsp; Rumors: {2d6}  &nbsp; &nbsp; Trade: 20  \n
+
+Table: PriestInfoRating
+\n <b>Info Ratings</b>: ([#{{1d8}+4} NewsDistance]) News: {10d2} &nbsp;  &nbsp; Lore: {1d6} &nbsp; &nbsp; Rumors: {1d10+10}  &nbsp; &nbsp; Trade: {1d4+16}  \n
+
+Table: RangerInfoRating
+\n <b>Info Ratings</b>: ([#1d8+2 NewsDistance]) News: {5d4}  &nbsp;  &nbsp; Lore: {2d6+3}  &nbsp; &nbsp; Rumors: {2d6+3}  &nbsp; &nbsp; Trade: 20  \n
+
+Table: SageInfoRating
+\n <b>Info Ratings</b>: ([#{{1d8}+4} NewsDistance]) News: {10d2}   &nbsp;  &nbsp; Lore: {1d6}  &nbsp; &nbsp; Rumors: {1d10+10}  &nbsp; &nbsp; Trade: {1d4+16} \n
+
+Table: TraderInfoRating
+\n <b>Info Ratings</b>: ([#{{1d8}-1} NewsDistance]) News: {2d4}  &nbsp;  &nbsp; Lore: {1d16+5}  &nbsp; &nbsp; Rumors: {2d3}  &nbsp; &nbsp;  Trade: {1d6} \n
+
+Table: NewsDistance
+Type:Lookup
+0: Local
+1-3: Local
+4-5: Area
+6-7: Regional/100 mi.
+8: Distant
+9-25: Distant
+		
+Table:AdventurerSoloMission
+Type: Lookup
+1-10: Rest/resupply
+11-12: Hiding
+13-17: Seeking work
+18-19: Trade: Sell [|non-magical item|non-magical loot|information|map]
+20: Sell exotic
+21-24: Seeking assistance
+25-26: Seeking item/object
+27: Seeking vengeance
+28: Hiding
+29-31: Rest/resupply
+32-40: Seeking work
+41-42: Seeking item/object
+43-44: Seeking assistance
+45: Seeking vengeance
+46: Rest/resupply
+47-49: Seeking work
+50: Trade: Sell [|non-magical item|non-magical loot|information|map]
+51: Sell exotic
+52-53: Seeking item
+54-55: Seeking assistance
+56: Seeking vengeance
+57-61: Rest/resupply
+62-63: Seeking work
+64-66: Trade: Sell [|non-magical item|non-magical loot|information|map]
+67: Sell exotic
+
+Table: AdventuringPartyMission
+Type: Lookup
+1-3: Seeking assistance
+4-5: Seeking item/object
+6: Seeking vengeance
+7-8: Hiding
+9-18: Rest/resupply
+19-23: Seeking work
+24-26: Recruiting
+27-28: Seeking assistance
+29-31: Seeking item/object
+32: Seeking vengeance
+33-34: Hiding
+35-38: Rest/resupply
+39-42: Seeking work
+43-45: Recruiting
+46-47: Trade: Sell [|non-magical item|non-magical loot|information|map]
+48: Sell exotic
+49-50: Seeking assistance
+51-52: Seeking item/object
+53-54: Seeking vengeance
+55-57: Hiding
+58-62: Rest/resupply
+63-64: Seeking work
+65: Recruiting
+66-69: Trade: Sell [|non-magical item|non-magical loot|information|map]
+70: Sell exotic
+
+Table: BarbarianMission
+Type: Lookup
+Roll: 1d20
+1-2: begging
+3-4: commit crime
+5: fleeing
+6: hiding
+7-8: seeking assistance
+9-10: seeking item/object
+11-12: seeking justice
+13-14: seeking person
+15-17: seeking revenge
+18-20: seeking work
+
+Table: BardMission
+Type: Lookup
+1-2: beg
+3-4: deliver lore
+5: deliver message
+6-7: deliver news
+8: hiding
+9-18: resting/resupplying
+19: spying
+20: seeking work
+21-22: seeking assistance
+23-25: beg
+26-29: deliver lore
+30: deliver message
+31-33: deliver news
+34: hiding
+35-36: resting/resupplying
+37: spying
+38:  seeking work
+39-40: seeking assistance
+41-50: Deliver lore
+51-55: Deliver news
+56-58: Deliver message
+59: Fleeing
+60: Hiding
+61-62: Seeking work
+63-65: Seeking assistance
+66: Begging
+67-72: Deliver lore
+73-78: Deliver news
+79-81: Deliver message
+82: Fleeing
+83-84: Hiding
+85-86: Seeking work
+87-89: Seeking assistance
+
+Table: CivicMission
+Type: Lookup
+01-17: Official business, assessment/audit
+18-34: Official business, proclamation
+34-50: Seeking assistance on [|personal|personal|official] matter
+51-65: Official business, impose/announce taxation
+66-75: Official business, seek [|individual|individual|group
+76-85: Official business, supervise construction/repair
+86-90: Official business, solve mystery
+91-96: Official business, investigate crime
+97-99: Official business, census
+100: Official business, collect unusual/specific tithe
+101-115: Seeking assistance on [|personal|personal|official] matter
+116-133: Official business, assessment/audit
+134-150: Official business, proclamation
+151-165: Official business, seek [|individual|individual|group]
+166-170: Official business, impose/announce taxation
+171-185: Official business, supervise construction/repair
+186-190: Official business, solve mystery
+191-196: Official business, investigate crime
+197-200: Official business, collect unusual/specific tithe
+201-222: Seeking assistance on [|personal|personal|official] matter
+223-255: Official business, collect taxation
+256-265: Official business, proclamation
+266-273: Official business, assessment/audit
+274-279: Official business, census
+280-285: Official business, seek [|individual|individual|group]
+286-288: Official business, impose/announce taxation
+289-292: Official business, solve mystery
+293-296: Official business, investigate crime
+297: Official business, supervise construction/repair
+298-300: Official business, collect unusual/specific tithe
+
+Table: CriminalMission
+Type: Lookup
+1-3: Begging ([|actual|as cover|as cover|as cover]
+4: Fleeing
+5-6: Hiding
+7-10: Plan/scout crime
+11-20: Resting/resupplying
+21-22: Commit crime
+23: Seeking work ([|criminal|legit/cover])
+24: Spying
+25-26: Begging ([|actual|as cover|as cover|as cover]
+27-28: Fleeing
+29-30: Hiding
+31-33: Plan/scout crime
+34-38: Commit crime
+39-40: Seeking work ([|criminal|legit/cover])
+41: Spying
+42-43: Conducting a [|legal|illegal] transaction
+44-45: Seeking person
+46-47: Seeking item
+48: Seeking revenge
+49-51: Begging ([|actual|as cover|as cover|as cover]
+52-53: Fleeing
+54-56: Hiding
+57-59: Plan/scout crime
+60-68: Commit crime
+69-71: Seeking work ([|criminal|legit/cover])
+72: Spying
+73-74: Seeking person
+75-76: Seeking item
+77-78: conducting [|legal|illegal|illegal] transaction
+79-80: seeking revenge
+81-82: Begging ([|actual|as cover|as cover|as cover]
+83-86: Fleeing
+87-90: Hiding
+91: Plan/scout crime
+92-94: Resting/resupplying
+95-98: Commit crime
+99: Seeking work ([|criminal|legit/cover])
+100: Spying
+101-105: Conducting  [|legal|illegal|illegal|illegal] transaction
+106-108: Seeking revenge
+109-111: Seeking person
+112-114: Seeking item
+
+Table: DemihumanMission
+Type: Lookup
+Roll: 1d20
+1-10: Trade ([|Buy|Sell])
+11-17: Seek assistance
+18-19: Seek item
+20: Seek work
+
+Table:GuildMission
+Type: Lookup
+1-2: Deliver message
+3-4: Deliver news
+5-6: Envoy ([|Chapter|Chapter|Chapter|Competitor|Partner|Political])
+7-13: Guild business: [|Audit|Visit Guild|Visit Guild|Visit Guild|Visit Guild|Investigate Mystery]
+14: Legal
+15: Recruiting
+16: Trade, arrange purchase  
+17: Trade, arrange sale  
+18: personal buying  
+19: personal selling 
+20: Seek assistance
+21-22: Deliver message
+23-24: Deliver news
+25-28: Envoy ([|Chapter|Chapter|Chapter|Competitor|Partner|Political])
+29-40: Guild business
+41: Legal
+42-43: Recruiting
+44-47: Trade, arrange purchase
+48-55: Trade, arrange sale
+
+
+Table:KnightMission
+Type:Lookup
+1-2: Deliver news
+3-4: Deliver message
+5: Deliver ransom
+6-9: Deliver scutage/fees
+10: Appearance before ruler/to noble court
+11: Envoy [|Goodwill|Goodwill|Diplomacy|Challenge|Marriage|War]
+12: Fulfilment of penalty, e.g. defeat
+13: Atonement/penance
+14-22: Rest/resupply
+23: Plea/petition
+24-26: Recruit
+27: Deliver news
+28-29: Deliver message
+30-31: Deliver ransom
+32: Deliver scutage/fees
+33: Appearance before ruler/to noble court
+34-36: Envoy [|Goodwill|Goodwill|Diplomacy|Challenge|Marriage|War]
+37-38: Fulfilment of penalty, e.g. defeat
+39: Atonement/penance
+40-45: Rest/resupply
+46-47: Plea/petition
+48-52: Tournament or festival
+53-54: Recruit 
+27-28: Deliver news
+29-30: Deliver message
+31-33: Deliver ransom
+34-40: Deliver scutage/fees
+41-43: Appearance before ruler/to noble court
+43-45:  Envoy [|Goodwill|Goodwill|Diplomacy|Challenge|Marriage|War]
+46-47: Envoy [|Goodwill|Goodwill|Diplomacy|Challenge|Marriage|War]
+48-50: Fulfillment of penalty
+51-52: Atonement/penance
+53-58: Rest/resupply
+59-61: Plea/petition
+62-67: Tournament or festival
+68: Recruit 
+
+Table:MageMission
+Type: Lookup
+Roll: 1d100
+01-20: Seek item
+21-40: Seek spell (any)
+41-51: Seek certain spell ([@MUScrollLevel])
+52-76: Research
+77-96: Rest/resupply
+97-100: Trade
+
+Table:Mercenary
+Type: Lookup
+Roll: 1d6
+1-4: [@MercenaryLevel] solo mercenary &nbsp; &nbsp; [@MercenaryMission]
+5-6: [#{1d20+2} MercLevel] captain mercenary with {10d2} men-at-arms &nbsp; &nbsp; [@MercenaryMission]
+
+Table:MercenaryLevel
+Type: Lookup
+1-8: Low-level, <b>L[|1|1|1|1|2|2|3]</b>
+9-18: Mid-level, <b>L [|4|4|4|4|5|5|6]</b>
+19-22: High-level, <b>L[|7|7|7|7|8|8|9]</b>
+
+Table:MercenaryMission
+Type:Lookup
+1-10: rest/resupply
+11: hiding
+12-14: guarding/escorting
+15-16: recruiting
+17-19: seeking work
+20: seeking revenge
+21-24 : rest/resupply
+25: hiding
+26-27: guarding/escorting
+28-32: recruiting
+33-39: seeking work
+40: Seeking revenge
+41-45: guarding/escorting
+46-54: recruiting
+55-59: seeking work
+60: seeking revenge
+61-65: resting/resupplying
+66-67: hiding
+68-71: seeking work
+72-78: guarding/escorting
+79-80: seeking revenge 
+
+Table: MerchantMission
+Type: Lookup
+1-5: Recruiting
+6-11: Buying (stock/goods)
+12-14: Resting/resupplying
+15-19: Seeking work/contract
+20: Sell exotic
+21-24: Recruiting
+25-26: Buying (stock/goods)
+27-29: Selling (stock/goods)
+30-31: Resting/resupplying
+32-33: Seeking work/contract
+34: Sell exotic
+35-37: Recruiting
+38-40: Buying (stock/goods)
+41-50: Selling (stock/goods)
+51-55: Resting/resupplying
+56-59: Seeking work/contract (typically for spring)
+60:Sell exotic
+
+Table: MilitaryMission
+Type: Lookup
+1-3: Deliver News
+4-15: Resting/resupplying 
+16-20: Seeking work
+21: Recruiting
+22-23: Deliver news
+24-28: Resting/resupplying
+29-32: Seeking work
+33-41: Recruiting
+42-43: Deliver news
+44: Resting/resupplying
+45: Seeking work
+46-48: Fleeing/retreating
+49-55: Conducting operations in area
+56-57: Recruiting
+58-59: Seeking work
+60-61: Deliver news
+62-65: Resting/resupplying
+66-70: Seeking work (usually for spring)
+71-73: Fleeing/retreating
+74-75: Conducting operations in area
+76-77: Seeking promised pay
+78-83: Recruiting
+
+Table: NobleMission
+Type: Lookup
+1-2: Deliver news
+3-4: Deliver message
+5-6: Envoy: Court presentation/appearance
+7: Envoy: Marriage negotiations
+8: Envoy: Spy
+9: Envoy: Trade matters
+10: Envoy: Treaty negotiations
+11-12: Envoy: Goodwill and friendship
+13-14: Seek assistance
+15: Seek justice
+16-20: Visit to Noble
+21-22: Deliver news
+23-24: Deliver message
+25-26: Envoy: Court presentation/appearance
+27:  Envoy: [|Deliver|Receive] hostage
+28:  Envoy: Marriage negotiations
+29:  Envoy: Spy
+30:  Envoy: Trade matters
+31:  Envoy: Treaty negotiations
+32:  Envoy: Goodwill and friendship
+33-34: Festival or tournament
+35-36:  Seek assistance
+37: Visit to Noble
+38-39: Deliver news
+40-41: Deliver message
+42-44: Envoy: Court presentation/appearance
+45: Envoy: [|Deliver|Receive] hostage
+46-48: Envoy: Marriage negotiations
+49: Envoy: Spy
+50-51: Envoy: Trade matters
+52: Envoy: Treaty negotiations
+53-54: Envoy: Goodwill and friendship
+55-59: Festival or tournament
+60-61: Seek assistance
+62-65: Visit to Noble
+66-67: Deliver news
+68-69: Deliver message
+70-71: Envoy: Court presentation/appearance
+72: Envoy: [|Deliver|Receive] hostage
+73-74: Envoy: Marriage negotiations
+75: Envoy: Spy
+76-77: Envoy: Trade matters
+78-79: Envoy: Treaty negotiations
+80-81: Envoy: Goodwill and friendship
+82-83: Festival or tournament
+84-85: Seek assistance
+86-89: Visit to Noble
+
+Table: PilgrimMission
+Type: Lookup
+1-2: Begging
+3: Seek assistance (revenge)
+4: Seek assistance (retrieve item/object)
+5-6: Seek assistance ([|find|retrieve] person)
+7-9: Recruiting
+10-15: Resting/resupplying
+16-20: Seek assistance (guards/guides)
+
+Table: PoliticalMission
+Type: Lookup
+01-15: Adjudicate dispute
+16-33: Issue proclamation
+34-55: Deliver message
+56-64: Envoy: Marriage negotiations
+65-74: Envoy: Trade matters
+75-84: Envoy: Treaty negotiations
+85-87: Envoy: Muster
+88-91: Investigate mystery
+92-95: Investigate crime
+96-100: Envoy: Spy
+101-120:  Adjudicate dispute
+121-145: Issue proclamation
+146-164: Deliver message
+165-169: Envoy: Marriage negotiations
+170-174: Envoy: Goodwill and friendship
+175-179: Envoy: Trade matters
+180-184: Envoy: Treaty negotiations
+185-190: Investigate mystery
+191-195: Investigate crime
+196: Envoy: Muster
+197-200: Envoy: Spy
+201- 217: Adjudicate dispute
+218-234: Issue proclamation
+235-244: Deliver message
+245-260: Envoy: Collect taxes
+261-265: Envoy: Receive scutage
+266-272:  Envoy: Goodwill and friendship
+273-279: Envoy: Trade matters
+280-285: Envoy: Treaty negotiations
+286-289: Envoy: Marriage negotiations
+290-293: Investigate mystery
+294-296: Investigate crime
+297-300: Envoy: Spy
+
+Table: PriestMission
+Type: Lookup
+1-3: Beg
+4: Deliver news/message
+5-6: Festival/observance
+7: Investigate mystery
+8-17: Resting/resupplying
+18-21: Official/work visit
+22: Ministry
+23-25: Beg
+26-28: Deliver news/message
+29-33: Festival/observance
+34-35: Investigate mystery
+36-38: Resupply [|for self|for agent(s)| holy community| holy community| holy community| holy community]
+39-40: Sell/contract holy community produce (honey, wine, etc.)
+41-45: Official/work visit
+46-49:  Ministry
+50: Proselytize
+51: Beg
+52-56: Deliver news/message
+57-60: Festival/observance
+61: Investigate mystery
+62-65: Resupply [|for self|for agent(s)| holy community| holy community| holy community| holy community]
+66-75: Official/work visit
+76-80: Ministry
+81-82: Proselytize
+83-84: Beg
+85-86: Deliver news/message
+87-90: Festival/observance
+91-94: Official/work visit
+95: Investigate mystery
+96-98: Ministry
+99-100: Proselytize
+
+Table: RangerMission
+Type: Lookup
+1-3: deliver lore
+4-6: deliver message
+7-9: deliver news
+10-18: rest/resupply
+19: revenge 
+20: seek assistance
+21-22: deliver message
+23: deliver news
+24-26: rest/resupply
+27-29: find person
+30-34: find creature
+35-37: investigate [|local|local|local|area|area|distant] [|phenomenon|mystery]
+38-39: seek assistance
+40: recruit
+41-42: deliver message
+43-44: deliver news
+45: rest/resupply
+46-49: find person
+50-54: find creature
+55-56: investigate [|local|local|local|area|area|distant] [|phenomenon|mystery]
+57-59: seek assistance
+60: recruit
+61-62: deliver message
+63-64: deliver news
+65-68: rest/resupply
+69-71: find person
+72-74: find creature
+75-76: investigate [|local|local|local|area|area|distant] [|phenomenon|mystery]
+77-78: seek assistance
+79-80: recruit
+
+Table:SageMission
+Type:Lookup
+Roll: 1d100
+01-20: Seek item
+21-40: Seek person
+41-51: Seek component/ingredient
+52-76: Research [@SageResearch]
+77-96: Resupply
+97-100: Trade
+
+Table: SageResearch
+Type: Lookup
+Roll: 1d20
+1-3: Adventure location
+4-5: Geographical feature, [|point of interest|point of interest|gazetteer-size]
+6-9: Item or object, mundane
+10-13: Item or object, magical
+14-15: Hoard
+16-20: Area of specialization
+
+Table: TraderMission
+Type: Lookup
+1-2: Deliver news
+3-15: Rest/resupply
+16: Buy
+17: Sell
+18-19: Buy/Sell
+20: Sell exotic
+21-23: Deliver news
+24-27: Rest/resupply
+28-39: Buy/Sell
+40: Sell exotic
+41-42: Deliver news
+43: Rest/resupply
+44-59: Buy/Sell
+60: Sell exotic
+61-63: Deliver news
+64-66: Rest/resupply
+67-79: Buy/Sell
+80: Sell exotic
+
+Table: CroneMission
+Type:Lookup
+Roll: 1d100
+01-22: Unknown [|benign|sinister|benign but seems sinister|sinister but seems benign]
+23-44: Mischief
+45-65: Seek Assistance
+66-74:-Exotic, sale
+74-80: Exotic, buy
+80-85: Exotic,  buy/sell
+86-91: Seek apprentice, [|benign|sinister] motives
+92-96: Seek Item
+97-98: Teach skill
+99-100: Teach spell
+
+Table: EeryMission
+Type: Lookup
+Roll: 1d21
+1-3: Trade: Sell [|exotic|exotic|valuable mundane substance|false item/product]
+4-6: Trade: Buy [|mundane item|mundane item|outre item like eyes|impossible/fictive item]
+7-11: Mischief
+12-16: Unknown/unclear
+17: Return Changeling
+18: Seek Assistance
+19: Take Changeling
+20: Teach Skill
+21: Teach Spell
+
+Table:GlobalEventDetails
+<b>[@BaseEventDate]</b> [@GlobalEventType] \n
+
+Table:BaseEventDate
+Type:Lookup
+Roll: 1d12
+1: January {LongMonthDay} \n
+2: February {FebDay} \n
+3: March {LongMonthDay} \n
+4: April {ShortMonthDay} \n
+5: May {LongMonthDay} \n
+6: June {ShortMonthDay} \n
+7: July {LongMonthDay} \n
+8: August {LongMonthDay} \n
+9: September {ShortMonthDay} \n
+10: October {LongMonthDay} \n
+11: November {ShortMonthDay} \n
+12: December {LongMonthDay} \n 
+
+Table:GlobalEventDistanceIntensity
+Type: Lookup
+Roll: 1d100
+01-39: most distant, of [@MostDistantIntensity] 
+40-65: very distant, of [@VeryDistantIntensity] 
+66-85: distant,of [@DistantIntensity]
+86-96: area, of [@AreaIntensity] 
+97-100: local, of[@LocalIntensity]
+
+Table:MonthlyEventDistance
+Type:Lookup
+Roll:1d100
+01-20: Local
+21-60: Area
+61-100: Distant
+
+Table:MonthlyEventIntensity
+Type:Lookup
+Roll:1d100
+01-20: low
+21-85: average
+86-96: high
+97-99: very high
+100: catastrophic
+
+Table:GlobalEventDistanceSignificance
+Type:Lookup
+Roll: 1d100
+01-39: most distant, of [@MostDistantSignificance] 
+40-65: very distant, of [@VeryDistantSignificance] 
+66-85: distant, of [@DistantSignificance]
+86-96: ,of [@AreaSignificance] 
+97-100: local, of [@LocalSignificance]
+
+Table:MostDistantIntensity
+Type: Lookup
+Roll: 1d100
+01-50:average intensity
+51-90:high intensity
+91-100:catastrophic intensity
+
+Table:MostDistantSignificance
+Type: Lookup
+Roll: 1d100
+01-50: average significance
+51-90: high significance
+91-100: greatest significance
+
+Table:VeryDistantIntensity
+Type: Lookup
+Roll: 1d100
+01-75: average intensity
+76-93: high intensity
+94-100: catastrophic intensity
+
+Table:VeryDistantSignificance
+Type: Lookup
+Roll: 1d100
+01-75: average significance
+76-93: high significance
+95-100: greatest significance
+
+Table:DistantIntensity 
+Type: Lookup
+Roll: 1d100
+01-04: low intensity
+5-14: below-average intensity
+15-94: average intensity
+95-98: high intensity
+99-100: catastrophic intensity
+
+Table:DistantSignificance 
+Type: Lookup
+Roll: 1d100
+01-04: low significance
+5-14: below-average significance
+15-94: average significance
+95-98: high significance
+99-100: greatest significance
+
+Table:AreaIntensity
+Type: Lookup
+Roll: 1d100
+01-09: low intensity
+10-19: below-average intensity
+20-88: average intensity
+89-99: high intensity
+100: catastrophic intensity
+
+Table:AreaSignificance
+Type: Lookup
+Roll: 1d100
+01-09:low significance
+10-19: below-average significance
+20-87: average significance
+88-99: high significance
+100: greatest significance
+
+Table:LocalIntensity
+Type: Lookup
+Roll: 1d100
+01-15: low intensity
+16-25: below-average intensity
+26-96: average intensity
+97-99: high intensity
+100: catastrophic intensity
+
+Table:LocalSignificance
+Type: Lookup
+Roll: 1d100
+01-15: low significance
+16-25: below-average significance
+26-96: average significance
+97-99: high significance
+100: greatest significance
+
+Table:GlobalEventType
+Type: Lookup
+Roll: 1d100
+01-21: [@GlobalClash],[@GlobalEventDistanceIntensity] 
+22-32: [@AstronomicalEvent] 
+33-35: Drought, [@GlobalEventDistanceIntensity]  
+36-38: Earthquake, [@GlobalEventDistanceIntensity] 
+39-58: Famine, [@GlobalEventDistanceIntensity] 
+59-60: Fire, [@GlobalEventDistanceIntensity]  
+61-62: Flood, [@GlobalEventDistanceIntensity]  
+63-65: Plague, [@GlobalEventDistanceIntensity] 
+66-100: [@Portent]
+ 
+Table:GlobalClash
+Type:Lookup
+Roll: 1d100
+01-33: <b>Clash</b>: Battle \n <b>Combatants</b>: [@ClashAggressor] attacker v. [@ClashDefender] defender \n <b>Main cause</b>: [@ClashCause]
+34-54: <b>Clash</b>: Campaign \n <b>Combatants</b>: [@ClashAggressor] attacker v. [@ClashDefender] defender \n <b>Main cause</b>: [@ClashCause]
+55-56: <b>Clash</b>: Civil war \n <b>Combatants</b>: [@ClashAggressor] attacker v. [@ClashDefender] defender \n <b>Main cause</b>: [@ClashCause]
+57-62: <b>Clash</b>: Invasion \n <b>Combatants</b>: [@ClashAggressor] attacker v. [@ClashDefender] defender \n <b>Main cause</b>: [@ClashCause]
+63-94: <b>Clash</b>: Raiding \n <b>Combatants</b>: [@ClashAggressor] attacker v. [@ClashDefender] defender \n <b>Main cause</b>: [@RaidingCause]
+95: <b>Clash</b>: Peasant rebellion \n <b>Combatants</b>: <b>Main cause</b>: [@ClashCause] 
+96-98: <b>Clash</b>: Rebellion of vassal \n <b>Combatants</b>: <b>Main cause</b>: [@ClashCause]
+99-100: <b>Clash</b>: Rebellion of allied vassals \n <b>Combatants</b>: <b>Main cause</b>: [@ClashCause]
+
+Table:MonthlyClash
+Type:Lookup
+Roll: 1d100
+01-19: <b>Clash</b>: Battle \n <b>Combatants</b>: [@ClashAggressor] attacker v. [@ClashDefender] defender \n <b>Main cause</b>: [@ClashCause]
+20-65: <b>Clash</b>: Raid \n <b>Combatants</b>: [@ClashAggressor] attacker v. [@ClashDefender] defender \n  <b>Main cause</b>: [@ClashCause]
+66-85: <b>Clash</b>: Raids \n <b>Combatants</b>: [@ClashAggressor] attacker v. [@ClashDefender] defender \n <b>Main cause</b>: [@ClashCause]
+86-97: <b>Clash</b>: Campaign \n <b>Combatants</b>: [@ClashAggressor] attacker v. [@ClashDefender] defender \n <b>Main cause</b>: [@ClashCause] \n & 
+<b>Duration</b>: Will last [|season|season|season|{2d3} months|{2d3} months|{2d4} months] 
+98-99: <b>Clash</b>: Invasion \n <b>Combatants</b>: [@ClashAggressor] attacker v. [@ClashDefender] defender \n <b>Main cause</b>: [@ClashCause]
+100: <b>Clash</b>: War \n <b>Combatants</b>: [@ClashAggressor] attacker v. [@ClashDefender] defender \n <b>Main cause</b>: [@ClashCause] \n &
+ <b>Duration</b>: Will last will last {3d12} months 
+
+Table: MonthlyTriggeredClash
+Type:Lookup
+Roll: 1d100
+01-19: <b> Triggered clash</b>: Battle \n <b>Combatants</b>: [@ClashAggressor] attacker v. [@ClashDefender] defender 
+20-65: <b> Triggered clash</b>: Raid, \n <b>Combatants</b>: [@ClashAggressor] attacker v. [@ClashDefender] defender
+66-85: <b> Triggered clash</b>: Raids, \n <b>Combatants</b>: [@ClashAggressor] attacker v. [@ClashDefender] defender 
+86-97: <b> Triggered clash</b>: Campaign, \n <b>Combatants</b>: [@ClashAggressor] attacker v. [@ClashDefender] defender, will last &
+[|season|season|season|{2d3} months|{2d3} months|{2d4} months] 
+98-99: <b> Triggered clash</b>: Invasion \n <b>Combatants</b>: [@ClashAggressor] attacker v. [@ClashDefender] defender 
+100: <b> Triggered clash</b>: War, [@ClashAggressor] attacker v. [@ClashDefender] defender, will last {3d12} months 
+
+Table:ClashAggressor
+01-80: Human
+81-83: Demi-human
+86-96: Humanoid
+97-100: Monster
+
+Table: ClashDefender
+01-75: Human
+76-79: Demi-human
+80-95: Humanoid
+96-100: Monster
+
+Table:ClashCause
+Type: Lookup
+Roll: 1d100 
+01-02: accident
+03-05: aggression
+06-25: border dispute
+26-28: broken promise or contract
+29: criminal act, [|theft|theft|theft|murder|murder|assault]
+30-31: culture
+32: debts
+33-35: expansion
+36-38: feud
+39-40: hot-blooded elements seeking [|fame|glory|advancement|wealth|land|honor|excitement|favor|to advance a competing strategy or belief]
+41-45: inheritance of property
+46-47: inheritance of wealth
+48-49: insult to honor
+50: insult to status or social standing
+51: marriage 
+52: probe
+53-72: property dispute
+73: [|provoked by enemy|provoke an enemy]
+74 religious dispute
+75-79: resource dispute
+80-81: resource asset dispute
+82-84: revenge for earlier [@ClashCause]
+85-99: succession, [@SuccessionStrife]
+100: taxation
+
+Table:SuccessionStrife
+Type: Lookup
+Roll:1d20
+1: usurp current ruler
+2-3: defend recent elevation to throne against [|a rival|{1d2} rivals|{1d3} rivals]
+4: defend recent elevation to throne against {1d6} rivals in {1d2+1} groups
+5-9: [|neutralize|neutralize|neutralize|conquer] immanent/near-term claimant
+10: destroy immanent/near-term claimant
+11-14: [|neutralize|neutralize|neutralize|conquer] potential claimant
+15: destroy potential claimant
+16-19: [|neutralize|neutralize|neutralize|conquer] current/active claimant
+20: destroy current/active claimant
+
+Table: RaidingCause
+Type:Lookup
+Roll: 1d100
+01: bullying
+02: cultural objection to [|presence|religion|non-cultural practices|behavior]
+03-04: exploitation of [|situation|person|resource|weakness]
+05-11: feud
+12: greed
+13-19: hotheads seeking [|fame|glory|advancement|honor|excitement|favor]
+20: malice
+21: need
+22: probing
+23-24: provocation of a response
+25-56:[|animal|animal|animal|animal|food|food|goods|goods|general movables|people] resources
+57-62: resource asset
+63: strategic or long-term ends
+64-65: raiders infringing others' territory
+66-67: raider territory infringed
+68-100: tradition
+
+Table: AstronomicalEvent
+Type:Lookup
+Roll: 1d100
+01-64: Significant stars. Portent: [@MinorAstrologicalPortent], {{30d3}-{1d20}} days
+65-84: Minor conjunction. Portent: [@MinorAstrologicalPortent], {10d3} days
+85-90: Comet visible for {6d10} days
+91-96: Major conjunction [@MajorAstrologicalPortent], {{30d3}-{1d20}} days 
+97-98: Historic conjunction [@LegendaryAstrologicalPortent], {{30d3}-{1d20}} days
+99-100: Solar eclipse
+
+Table: Portent
+Type: Lookup
+Roll: 1d100
+01-19: Portent, [|discovery|rediscovery] of legendary [|location|object], [@PortentOrigin]  
+20-81: Portent, [|an astrological|a magical|a natural|a natural|a natural|a political|a religious] sign of &
+ [@PortentOrigin]  
+82-87: Portent, new prophecy, subject: [@ProphecySubject], [@PortentOrigin], [@PortentSource]   
+88: Portent, new religious [|figure|figure|figure|figure|sect|sect|sect|creed], [@PortentOrigin]  
+89-92: Portent, religious vision, [@PortentOrigin]   
+93-99: Portent, wondrous event or miracle, [@PortentOrigin] 
+100: Portent, [@Apophrades],[@PortentOrigin] 
+
+Table: PortentSource
+divination
+oracular
+vision
+magical phenomenon
+anomalous natural phenomenon
+miraculous event
+strange message [@PortentMessages]
+
+Table: PortentOrigin
+Type: Lookup
+Roll: 1d100
+01-03: most distant origin
+04-13: very distant origin 
+14-79: distant origin
+80-90: area origin 
+90-100: local origin
+
+Table:ProphecySubject
+Type: Lookup
+Roll: 1d100
+01-50: Unclear or confusing
+51-52: Birth of [|a potential|a future|an eventual|an unexpected] ruler
+53-55: Birth of a [|disastrous|evil|weak|greedy|cowardly|heroic|great|fortune-favored|beneficent|exceptional|future savior] &
+ ruler
+56-58: Birth of one who will become legendary for &
+[|cowardice|heroism|bravery|cruelty|deeds|greed|blasphemy|power|ill fortune|good fortune]
+59-60: Cabal appears
+61: Cabal appears, a force for great [|good|evil|evil|evil]
+62-66: Death of a [|ruler|hero|noble|wizard|dragon]
+67-69: Destruction of a [|family|dynasty|fortune|person|army|cause|undertaking]
+70-72: Disaster/doom
+73-74: Disaster/doom owing to [|blight|drought|earthquake|fire|flood|air|water|the heavens]
+75: Invasion
+76-79: Item is [created|destroyed|discovered|lost|rediscovered|seized|used]
+80-84: Miracle or wondrous event
+85: Old religion reappears, heralded by a [@ProphecyConditions]
+86-87: Plague
+88: Plague, heralded by a [@ProphecyConditions]
+89: Religious schism [|\z|\z|\z|heralded by a [@ProphecyConditions]]
+90: Religious renewal [|\z|\z|\z|heralded by a [@ProphecyConditions]]
+91-92: Regime or ruler change [|\z|\z|heralded by a [@ProphecyConditions]]
+93: Regime change owing to [|crime|natural causes| succession|violence] &
+[|\z|\z|\z|heralded by a [@ProphecyConditions]]
+94: [@Apophrades]
+95-98: Strife within a [|family|area|nation|people|dwarf group|elf group|] &
+[|\z|\z|\z|heralded by a [@ProphecyConditions]]
+99-100: War [|\z|\z|\z|heralded by a [@ProphecyConditions]]
+
+Table: ProphecyConditions
+an ancestry
+a birth
+a death
+a departure
+a discovery
+an item [|discovery|sacrifice|recovery|repair|usage|transfer]
+a mark
+[@GlobalClash]
+a return or reoccupation
+a seasonal change
+[|an astrological|a magical|a natural|a political|a religious] sign
+  
+Table:MinorAstrologicalPortent
+Type:Lookup
+Roll: 1d100
+01-07: [|Auspicious|Inauspicious] for discovery
+08-15: [|Auspicious|Inauspicious] for new enterprises
+16-23:[|Auspicious|Inauspicious] for love and childbearing
+24-31: [|Auspicious|Inauspicious] for harvest/yield
+32-39: [|Auspicious|Inauspicious] for trade or commerce
+40-48:[|Auspicious|Inauspicious] for luck
+49-56:[|Auspicious|Inauspicious] for magical undertakings
+57-64:[|Auspicious|Inauspicious] for success
+65-66: Disaster
+67-68: Peace
+69-71: Prosperity
+72-75: Significant birth
+76-79: Strife
+80-86: Unclear significance
+87-92: Unclear significance, but negative?
+92-97: Unclear significance, but positive?
+97-98: War
+99-100: [@MajorAstrologicalPortent]
+
+Table:MajorAstrologicalPortent
+Type:Lookup
+Roll: 1d100
+01-27: Unclear, concerns [@Houses]
+28-46: Unclear, but negative? Concerns [@Houses]
+47-64: Unclear, but positive? Concerns [@Houses] 
+65-66: Greatly [|Auspicious|Inauspicious] for discovery
+67-68: Greatly [|Auspicious|Inauspicious] for new enterprises
+69-70: Greatly [|Auspicious|Inauspicious] for love and childbearing
+71-72: Greatly [|Auspicious|Inauspicious] for harvest/yield
+73-74: Greatly [|Auspicious|Inauspicious] for trade or commerce
+75-76: Greatly [|Auspicious|Inauspicious] for luck
+77-78: Greatly [|Auspicious|Inauspicious] for magical undertakings
+79-80: Greatly [|Auspicious|Inauspicious] for success
+81-82: Emergence of a powerful [|ruler|monster|hero|army|nonhuman enemy]
+83-84: Great political change
+85-86: Great disaster
+87: Miracle
+88: Lasting or unexpected peace
+89: Great prosperity
+90-92: Ruin/collapse of a great [|undertaking|house|prince|hero|fortune]
+93-94: Significant birth
+95-96: Great strife
+97-98: War
+99-100: [@Portent] marked by [@{1d3+2} ProphecySigns] signs
+
+Table:ProphecySigns
+Type: Lookup
+Roll: 1d12
+1-2: [@AstronomicalEvent]
+3: [|unusual|unnatural|unnatural] animal behavior
+4: talking animal
+5: natural phenomenon
+6-7: weather of unnatural [|frequency|duration|variety of the normal kind]
+8: unseasonal phenomenon to do with [|migration|crops|animals|a kind of plant|plants|]
+9: unusual [|birth|birth|birth|birth|births|births]
+10: unusual message [@PortentMessages] 
+11: magical phenomenon
+12: religious vision
+
+Table:PortentMessages
+Type:Lookup
+Roll: 1d20
+1: in sky
+2: on person
+3: on natural object
+4: on created object
+5: on building in [|strange runes|animal marks or tracks|writing|writing|writing|carving or engraved inscription|arrangement of natural objects]
+6: on natural terrain feature &
+[|strange runes|animal marks or tracks|writing|writing|carving or engraved inscription|arrangement of natural objects]
+7: on ground in [|strange runes|animal marks or tracks|writing|arrangement of natural objects]
+8: on animal
+9-10: in butchered or dead animal
+11: in fire
+12: in water
+13: in or on artwork
+14: in muttered dictation from inaudible whisper
+15: in dream
+16: in dream cluster
+17: in recurrent dream
+18: in whispers [|audible|inaudible|half-intelligible] to others
+19: in wind
+20: from child or infant
+
+Table: Houses
+Type: Lookup
+Roll: 1d12
+1: Chaos
+2: Communication
+3: Fortune/success
+4: Love
+5: Magic
+6: Nature/harvest
+7: Order
+8: Peace
+9: Power
+10: Trade/commerce
+11: War
+12: Politics
+
+Table: Apophrades
+Type:Lookup
+Roll: 1d8
+1: A hero thought lost returns for {1d60} days & \n 
+[ApophradesPurpose] before [@ApophradesReturn]
+2: A hero thought lost returns, apparently permanently & \n 
+[ApophradesPurpose] before [@ApophradesReturn]
+3: A hero thought lost reappears; they weren't dead
+4: A legendary [|warrior|sorceror|priest|king] returns for {1d90} days &
+\n [@ApophradesPurpose] before [@ApophradesReturn] 
+5: A legendary [|warrior|sorceror|priest|king] returns,&
+ apparently permanently \n [@ApophradesPurpose] before [@ApophradesReturn]
+6: A legendary [|warrior|sorceror|priest|king] returns &
+as a fearsome undead
+7: A [|dragon|giant|fey|humanoid] returns seeking [@ApophradesPurpose]; & 
+it was [|actually dead|not actually dead|not actually dead] 
+8: A [|dragon|giant|fey|humanoid] thought dead reappears; it wasn't
+
+Table:ApophradesReturn
+Type:Lookup
+Roll: 1d8
+1: collapsing into dust
+2: ascending heavenward
+3: descending hellward
+4-5: disappearing
+6: vanishing before [|a witness|a group|a crowd]
+7: dying again
+8: being slain
+
+Table:ApophradesPurpose
+Type:Lookup
+Roll: 1d20
+1-2: to deliver a warning
+3: as the fulfillment of a prophecy
+4-5: to seek revenge
+6: to reclaim lost property
+7: to assume power
+8: to fulfill an oath
+9: as the result of a curse
+10-12: to carry out some unknown purpose
+13: to destroy a specific object
+14: to destroy a specific person
+15: to defeat a specific enemy
+16: to create a condition
+17: to perform a specific task
+18: to restore the fortunes of a [|house|group|family]
+19-20: for no apparent reason
+
+Table:WinterMonthlyCheck
+Type:Lookup
+Roll: 1d100
+01-70: \n <b>Monthly</b>: None
+71-100: \n [@WinterMonthlyEvents]
+
+Table:WinterMonthlyEvents
+Type:Lookup
+Roll:1d100
+01-40: <b>{RightDay}</b>: Lunar eclipse
+41-50: <b>{RightDay}</b>: [@MonthlyEventDistance] blizzard, effects for {1d6+2} days
+51-55: <b>{RightDay}</b>: [@MonthlyEventDistance] accident, [@MonthlyAccident]
+56-61: <b>{RightDay}</b>: [@MonthlyEventDistance] fire, [@MonthlyEventIntensity]
+62-65: <b>{RightDay}</b>: [@MonthlyEventDistance] trigger event, [@ClashCause], will cause [@MonthlyTriggeredClash]
+66-76: <b>{RightDay}</b>: Important emissary visits to [|discuss alliance|investigate suitor or bride|increase goodwill|spy]
+77-86: <b>{RightDay}</b>: Noble or ruler visits, will stay for season
+87-96: <b>{RightDay}</b>: Minor Portent, [@MinorAstrologicalPortent]
+97: <b>{RightDay}</b>: [@MonthlyEventDistance] problem with [|rats|wolves|wolves|a mysterious predator|a monster]
+98: <b>{RightDay}</b>: [@MonthlyEventDistance] [@MonthlyMiracle]
+99-100: <b>{RightDay}</b>: Report of a [@MonthlyEventDistance] [@ProphecySigns]
+
+Table:DecemberMonthlyEvents
+Roll: 1d100
+Type:Lookup
+01-64: [@WinterMonthlyEvents]
+65-76: \n <b>Special December Event</b>, December [@DecemberRightMonthDay]:[@MonthlyEventDistance], a [|ghost|eery knight|fey|dreadful figure|talking beast] [|appears|appears|visits] &
+[@DecemberSupernaturalVisitorPurpose]
+77-86: \n <b>Special December Event</b>, December [@DecemberRightMonthDay]: PC dreams of [|treasure|clue|enemy]
+87-100: \n <b>Special December Event</b>, December <b>25</b>: PC gets unexpected boon or reward
+
+Table:DecemberRightMonthDay
+Type:Lookup
+Roll: 1d100
+01-05: <b>6</b>
+06-25: <b>21</b>
+26-65: <b>24</b>
+66-89: <b>25</b>
+90-100:<b>31</b>
+
+Table:DecemberSupernaturalVisitorPurpose 
+to deliver a warning regarding [@ProphecySubject]
+to deliver a message regarding [@ProphecySubject]
+to issue a challenge
+to accuse a great wrong
+to offer a quest about [@DecemberQuestRequirements]
+to lift a curse, involving [@DecemberQuestRequirements]
+to lay a being to rest, involving [@DecemberQuestRequirements] 
+
+Table:DecemberQuestRequirements
+defeating a foe
+retrieving an item
+retrieving a great treasure or hoard
+stealing an item [|once owned|never owned|never owned (lie)] by quest giver
+retrieving a person or being
+avenging a wrong
+returning an item [|once owned|never owned|never owned (lie)]
+destroying an item
+destroying a house or family
+destroying a group
+removing or destroying a building or site
+expelling a [|PC|player party|NPC|ruler|group|people|humanoid presence|demihuman presence] from an area
+[|reconsecrating|desecrating] a site or area
+
+Table:SpringMonthlyCheck
+Type:Lookup                                                   
+Roll: 1d100
+01-70: \n <b>Monthly: None</b>
+71-100: \n [@SpringMonthlyEvents]
+
+Table:SpringMonthlyEvents
+Type:Lookup
+Roll: 1d100
+01-40:<b>{RightDay}</b>: Lunar eclipse
+41-60: <b>{RightDay}</b> Flooding, {1d3} days,[@MonthlyEventDistance], [|rough|rough|difficult|very difficult] travel
+61-70: <b>{RightDay}</b> Serious flooding,[@MonthlyEventDistance], {1d6+2} days [|difficult|very difficult|impossible] travel, &
+[@CropDamage]
+71-80: [|Very good|Very bad] stock births
+81-85: Minor Portent, [@MinorAstrologicalPortent]
+86-90: <b>{RightDay}</b> Accident, [@MonthlyAccident],[@MonthlyEventDistance]
+91-97: <b>{RightDay}</b> [@MonthlyClash]
+98: <b>{RightDay}</b> [@MonthlyEventDistance] [@MonthlyMiracle]
+99-100: <b>{RightDay}</b> Report of a [@MonthlyEventDistance] [@ProphecySigns]
+
+Table:CropDamage
+Type:Lookup
+Roll:1d100
+01-50: <b> Monthly: None </b>
+51-75: minor crop damage of {{1d3}*10}%
+76-95: moderate crop damage of {{1d4+2}*10}%
+96-100: severe crop damage of {{1d5+4}*10}%, {1d40+35}% chance of [|fall|winter|next spring|next spring] famine
+
+Table:SummerMonthlyCheck
+Type:Lookup
+Roll: 1d100
+01-70: \n <b>Monthly</b>:None
+71-100: \n [@SummerMonthlyEvents]
+
+Table:SummerMonthlyEvents
+Type:Lookup
+Roll: 1d100
+01-40: Lunar eclipse
+41-45: <b>{RightDay}</b>: Accident, [@MonthlyAccident]
+46-55: <b>{RightDay}</b>: [@MinorAstrologicalPortent]
+56-85: <b>{RightDay}</b>: [@MonthlyEventDistance] [@MonthlyClash]
+86-91: <b>{RightDay}</b>: [@MonthlyEventDistance] campaign,[@ClashAggressor] attacker v. [@ClashDefender] defender,(main cause: [@ClashCause])
+92: <b>{RightDay}</b>: [@MonthlyEventDistance] [@MonthlyMiracle]
+93-94:<b>{RightDay}</b>:  Report of a [@MonthlyEventDistance] [@ProphecySigns]
+95-99:<b>{RightDay}</b>:  Serious storms, [@MonthlyEventDistance], {1d6} days, crop damage of {{1d3}*10}%, Difficult travel  
+100:<b>{RightDay}</b>:  Severe storms, [@MonthlyEventDistance],{1d3} days, each PC must save vs. Death or suffer a [@AccidentSeverity] injury if Local
+
+Table:JuneMonthlyCheck
+Type: Lookup
+Roll: 1d100
+01-64: [@SummerMonthlyEvents]
+65-100: <b>June Special Event,</b> [@JuneRightMonthDay][@JuneMonthlyEvents]
+
+Table:JuneRightMonthDay
+Type:Lookup
+Roll: 1d100
+01-55: <b>20</b>
+56-95: <b>21</b>
+96-100: <b>30</b>
+
+Table:JuneMonthlyEvents
+Type: Lookup
+Roll: 1d6
+1: PC encounters [|a fey|a talking animal|a mysterious stranger|an odd child|an apparition] 
+2: Party encounters [|a fey|a talking animal|a mysterious stranger|an odd child|an apparition] that warns &
+of [|betrayal|treachery|danger|enemy|course of action|consequences of a deed|[@Prohibition]] 
+3: PC [|dreams of|encounters|has a vision of] a [|handsome|beautiful|forbidding] &
+ fey [|man|woman|being] who [|beckons|leads|compels following|gives a blessing|gives a boon|demands a favor] 
+4: Party encounters a [|handsome|beautiful|forbidding] &
+ fey [|man|woman|being] who [|beckons|leads|compels following|gives a blessing|gives a boon|demands a favor]
+5: PC encounters [|fey|talking animal|mysterious stranger|odd child|apparition] &
+ that [|demands a favor|delivers a message|offers a quest about [@DecemberQuestRequirements]]
+6: Party encounters [|fey|talking animal|mysterious stranger|odd child|apparition] &
+ that [|demands a favor|delivers a message|offers a quest about [@DecemberQuestRequirements]
+
+Table:Prohibition
+walking
+riding
+crossing water
+entering a specific place
+entering a specific area (village, province, etc.]
+sleeping indoors
+sleeping [|outdoors|in moonlight|under stars]
+swearing a new oath
+making a promise
+touching metal
+wearing metal
+failing to make an offering
+
+Table:FallMonthlyCheck
+Type:Lookup
+Roll: 1d100
+01-70: \n <b>Monthly</b>:None
+71-100:[@FallMonthlyEvents]
+
+Table:FallMonthlyEvents
+Type:Lookup
+Roll: 1d100
+01-40:<b>{RightDay}</b>: Lunar eclipse
+41-50:<b>{RightDay}</b>: Accident, [@MonthlyAccident],[@MonthlyEventDistance]
+51-60:<b>{RightDay}</b>: Minor Portent, [@MinorAstrologicalPortent]
+61-97:<b>{RightDay}</b>: [@MonthlyEventDistance] [@MonthlyClash]
+98:<b>{RightDay}</b>: [@MonthlyEventDistance] [@MonthlyMiracle]
+99-100:<b>{RightDay}</b>: Report of a [@MonthlyEventDistance] [@ProphecySigns]
+
+Table:OctoberMonthlyEvents
+Type:Lookup
+Roll: 1d100
+01-64: [@FallMonthlyEvents]
+65-75: <b>October Special Event</b>, October [@OctoberRightMonthDay]: Report, [@MonthlyEventDistance] [|apparition|horror|recognizable ghost]
+76-86: <b>October Special Event</b>, October [@OctoberRightMonthDay]: Report, [@MonthlyEventDistance] haunting, [|a poltergeist|an entity|a ghost|a ghost|a ghost]
+87-97: <b>October Special Event</b>, October [@OctoberRightMonthDay]: Report, [@MonthlyEventDistance] supernatural phenomenon
+98-100: <b>October Special Event</b>, October [@OctoberRightMonthDay]: [@Apophrades]
+
+Table:OctoberRightMonthDay
+Type:Lookup
+Roll:1d100
+01-10: <b>21</b>
+11-35: <b>30</b>
+36-100: <b>31</b>
+
+Table:MonthlyMiracle
+[@WeirdBirth] infant born
+talking [|bird|fish|deer|cat|hound|fox]
+appearance of extraordinary or supernatural beast
+appearance of traditional/legendary phenomenon
+reappearance of legendary beast
+sighting of noble family fetch
+
+Table:WeirdBirth
+Type: Lookup
+Roll:1d20
+1-5: changeling
+6: [|cat|rabbit|dog]-headed
+7: fur-covered
+8: eyeless
+9-11: talking
+12: tailed 
+13: monstrous
+14: winged
+15: demonic
+16: unknown-language-speaking
+17: fully mature
+18: horned
+19: [|blue|green|red]-skinned
+20: reptilian-[|eyed|tongued|scaled|fanged|appearing]
+
+Table:MonthlyAccident
+local [|NPC|NPC|NPC|close NPC|important NPC|very important NPC], [@AccidentSeverity]
+area [|NPC|NPC|NPC|close NPC|important NPC|very important NPC], [@AccidentSeverity]
+distant [|NPC|NPC|close NPC|important NPC|very important NPC|important NPC|very important NPC], [@AccidentSeverity]
+
+Table:AccidentSeverity
+Type:Lookup
+Roll: 1d8
+1-3: serious
+4-6: very serious
+7: mortal in {1d7} days
+8: fatal
+ 
+Table: YearSymbol
+Advisor
+Antler
+Apparition
+Arch
+Arrow
+Axe
+Balance
+Banner
+Bear
+Beast
+Bell
+Bird
+Blade
+Blaze
+Book
+Bow
+Bridge
+Castle
+Cat
+Chain
+Circle
+Claw
+Cloak
+Cloud
+Column
+Creed
+Crown
+Cup
+Curtain
+Dagger
+Door
+Dragon
+Ephebe
+Eye
+Echo
+Feather
+Fish
+Flagon
+Flame
+Fleet
+Forest
+Fortress
+Fortune
+Fountain
+Gate
+Giant
+Helm
+Hound
+Horn
+Jewel
+Key
+Maiden
+Merchant
+Mirror
+Noble
+Palace
+Prince
+Queen
+Ring
+River
+Robe
+Rock
+Sage
+Scale
+Scar
+Sentinel
+Serpent
+Shadow
+Shield
+Ship
+Soldier
+Spring (as water)
+Staff
+Star
+Statue
+Storm
+Sword
+Tempest
+Temple
+Terror
+Throne
+Tooth
+Torrent
+Tower
+Treasure
+Tree
+Twins
+Vine
+Vizier
+Wall
+Warrior
+Wasp
+Wave
+Well
+Wheel
+Whip
+Wolf
+Wyvern
+
+; MegahexChooser.ipt
+; created 5/11/2026 2:04:26
+;should be standalone, can't get the use command to find it?
+Table: PickMegaHex
+Type:Lookup
+Roll: 1d100
+01-03: [@MH1]
+04-07: [@MH2]
+08-11: [@MH3]
+12-15: [@MH4]
+16-18: [@MH4a]
+19-22: [@MH5]
+23-26: [@MH6]
+27-30: [@MH7]
+30-32: [@MH7b]
+33-36: [@MH8]
+37-41: [@MH9] 
+42-45: [@MH10] 
+46-49: [@MH11]
+50-53: [@MH11a]
+54-58: [@MH12] 
+59-63: [@MH13]
+64-67: [@MH14]
+68-69: [@MH14b]
+70-73: [@MH15]
+74-77: [@MH16]
+78-81: [@MH17]
+82-85: [@MH18]
+86-87: [@MH18a]
+88-91: [@MH19]
+91-94: [@MH20]
+95-98: [@MH21]
+99-100: [@MH21b]
+
+Table: MH1
+Type: Lookup
+Roll: 1d100
+01: MH1, <b>0101</b> 
+02: MH1, <b>0103</b> 
+03: MH1, <b>0300</b> 
+04: MH1, <b>0304</b> 
+05: MH1, <b>0501</b> 
+06: MH1, <b>0503</b> 
+07-14: MH1, 0301  
+15-22: MH1, 0302  
+23-30: MH1, 0303  
+31-37: MH1, 0201 
+38-44: MH1, 0202 
+45-51: MH1, 0203 
+52-58: MH1, 0204 
+59-65: MH1, 0402 
+66-72: MH1, 0401 
+73-79:  MH1, 0402 
+80-86: MH1, 0403 
+87-93:  MH1, 0404  
+94-100: MH1, 0502 
+
+
+Table: MH2
+Type: Lookup
+Roll: 1d100
+01: MH2, <b>0105</b> 
+02: MH2, <b>0107</b> 
+03: MH2, <b>0304</b> 
+04: MH2, <b>0308</b> 
+05: MH2, <b>0505</b> 
+06: MH2, <b>0507</b> 
+07-14: MH2, 0305  
+15-22: MH2, 0306  
+23-30: MH2, 0307  
+31-37: MH2, 0106 
+38-44: MH2, 0205 
+45-51: MH2, 0206 
+52-58: MH2, 0207 
+59-65: MH2, 0208 
+66-72: MH2, 0405 
+73-79: MH2, 0406 
+80-86: MH2, 0407 
+87-93: MH2, 0408 
+94-100: MH2,0506 
+
+
+Table: MH3
+Type: Lookup
+Roll: 1d100
+01: MH3, <b>0109</b> 
+02: MH3,  <b>0111</b> 
+03: MH3,  <b>0308</b> 
+04: MH3,  <b>0312</b> 
+05: MH3,  <b>0509</b> 
+06: MH3,  <b>0511</b> 
+07-14: MH3,  0309  
+15-22: MH3,  0310  
+23-30: MH3,  0311  
+31-37: MH3,  0209 
+38-44: MH3,  0210 
+45-51: MH3,  0211 
+52-58: MH3,  0212 
+59-65: MH3,  0409 
+66-72: MH3,  0410 
+73-79: MH3,  0411 
+80-86: MH3,  0412 
+87-93: MH3,  0110 
+94-100: MH3, 0510
+
+Table: MH4
+Type: Lookup
+Roll: 1d100
+01: MH4, <b>0113</b> 
+02: MH4, <b>0115</b> 
+03: MH4, <b>0312</b> 
+04: MH4, <b>0316</b> 
+05: MH4, <b>0513</b> 
+06: MH4, <b>0515</b> 
+07-14: MH4, 0313  
+15-22: MH4, 0314  
+23-30: MH4, 0315  
+31-37: MH4, 0114 
+38-44: MH4, 0213 
+45-51: MH4, 0214 
+52-58: MH4, 0215 
+59-65: MH4, 0216 
+66-72: MH4, 0413 
+73-79: MH4, 0414 
+80-86: MH4, 0415 
+87-93: MH4, 0416 
+94-100: MH4, 0514 
+
+Table: MH4a
+Type: Lookup
+Roll: 1d100
+01-06: MH4a, <b>0501</b> 
+07-12: MH4a, <b>0702</b> 
+12-18: MH4a, <b>0901</b> 
+19-35: MH4a, 0601 
+36-52: MH4a, 0602 
+53-68: MH4a, 0701 
+69-84: MH4a, 0801  
+85-100: MH4a, 0802 
+
+Table: MH5
+Type: Lookup
+Roll: 1d100
+01: MH5, <b>0503</b> 
+02: MH5, <b>0505</b> 
+03: MH5, <b>0702</b> 
+04: MH5, <b>0706</b> 
+05: MH5, <b>0903</b> 
+06: MH5, <b>0905</b> 
+07-14: MH5, 0703  
+15-22: MH5, 0704  
+23-30: MH5, 0705  
+31-37: MH5, 0504 
+38-44: MH5, 0603 
+45-51: MH5, 0604 
+52-58: MH5, 0605 
+59-65: MH5, 0606 
+66-72: MH5, 0803 
+73-79: MH5, 0804  
+80-86: MH5, 0805 
+87-93: MH5, 0806 
+94-100: MH5, 0904 
+
+
+Table: MH6
+Type: Lookup
+Roll: 1d100
+01: MH6, <b>0507</b> 
+02: MH6, <b>0509</b> 
+03: MH6, <b>0706</b> 
+04: MH6, <b>0710</b> 
+05: MH6, <b>0907</b> 
+06: MH6, <b>0909</b> 
+07-14: MH6, 0707  
+15-22: MH6, 0708  
+23-30: MH6, 0709  
+31-37: MH6, 0508 
+38-44: MH6, 0607 
+45-51: MH6, 0608 
+52-58: MH6, 0609 
+59-65: MH6, 0610 
+66-72: MH6, 0807 
+73-79: MH6, 0808 
+80-86: MH6, 0809 
+87-93: MH6, 0810 
+94-100: MH6, 0908 
+
+Table: MH7
+Type: Lookup
+Roll: 1d100
+01: MH7, <b>0511</b> 
+02: MH7, <b>0513</b>  
+03: MH7, <b>0710</b>  
+04: MH7, <b>0714</b> 
+05: MH7, <b>0911</b> 
+06: MH7, <b>0913</b> 
+07-14: MH7, 0711  
+15-22: MH7, 0712  
+23-30: MH7, 0713  
+31-37: MH7, 0512 
+38-44: MH7, 0611 
+45-51: MH7, 0612 
+52-58: MH7, 0613 
+59-65: MH7, 0614 
+66-72: MH7, 0811 
+73-79: MH7, 0812 
+80-86: MH7, 0813 
+87-93: MH7, 0814 
+94-100: MH7, 0912 
+
+Table: MH7b
+Type: Lookup
+Roll: 1d100
+01-03: MH7b, <b>0515</b>  
+04-06: MH7b, <b>0516 </b>  
+07-09: MH7b, <b>0714 </b> 
+10-12: MH7b, <b>0716</b> 
+13-15: MH7b, <b>0915</b> 
+16-18: MH7b, <b>0916</b> 
+19-34: MH7b, 0615  
+35-50: MH7b, 0616 
+51-68: MH7b, 0715 
+69-85: MH7b, 0815  
+86-100: MH7b, 0816  
+
+Table: MH8
+Type: Lookup
+Roll: 1d100
+01: MH8, <b>0507</b> 
+02: MH8, <b>0509</b> 
+03: MH8, <b>0706</b>  
+04: MH8, <b>0710</b>  
+05: MH8, <b>0907</b>  
+06: MH8, <b>0909</b>  
+07-14: MH8, 0707  
+15-22: MH8, 0708  
+23-30: MH8, 0709  
+31-37: MH8, 0508 
+38-44:: MH8, 0607 
+45-51: MH8, 0608 
+52-58: MH8, 0609 
+59-65: MH8, 0610 
+66-72: MH8, 0807 
+73-79: MH8, 0808 
+80-86: MH8, 0809 
+87-93: MH8, 0810 
+94-100: MH8, 0908 
+
+
+Table: MH9
+Type: Lookup
+Roll: 1d100
+01: MH9, <b>0905</b> 
+02: MH9, <b>0907</b> 
+03: MH9, <b>1104</b> 
+04: MH9, <b>1108</b> 
+05: MH9, <b>1305</b> 
+06: MH9, <b>1307</b> 
+07-14: MH9, 1105  
+15-22: MH9, 1106  
+23-30: MH9, 1107  
+31-37: MH9, 0906 
+38-44: MH9, 1005 
+45-51: MH9, 1006 
+52-58: MH9, 1007 
+59-65: MH9, 1008 
+66-72: MH9, 1205 
+73-79: MH9, 1206 
+80-86: MH9, 1207 
+87-93: MH9, 1208 
+94-100: MH9, 1306 
+
+Table: MH10
+Type: Lookup
+Roll: 1d100
+01:MH10, <b>0909</b> 
+02:MH10, <b>0911</b> 
+03:MH10, <b>1108</b> 
+04:MH10, <b>1112</b> 
+05:MH10, <b>1309</b> 
+06:MH10, <b>1311</b> 
+07-14:MH10, 1109  
+15-22:MH10, 1110  
+23-30:MH10, 1111  
+31-37:MH10, 0910 
+38-44:MH10, 1009 
+45-51:MH10, 1010 
+52-58:MH10, 1011 
+59-65:MH10, 1012 
+66-72:MH10, 1209 
+73-79:MH10, 1210 
+80-86:MH10, 1211 
+87-93:MH10, 1212 
+94-100:MH10, 1310 
+
+Table: MH11
+Type: Lookup
+Roll: 1d100
+01: MH11, <b>0913</b> 
+02: MH11, <b>0915</b> 
+03: MH11, <b>1112</b> 
+04: MH11, <b>1116</b> 
+05: MH11, <b>1313</b> 
+06: MH11, <b>1315</b> 
+07-14: MH11, 1113  
+15-22: MH11, 1114  
+23-30: MH11, 1115  
+31-37: MH11, 0914 
+38-44: MH11, 1013 
+45-51: MH11, 1014 
+52-58: MH11, 1015 
+59-65: MH11, 1016 
+66-72: MH11, 1213 
+73-79: MH11, 1214 
+80-86: MH11, 1215 
+87-93: MH11, 1216 
+94-100: MH11, 1314 
+
+Table: MH11a
+Type: Lookup
+Roll: 1d100
+01-06: MH11a, <b>1301</b> 
+07-12: MH11a, <b>1502</b> 
+12-18: MH11a, <b>1701</b> 
+19-35: MH11a, 1401  
+36-52: MH11a, 1402 
+53-68: MH11a, 1501 
+69-84: MH11a, 1601  
+85-100: MH11a, 1602 
+
+Table: MH12
+Type: Lookup
+Roll: 1d100
+01: MH12, <b>1303</b> 
+02: MH12, <b>1305</b>  
+03: MH12, <b>1502</b>  
+04:  MH12, <b>1506</b>  
+05:  MH12, <b>1703</b>  
+06:  MH12, <b>1705</b>  
+07-14: MH12, 1503  
+15-22: MH12, 1504  
+23-30: MH12, 1505  
+31-37: MH12, 1304 
+38-44: MH12, 1403 
+45-51: MH12, 1404 
+52-58: MH12, 1405 
+59-65: MH12,  1406  
+66-72: MH12, 1603 
+73-79: MH12, 1604  
+80-86: MH12, 1605 
+87-93:  MH12, 1606 
+94-100: MH12, 1704 
+
+Table: MH13
+Type: Lookup
+Roll: 1d100
+01: MH13, <b>1307</b> 
+02: MH13, <b>1309</b> 
+03: MH13, <b>1506</b> 
+04: MH13, <b>1510</b> 
+05: MH13, <b>1707</b> 
+06: MH13, <b>1709</b> 
+07-14: MH13, 1507 
+15-22: MH13, 1508  
+23-30: MH13, 1509  
+31-37: MH13, 1308 
+38-44: MH13, 1407 
+45-51: MH13, 1408 
+52-58: MH13, 1409 
+59-65: MH13, 1410 
+66-72: MH13, 1607 
+73-79: MH13, 1608 
+80-86: MH13, 1609 
+87-93: MH13, 1610 
+94-100: MH13, 1708
+
+Table: MH14
+Type: Lookup
+Roll: 1d100
+01: MH14, <b>1311</b> 
+02: MH14, <b>1313</b> 
+03: MH14, <b>1510</b> 
+04: MH14, <b>1514</b>
+05: MH14, <b>1711</b> 
+06: MH14, <b>1712</b> 
+07-14: MH14, 1511  
+15-22: MH14, 1512 
+23-30: MH14, 1513  
+31-37: MH14, 1312 
+38-44: MH14, 1411 
+45-51: MH14, 1412 
+52-58: MH14, 1413 
+59-65: MH14, 1414 
+66-72: MH14, 1611 
+73-79:  MH14, 1612 
+80-86: MH14, 1613 
+87-93:  MH14, 1614
+94-100: MH14, 1712 
+
+Table: MH14b
+Type: Lookup
+Roll: 1d100
+01-03: MH14b, <b>1315</b> 
+04-06: MH14b, <b>1316 </b> 
+07-09: MH14b, <b>1514 </b> 
+10-12: MH14b, <b>1516</b> 
+13-15: MH14b, <b>1715</b> 
+16-18: MH14b, <b>1716</b> 
+19-34: MH14b, 1415
+35-50: MH14b, 1416 
+51-68: MH14b, 1515 
+69-85: MH14b, 1615 
+86-100: MH14b, 1616 
+
+Table: MH15
+Type: Lookup
+Roll: 1d100
+01: <b></b> 
+02: <b></b> 
+03: MH15, <b>1900</b> 
+04: MH15, <b>1904</b> 
+05: MH15, <b>2101</b> 
+06: MH15, <b>2103</b> 
+07-14: MH15, 1901  
+15-22: MH15, 1902  
+23-30: MH15, 1903  
+31-37: MH15, 1702 
+38-44: MH15, 1801 
+45-51: MH15, 1802 
+52-58: MH15, 1803 
+59-65: MH15, 1804 
+66-72: MH15, 2001 
+73-79:  MH15, 2002 
+80-86: MH15, 2003
+87-93: MH15, 2004 
+94-100: MH15, 2102 
+
+Table: MH16
+Type: Lookup
+Roll: 1d100
+01: MH16, <b>1705</b> 
+02: MH16, <b>1707</b> 
+03: MH16, <b>1904</b> 
+04: MH16, <b>1908</b> 
+05: MH16, <b>2105</b> 
+06: MH16, <b>2107</b>
+07-14: MH16, 1905  
+15-22: MH16, 1906  
+23-30: MH16, 1907  
+31-37: MH16, 1706 
+38-44: MH16, 1805 
+45-51: MH16, 1806 
+52-58: MH16, 1807
+59-65: MH16, 1808 
+66-72: MH16, 2005
+73-79: MH16, 2006
+80-86: MH16, 2007 
+87-93:  MH16, 2008 
+94-100: MH16, 2106 
+
+Table: MH17
+Type: Lookup
+Roll: 1d100
+01: MH17, <b>1709</b> 
+02: MH17, <b>1711</b> 
+03: MH17, <b>1908</b> 
+04: MH17, <b>1912</b> 
+05: MH17, <b>2109</b>
+06: MH17, <b>2111</b> 
+07-14: MH17, 1910 
+15-22: MH17, 1919  
+23-30: MH17, 1920  
+31-37: MH17, 1710 
+38-44: MH17, 1809 
+45-51: MH17, 1810 
+52-58: MH17, 1811 
+59-65: MH17, 1812 
+66-72: MH17, 2009 
+73-79: MH17, 2010 
+80-86: MH17, 2011 
+87-93:  MH17, 2012 
+94-100: MH17, 2110
+
+Table: MH18
+Type: Lookup
+Roll: 1d100
+01: MH18, <b>1713</b>
+02: MH18, <b>1715</b> 
+03: MH18, <b>1912</b> 
+04: MH18, <b>1916</b> 
+05: MH18, <b>2113</b> 
+06: MH18, <b>2115</b> 
+07-14: MH18, 1913  
+15-22: MH18, 1914  
+23-30: MH18, 1915  
+31-37: MH18, 1714 
+38-44: MH18, 1813 
+45-51: MH18, 1814 
+52-58: MH18, 1815  
+59-65: MH18, 1816 
+66-72: MH18, 2013 
+73-79:  MH18, 2014 
+80-86: MH18, 2015 
+87-93:  MH18, 2016 
+94-100: MH18, 2114 
+
+Table: MH18a
+Type: Lookup
+Roll: 1d100
+01-06: MH18a, <b>2101</b> 
+07-12: MH18a, <b>2302</b> 
+12-18: MH18a, <b>2501</b> 
+19-35: MH18a, 2201  
+36-52: MH18a, 2202 
+53-68: MH18a, 2301 
+69-84: MH18a, 2401 
+85-100: MH18a, 2402 
+
+Table: MH19
+Type: Lookup
+Roll: 1d100
+01: MH19, <b>2103</b> 
+02: MH19, <b>2105</b> 
+03: MH19, <b>2302</b> 
+04: MH19, <b>2306</b> 
+05: MH19, <b>2503</b> 
+06: MH19, <b>2505</b> 
+07-14: MH19, 2303  
+15-22: MH19, 2304  
+23-30: MH19, 2305  
+31-37: MH19, 2104 
+38-44: MH19, 2203 
+45-51: MH19, 2204 
+52-58: MH19, 2205 
+59-65: MH19, 2206 
+66-72: MH19, 2403 
+73-79: MH19, 2404 
+80-86: MH19, 2405 
+87-93: MH19, 2406 
+94-100: MH19, 2504 
+
+Table: MH20
+Type: Lookup
+Roll: 1d100
+01: MH20, <b>2107</b> 
+02: MH20, <b>2109</b> 
+03: MH20, <b>2306</b> 
+04: MH20, <b>2310</b> 
+05: MH20, <b>2507</b> 
+06: MH20, <b>2509</b> 
+07-14: MH20, 2307  
+15-22: MH20, 2308  
+23-30: MH20, 2309  
+31-37: MH20, 2108 
+38-44: MH20, 2207 
+45-51: MH20, 2208 
+52-58: MH20, 2209 
+59-65: MH20, 2210 
+66-72: MH20, 2407 
+73-79:  MH20, 2408 
+80-86: MH20, 2409 
+87-93:  MH20, 2410 
+94-100: MH20, 2508 
+
+Table: MH21
+Type: Lookup
+Roll: 1d100
+01: MH21, <b>2111</b> 
+02: MH21, <b>2113</b> 
+03: MH21, <b>2310</b> 
+04: MH21, <b>2314</b> 
+05: MH21, <b>2511</b> 
+06: MH21, <b>2513</b> 
+07-14: MH21, 2311  
+15-22: MH21, 2312  
+23-30: MH21, 2313  
+31-37: MH21, 2112 
+38-44: MH21, 2211 
+45-51: MH21, 2212 
+52-58: MH21, 2213 
+59-65: MH21, 2214 
+66-72: MH21, 2411 
+73-79: MH21, 2412 
+80-86: MH21, 2413 
+87-93: MH21, 2414 
+94-100: MH21, 2512 
+
+Table: MH21b
+Type: Lookup
+Roll: 1d100
+01-03: MH21b, <b>2115</b> 
+04-06: MH21b, <b>2116</b> 
+07-09: MH21b, <b>2314</b> 
+10-12: MH21b, <b>2316</b> 
+13-15: MH21b, <b>2416</b> 
+16-18: MH21b, <b>2516</b> 
+19-34: MH21b, 2215 
+35-50: MH21b, 2216 
+51-68: MH21b, 2315 
+69-85: MH21b, 2415 
+86-100: MH21b, 2416 
+
+
+
