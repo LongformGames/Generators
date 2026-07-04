@@ -1,0 +1,348 @@
+; Hex Structures Generator.ipt
+; created 5/19/2026 4:11:30 PM
+
+Prompt: MH Type {Border|Wild|Wilderness} Border
+Prompt: Megahex Number {MH1|MH2|MH3|MH4|MH4a|MH5|MH6|MH7|MH7b|MH8|MH9|MH10|MH11|MH11a|MH12|MH13|MH14|MH14b|MH15|MH16|MH17|MH18|MH18a|MH19|MH20|MH21|MH21b} MH1
+
+use: common\MegahexChooser.ipt
+
+Table: Results
+<b>{$Prompt1} Hex {$Prompt2}</b> [@{$Prompt1}LairCheck] [@{$Prompt1}StructureCheck] [@DungeonCheck]
+
+Table: LonelyLairCheck
+Type: Lookup
+Roll: 1d100
+01-50: \z
+51-84: [@LonelyLair]
+85-95: [#2 LonelyLair]
+97-100: [#3 LonelyLair]
+
+Table: BorderLairCheck
+Type: Lookup
+Roll: 1d100
+01-30: [@BorderLair]
+31-65: [@2 BorderLair]
+66-85: [@{1d2+1} BorderLair]
+86-96:  [@{1d3+1} BorderLair]
+97-100: [@{2d2+1} BorderLair]
+
+Table: WildLairCheck
+Type: Lookup
+Roll: 1d100
+01-35: [@1 WildLair]
+36-65: [@{1d2} WildLair]
+66-85: [@{1d3+1} WildLair]
+86-96: [@{1d3+2} WildLair]
+97-100: [@{1d4+3} WildLair]
+
+Table: WildernessLairCheck
+Type: Lookup
+Roll: 1d100
+01-30: [@WildernessLair]
+31-65: [@{1d3+1} WildernessLair]
+66-85: [@{1d3+2} WildernessLair]
+86-96: [@{1d4+3} WildernessLair]
+97-100: [@{1d6+4} WildernessLair]
+
+Table:LonelyLair
+1: \n <b>Lair:</b> [@{$Prompt2}] &nbsp;&nbsp;&nbsp; [@DiscoveryNumber] & 
+[|[@LowLevelLair]|[@LowLevelLair]|[@MidLevelLair]]
+
+Table:BorderLair
+1: \n <b>Lair:</b> [@{$Prompt2}] [@LowLevelLair]
+
+Table:WildLair
+1: \n <b>Lair:</b> [@{$Prompt2}] [@MidLevelLair]
+
+Table:WildernessLair
+1: \n <b>Lair:</b> [@{$Prompt2}] [@HighLevelLair]
+
+Table:LowLevelLair
+Type: Lookup
+Roll: 1d6
+1-4: \n &nbsp;  &nbsp;  &nbsp;  &nbsp;  Low-level &nbsp;&nbsp; [@DiscoveryNumber]
+5: \n &nbsp;  &nbsp;  &nbsp;  &nbsp;  Max low-level &nbsp;&nbsp; [@DiscoveryNumber]
+6: \n &nbsp;  &nbsp;  &nbsp;  &nbsp;  Mid-level  &nbsp;&nbsp; [@DiscoveryNumber]
+
+Table:MidLevelLair
+Type: Lookup
+Roll: 1d6
+1: \n &nbsp;  &nbsp;  &nbsp;  &nbsp;  Low-level  &nbsp;&nbsp; [@DiscoveryNumber]
+2: \n &nbsp;  &nbsp;  &nbsp;  &nbsp;  x2 low-level  &nbsp;&nbsp; [@DiscoveryNumber]
+3-5: \n &nbsp;  &nbsp;  &nbsp;  &nbsp;  Mid-level &nbsp;&nbsp; [@DiscoveryNumber]
+6: \n &nbsp;  &nbsp;  &nbsp;  &nbsp;  High-level &nbsp;&nbsp; [@DiscoveryNumber]
+
+Table:HighLevelLair
+Type: Lookup
+Roll: 1d6
+1: \n &nbsp;  &nbsp;  &nbsp;  &nbsp;  {1d3+1}x Low-level &nbsp;&nbsp; [@DiscoveryNumber]
+2-3: \n &nbsp;  &nbsp;  &nbsp;  &nbsp;  2x mid-level &nbsp;&nbsp; [@DiscoveryNumber]
+4-6: \n &nbsp;  &nbsp;  &nbsp;  &nbsp;  High-level &nbsp;&nbsp; [@DiscoveryNumber]
+
+Table:BorderStructureCheck
+Type: Lookup
+Roll: 1d100
+01-65: [@{1d3+1} BorderStructure]
+66-85:  [@{1d3} BorderStructure]
+86-96: [@{1d2} BorderStructure]
+97-100: [@BorderStructure]
+
+Table: WildStructureCheck
+Type: Lookup
+Roll: 1d100
+[WildStructure]
+01-50: \z
+51-85:  [@{1d2} WildStructure]  
+86-96: [@{1d3} WildStructure]
+97-100: [@{1d3+1} WildStructure]
+
+Table: WildernessStructureCheck
+Type: Lookup
+Roll: 1d100
+01-60: \z
+61-85: [@WildernessStructure]
+86-96: [#{1d2} WildernessStructure]
+97-100: [#{1d3} WildernessStructure]
+
+Table: BorderStructure
+Type: Lookup
+Roll: 1d100
+01-16: \n <b>Structure</b>: [@SmallMilitary] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber] 
+17-32: \n <b>Structure</b>: [@SmallFunerary] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber]  
+33-47: \n <b>Structure</b>: [@SmallReligious] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber]  
+48-64: \n <b>Structure</b>: [@SmallProduction] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber] 
+65-68: \n <b>Structure</b>: [@SmallCivic] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber]  
+69-72: \n <b>Structure</b>: [@MediumFunerary] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber] 
+73-76: \n <b>Structure</b>: [@MediumMilitary] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber] 
+77-80: \n <b>Structure</b>: [@MediumProduction] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber]
+81-85: \n <b>Structure</b>: [@MediumReligious] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber] 
+86-88: \n <b>Structure</b>: [@MediumCivic] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber] 
+89-91: \n <b>Structure</b>: [@LargeFunerary] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber]
+92-93: \n <b>Structure</b>: [@LargeMilitary] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber] 
+94-96: \n <b>Structure</b>: [@LargeProduction] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber] 
+97-98: \n <b>Structure</b>: [@LargeCivic] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber]
+99-100: \n <b>Structure</b>: [@LargeReligious] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber]
+
+Table: WildStructure
+Type: Lookup
+Roll: 1d100
+01-12: \n <b>Structure</b>: [@SmallCivic] [@{$Prompt2}]  \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber]
+13-25: \n  <b>Structure</b>: [@MediumFunerary] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber]
+26-38: \n <b>Structure</b>: [@MediumMilitary] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber] 
+39-51: \n <b>Structure</b>: [@SmallProduction] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber]
+52-64: \n <b>Structure</b>: [@SmallReligious] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber]
+65-74: \n <b>Structure</b>: [@MediumProduction] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber]
+75-86: \n  <b>Structure</b>: [@MediumReligious] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber] 
+87-92: \n <b>Structure</b>: [@LargeFunerary] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber]
+92-96: \n <b>Structure</b>: [@LargeMilitary] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber] 
+97-98: \n <b>Structure</b>: [@MediumCivic] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber]
+99-100: \n <b>Structure</b>: [@LargeReligious] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber]
+
+Table: WildernessStructure
+Type: Lookup
+Roll: 1d100
+01-05:  \n<b>Structure</b>: [@SmallCivic] [@{$Prompt2}]  \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber]
+06-25: \n <b>Structure</b>: [@MediumFunerary] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber]
+26-45: \n <b>Structure</b>: [@SmallProduction] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber]
+46-65: \n <b>Structure</b>: [@SmallReligious] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber]
+66-85: \n <b>Structure</b>: [@SmallMilitary] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber] 
+86-96: \n <b>Structure</b>: [@MediumMilitary] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber] 
+97-98: \n <b>Structure</b>: [@LargeFunerary] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber]
+99-100: \n <b>Structure</b>: [@LargeReligious] [@{$Prompt2}] \n &nbsp;&nbsp;&nbsp;&nbsp; [@DiscoveryNumber]
+
+Table: DiscoveryNumber
+Type:Lookup
+Roll: 1d10
+1-4: Standard, <b>4</b>
+5-7: Obscure, <b>5</b>
+8-9: Lost, <b>7</b>
+10: Hidden, <b>12</b>
+
+Table:SmallCivic
+Set: DiscoveryMod ={-1}
+Small Baths [@SmallHybrid]  
+Small Bridge [@{$Prompt2}] 
+Small Cistern [@SmallHybrid] 	
+Small Granary 
+Small Inn [@SmallHybrid]
+Small Warehouse/Goods Storage
+
+Table: MediumCivic
+Set: DiscoveryMod = {0}
+Medium Armory [@MediumHybrid]
+Medium Baths [@SmallHybrid]
+Medium Bridge
+Medium Cistern [@MediumHybrid]	
+Medium Granary
+Medium Inn [@SmallHybrid]
+Medium Legal building
+Medium Library/Scriptorium  [@MediumHybrid]	
+Medium Manor house  [@MediumHybrid]	
+Medium Market
+Medium Palace  [@MediumHybrid]	
+Medium Vault/treasury  [@MediumHybrid]	
+Medium Warehouse/Goods Storage
+
+Table: LargeCivic
+Set: DiscoveryMod = {1}
+Large Armory [@MediumHybrid]
+Large Baths [@MediumHybrid]
+Large Granary
+Large Library/Scriptorium [@LargeHybrid]
+Large Manor house
+Large Palace [@MediumHybrid]
+Large Vault/treasury [@LargeHybrid]
+
+Table: SmallFunerary
+set: DiscoveryMod = {-2}
+Small Barrow
+Small Cairn
+Small Tomb
+
+Table: MediumFunerary
+set: DiscoveryMod = {-1}
+Medium Barrow
+Medium Burial Area
+Medium Cairn
+Medium Mound (burial)
+Medium Tomb
+
+Table: LargeFunerary
+set: DiscoveryMod = {0}
+Large Battlefield
+Large Mass Grave
+Large Mound (burial)
+Large Tomb
+
+Table: SmallMilitary
+set: DiscoveryMod = {0}
+Small Bivouac 
+Small Camp
+Small Outpost [@SmallHybrid]
+Small Outpost, observational
+Small Tower [@SmallHybrid]
+
+Table: MediumMilitary
+set: DiscoveryMod = {-1}
+Medium Bivouac 
+Medium Camp
+Medium Castle [@MediumHybrid]
+Medium Keep [@MediumHybrid]
+Medium Mound fortification [@SmallHybrid]
+Medium Outpost [@MediumHybrid]
+Medium Tower [@MediumHybrid]
+
+Table: LargeMilitary
+set: DiscoveryMod = {-2}
+Large Castle [@LargeHybrid]
+Large Fortress [@LargeHybrid]
+Large Keep [@LargeHybrid]
+Large Mound fortification [@MediumHybrid]
+
+Table: SmallProduction
+set: DiscoveryMod = {1}
+Small Fishing Hole/Weir	
+Small Hunting Camp
+Small Plantation/Farm
+Small Mine
+Small Mine, Placer
+Small Mill, Grain/Flour
+Small Mill, Saw
+Small Orchard
+Small Vineyard
+
+Table: MediumProduction
+set: DiscoveryMod = {0}
+Medium Plantation/Farm
+Medium Mine
+Medium Mine, Placer
+Medium Mill, Grain/Flour
+Medium Mill, Saw
+Medium Orchard
+Medium Vineyard
+
+Table: LargeProduction
+set: DiscoveryMod = {-1}
+Large Mine
+Large Mine, Placer
+
+Table: SmallReligious
+set: DiscoveryMod = {-2}
+Small Altar
+Small Cell
+Small Chapel	[@SmallHybrid]
+Small Church [@SmallHybrid]
+Small Pool (sacred)
+Small Shrine	
+Small Sacred site (glade)
+Small Sacred site (statue)
+Small Sacred site (stone)
+Small Sacred site (tree)
+Small Sacred site (trilithon)
+Small Sacred spring 
+Small Sacred well [@SmallHybrid]
+	
+Table: MediumReligious
+set: DiscoveryMod = {-1}
+Medium Chapel [@MediumHybrid]	
+Medium Church  [@MediumHybrid]	
+Medium Monastery  [@MediumHybrid]	
+Medium Temple  [@MediumHybrid]	
+
+Table: LargeReligious
+set: DiscoveryMod = {0}
+Large Church [@LargeHybrid]
+Large Monastery [@LargeHybrid]
+Large Temple [@LargeHybrid]
+
+Table: SmallHybrid
+Type: Lookup
+Roll: 1d100
+01-84: \z
+85-95: \n &nbsp;  &nbsp;  &nbsp;  &nbsp; Small underground section of {1d6+4} areas 
+96-100: \n &nbsp;  &nbsp;  &nbsp;  &nbsp; Medium underground section of {1d10+10} areas
+
+Table:MediumHybrid
+Type: Lookup
+Roll: 1d100
+01-64: \z
+65-84: \n &nbsp;  &nbsp;  &nbsp;  &nbsp;  Small underground section of {1d6+4} areas
+85-95: \n &nbsp;  &nbsp;  &nbsp;  &nbsp;  Medium underground section of {1d10+10} areas
+96-100: \n &nbsp;  &nbsp;  &nbsp;  &nbsp;  Large underground section of {30+1d20} areas over {1d4} levels
+
+Table: LargeHybrid
+Type: Lookup
+Roll: 1d100
+01-64: \z
+65-75: \n &nbsp;  &nbsp;  &nbsp;  &nbsp;  Small underground section of {1d6+4} areas
+76-96: \n &nbsp;  &nbsp;  &nbsp;  &nbsp;  Medium underground section of {1d10+10} areas
+97-100: \n &nbsp;  &nbsp;  &nbsp;  &nbsp;  Large underground section of {30+1d20} areas over {1d4} levels
+
+Table:DungeonCheck
+Type:Lookup
+Roll: 1d6
+1-5: \z
+6: [@Dungeon]
+
+Table: Dungeon
+Type: Lookup
+Roll: 1d100
+01-30: \n <b>Dungeon</b>: Small dungeon, {1d2+3} rooms [@{$Prompt2}]  
+31-64: \n <b>Dungeon</b>: Small dungeon, {1d6+5} rooms [@{$Prompt2}]  
+65-72: \n <b>Dungeon</b>: Average dungeon   {1d6+10} rooms [@{$Prompt2}] 
+73-79: \n <b>Dungeon</b>: Average dungeon, 2 levels & 
+with {1d6+5} rooms on each [@{$Prompt2}] 
+79-84: \n <b>Dungeon</b>: Average dungeon, 3 levels & 
+with {1d6+5} rooms on each [@{$Prompt2}]              
+85-89: \n <b>Dungeon</b>: Large dungeon, {1d2} levels with &
+ {1d10+10} rooms/level [@{$Prompt2}] 
+90-93: \n <b>Dungeon</b>: Large dungeon, {1d3} levels with &
+ {1d10+10} rooms/level [@{$Prompt2}] 
+94-96: \n <b>Dungeon</b>: Large dungeon, {1d4+1} levels with &
+{3d6+7} rooms/level [@{$Prompt2}] 
+97-98: \n <b>Dungeon</b>: Very large dungeon, {1d6} levels with &
+ {5d4} rooms/level [@{$Prompt2}] 
+99: \n <b>Dungeon</b>: Huge dungeon, {1d6+2} levels with &
+{5d4} rooms/level [@{$Prompt2}] 
+100: \n  <b>Dungeon</b>: Huge dungeon, {1d8+2} levels with &
+{6d4} rooms/level [@{$Prompt2}] 
