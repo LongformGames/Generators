@@ -1,0 +1,2571 @@
+Megahex Contents Generator.ipt
+
+;Generates megahex contents, per prompted megahex
+; created 11/4/2025 11:12:26 AM
+MaxReps=1
+Prompt: {Border|Wild|Wilderness} Border
+Prompt: {Forest|Hills|Mountain|Swamp} Forest
+Prompt: Megahex Number {MH1|MH2|MH3|MH4|MH4a|MH5|MH6|MH7|MH7b|MH8|MH9|MH10|MH11|MH11a|MH12|MH13|MH14|MH14b|MH15|MH16|MH17|MH18|MH18a|MH19|MH20|MH21|MH21b} MH1
+set: BorderSmallKingdomSite= {2d2}
+set: BorderMediumKingdomSite={3d3}
+set: BorderLargeKingdomSite={3d3+3}
+set: WildSmallKingdomSite={1d2+1}
+set: WildMediumKingdomSite={1d4+1}
+set: WildLargeKingdomSite={1d4+2}
+set: WildernessSmallKingdomSite={1d2+1}
+set: WildernessMediumKingdomSite={1d3+1}
+set: WildernessLargeKingdomSite={1d4+1}
+set: LostCastleSite={1d3+1}
+set: SmallTombComplex={1d2+1}
+set: MediumTombComplex={1d8+2}
+set: LargeTombComplex={1d10+10}
+set: WildEery={1d3+1}
+set: ContiguousWildEery={1d5+1}
+set: ScatteredSettlements={1d2+1}
+set: AverageSettlements={1d3+1}
+set: DenseSettlements={1d4+2}
+set: SettlementSize={70d4}
+set: ScatteredSettlementsPop={{ScatteredSettlements}*{SettlementSize}}
+set: AverageSettlements={1d3+1}
+set: AverageSettlementsPop={{AverageSettlements}*{SettlementSize}}
+set: DenseSettlements={1d4+2}
+set: DenseSettlementsPop={{DenseSettlements}*{SettlementSize}}
+set: DwarfBaseGroup={40d10}
+set: DwarfVillagePop={{1d3+1}*250}
+set: ElfVillagePop={({20d10}+25)*{1d6+6}}
+set: ElfVillageLocations={1d3+1}
+set: ElfHoldingLocations={1d2+1}
+Set: WildElfHoldingLocations={1d3+1}
+Set: ElfBand={20d10}
+Set: AugmentedElfBand={{20d10}+50}
+set: GoblinVillagePop={{120d10}+25*{1d3+1}}
+Set: GoblinBaseGroup={40d10}
+Set:GoblinBaseGroupWargs={{GoblinBaseGroup}/4}
+set:MultiGoblinBandLocations={1d2+1}
+set: MultiGoblinBands={{1d2+1}*{MultiGoblinBandLocations}}
+set: MultiGoblinBandsWargs={{MultiGoblinBands}/4}
+set: GoblinHoldingPop={{1d2+1}*{40d10}}
+set: GoblinHoldingLocations={1d3}
+set: GoblinWargBasePop={{GoblinVillagePop}/4}
+set: GoblinWargHolding={{GoblinHoldingPop}/4}
+set: OrcVillagePop={{120d10}}
+set: OrcBaseGroup={30d10}
+set: BorderOrcBandNumber={1d3}
+set: WildOrcBandNumber={1d3+2}
+set: WildernessOrcBandNumber={1d4+2}
+set: BorderMountainOrcBandNumber={{1d3}+1}
+set: WildMountainOrcBandNumber={{1d3}+3}
+set: WildernessMountainOrcBandNumber={{1d4}+3}
+set: BugbearBand={{5d4}*5}
+set: WildBugbearPop={1d5}
+Set: WildGiantkinPop={1d6}
+//redo lost castle/lost city to better reflect map size
+//should be one 6mi, mostly: change density of ruins, not expanse
+
+Table: Results
+<b>{$prompt3}</b> is a {$prompt1} {$prompt2} hex. \n Survivability: [@Survivability] \n[@{$prompt1}{$prompt2}SpecialHexType] &
+<b>Denizens</b>: [@{$prompt1}{$prompt2}DenizenRouting]
+
+//put common/general tables FIRST, as below
+//faction leaders vary by type of faction; power levels, etc. not supported 1.0
+
+Table: Survivability
+Type: Lookup
+Roll: 1d100
+01-05: Poor (forage)
+06-08: Poor (water)
+09-10: Poor (forage and water)
+11-85: Average
+86-91: Good (forage)
+92-96: Good (water)
+97-100: Good (forage and water)
+
+Table: AnomalousLocalPhenomenon
+Type: Lookup
+Roll: 1d100
+01-50: roaming encounter
+51-55: healing or rest
+56-60: slow healing or bad rest
+61-65: weather
+66-71: blessing
+72-77: curse
+78-85: action for boon
+86-87: oracle
+88: mental bonus (insight, direction, spells) 
+89: mental malus (confusion, direction, spells)
+90: disease
+91: madness
+92: trade or bargain
+93: sacrifice for boon
+94: temporal distortion
+95: transforming phenomenon
+96: teleporting phenomenon
+97: stasis/imprisoning phenomenon
+98: power-granting phenomenon
+99: extraplanar presence
+100: deity presence
+
+Table: AnomalousGlobalPhenomenon
+Type: Lookup
+Roll: 1d100
+01-50: roaming encounter
+51-58: healing or rest
+59-65: slow healing or bad rest
+66-72:  weather
+73-79: blessing/bonus
+80-85:  curse/malus
+86-88: mental bonus (insight, direction, spells) 
+89-91: mental malus (confusion, direction, spells)
+92-94: power-granting phenomenon
+95-96: temporal distortion
+97: disease
+98: madness
+99: roaming deity presence
+100: roaming extraplanar presence
+
+Table: ForestEeryGiantkin
+Type: Lookup
+Roll: 1d100
+01-04: Ettin
+05-73: Ogre
+74-98: Troll
+99-100: Fomorian
+
+Table:HillEeryGiantkin
+Type: Lookup
+Roll: 1d100
+01-03: Ettin
+04-29: Hill Giant
+30-72: Ogre
+73-97: Troll
+98-100: Cyclops
+
+Table:MountainEeryGiantkin
+Type: Lookup
+Roll: 1d100
+01-05: Cloud Giant
+06-20: Hill Giant
+21-30: Stone Giant
+31-50: Frost Giant
+51-65: Ogre
+66-85: Troll
+86-100: Troll, Cave or Mountain
+
+Table:SwampEeryGiantkin
+Type: Lookup
+Roll: 1d100
+Troll
+
+Table: ForestDragon
+Type: Lookup
+Roll: 1d100
+01-69: Green Dragon
+70-86: White Dragon if terrain allows, otherwise Green Dragon
+87-90: Black Dragon
+90-92: Red Dragon
+93-96: Eery Dragon
+97-100: Anomalous (Wyrm)
+
+Table: HillDragon
+Type: Lookup
+Roll: 1d100
+01-03: Green Dragon
+04-20: White Dragon if terrain allows, otherwise Red Dragon
+21-94: Red Dragon
+95-96: Eery Dragon
+97-100: Anomalous (Wyrm)
+
+Table: MountainDragon
+Type: Lookup
+Roll: 1d100
+01-25: White Dragon if terrain allows, otherwise Red Dragon
+26-96: Red Dragon
+97-98: Eery Dragon
+99-100: Anomalous (Wyrm)
+
+Table: SwampDragon
+Type: Lookup
+Roll: 1d100
+01-02: Green Dragon
+03-05: White Dragon if terrain allows, otherwise Black Dragon
+06-93: Black Dragon
+94-95: Eery Dragon
+96-100: Anomalous (Wyrm)
+
+Table:OverrunFaction
+Type:Lookup
+Roll: 1d100
+//Humanoids are the only ones who will tolerate allied factions
+01-31: \n &nbsp; <b>[@{$prompt3}Base]</b> Small Cabal faction led by [@CabalFactionLeader]
+32-42: \n &nbsp; <b>[@{$prompt3}Base]</b> Medium Cabal faction led by [@CabalFactionLeader]
+43-75: \n &nbsp; <b>[@{$prompt3}Base]</b> Small Criminal faction led by [@CriminalFactionLeader]
+76-86: \n &nbsp; <b>[@{$prompt3}Base]</b> Medium Criminal faction led by [@CriminalFactionLeader]
+87-96: \n &nbsp; <b>[@{$prompt3}Base]</b> Small Military faction led by [@MilitaryFactionLeader]
+97-100:\n &nbsp; <b>[@{$prompt3}Base]</b> Small Religious faction led by [@ReligiousFactionLeader] 
+
+Table: CabalFactionLeader
+Type: Lookup
+Roll: 1d100
+01–05: a Druid
+06-15: a Fighter
+16-20: a Ranger
+21-85: a Magic-User
+86-90: a Thief
+91-99: a Knight
+100: an Assassin
+
+Table: CriminalFactionLeader
+Type: Lookup
+Roll: 1d100
+01-85: a Thief
+86-96: a Fighter
+97-100: an Assassin
+
+Table: MilitaryFactionLeader
+Type: Lookup
+Roll: 1d100
+01-05: a Cleric
+06-75: a Fighter
+76-95: a Knight
+97-100: a Ranger
+
+Table:PoliticalFactionLeader 
+Type: Lookup
+Roll: 1d100
+01-05: a Cleric
+06-10: a Magic-User
+11-85: a Fighter
+86-96: a Knight
+97-98: a Thief
+99-100: an Assassin
+
+Table: ProductionFactionLeader
+Type: Lookup
+Roll: 1d100
+01-65: a Normal Human
+66-85: a Fighter
+86-100: a Thief
+
+Table: ReligiousFactionLeader
+Type: Lookup
+Roll: 1d100
+01-65: a Cleric
+66-75: a Druid
+76-100: a Knight
+
+Table: DwarfHero
+Type:Lookup
+Roll: 1d100
+01-72: a [Human|Dwarven|Dwarven|Dwarven|Dwarven|Dwarven] Fighter
+73-77: a Human Fighter (werebear)
+78-81: a Human Knight
+81-100: a Human Ranger
+
+Table: ElfLeader
+Type: Lookup
+Roll: 1d12
+//2.0: elf leaders have magic item(s) at lvl*5%
+set: ElvenFighterLevel={1d6+1}
+set: ElvenMagicUserLevel={1d6+1}
+set: ElvenKnightLevel={1d6+1}
+//see knights.ipt in main nbos program file for the data structure I used for their magic
+1-2: Leader: a level {ElvenFighterLevel} Elven Fighter \n
+3-4: Leader: a level {ElvenMagicUserLevel} Elven Magic-User \n
+5: Leader: a level {ElvenKnightLevel} Elven Knight \n
+6-12: Leader: a level {ElvenFighterLevel} Fighter/level {ElvenMagicUserLevel} Magic-User \n
+
+Table: ElfHero
+Type:Lookup
+Roll: 1d100
+01: [|a Human|an Elven] Fighter 
+02: [|a Human|an Elven] Knight 
+03-67: an Elven Fighter/Magic-User
+68-77: \a [|Human|Elven|Elven|Elven|] Magic-User 
+78: a Human Cleric 
+79-89: a Human Druid
+90-100: \a [|Human|Human|Human|Elven] Ranger 
+
+Table:GoblinHero
+Type:Lookup
+Roll: 1d100
+01-04: A Human Cleric
+05-69: [|a Human|a Human|a Half-Orc] Fighter
+70-89: a Human Magic-User
+90-100: a Human Thief
+
+Table: OrcHero
+Type:Lookup
+Roll: 1d100
+//note: half-orcs are humans beginning to be corrupted by orcneas
+01-10:  a Half-Orc Assassin
+11-12:  a Human Cleric
+13-77: [|a Human|a Human|a Half-Orc|a Half-Orc] Fighter
+78-79: a Human Knight
+80-100: a Human Magic-User
+
+Table: OrcBand
+{30d10} orcs 
+
+Table: GoblinBand
+{40d10} goblins 
+
+Table: DwarfBand
+{40d10} dwarves 
+
+Table: ElfBand
+{20d10} elves
+
+Table: ElfVillage
+&nbsp; {ElfVillagePop} elves at \n &
+&nbsp; [!{ElfVillageLocations} $prompt3}Base]  \n
+ 
+Table:BorderForestSpecialHexType
+Type: Lookup
+Roll: 1d100
+01-65: \z 
+66-95: [@BorderForestRuins]
+96-98: Megadungeon at <b>[@{$prompt3}Base]</b> \n
+99-100:[@BorderForestAnomalous]
+
+Table:BorderForestRuins
+Type: Lookup
+Roll: 1d100
+01-53: <b>[@{$prompt3}Base]</b> <b>Ruins</b>: Lost Kingdom with {BorderSmallKingdomSite} sites \n 
+54-60: <b>[@{$prompt3}Base]</b> <b>Ruins</b>: Lost Kingdom with {BorderMediumKingdomSite} sites \n &
+61-64: <b>[@{$prompt3}Base]</b> <b>Ruins</b>:Lost Kingdom with {BorderLargeKingdomSite} sites \n &
+65-75: <b>[@{$prompt3}Base]</b> <b>Ruins</b>: Lost City with a large central location at  <b> [@{$prompt3}Base]</b> \n 
+76-79: <b>[@{$prompt3}Base]</b> <b>Ruins</b>: Lost Castle with {1d4} contiguous small-hex locations starting at &
+<b> [@{$prompt3}Base]</b> \n 
+80:<b>[@{$prompt3}Base]</b> <b>Ruins</b>: Small Tomb Complex with a tomb \n 
+81-85: <b>[@{$prompt3}Base]</b> <b>Ruins</b>: Small Tomb Complex with {SmallTombComplex} tombs \n 
+86-89: <b>[@{$prompt3}Base]</b> <b>Ruins</b>: Medium Tomb Complex with {MediumTombComplex} tombs \n 
+90-91: <b>[@{$prompt3}Base]</b> <b>Ruins</b>: Large Tomb Complex with {LargeTombComplex} tombs \n 
+92-95: <b>[@{$prompt3}Base]</b> <b>Ruins</b>: Mass Burial Site \n
+96-99: <b>[@{$prompt3}Base]</b> <b>Ruins</b>: Battlefield </b>  \n
+100: <b>[@{$prompt3}Base]</b> <b>Ruins</b>: Megatomb   \n 
+	
+Table: BorderForestAnomalous
+Type: Lookup
+Roll: 1d100
+01-15: Single Eery hex \n
+16-20: {WildEery} hexes \n &
+Locations: [!{WildEery} {$prompt3}Base]\n
+21-25: {WildEery} contiguous Eery Hexes  \n &
+Start Location: <b>[@{$prompt3}Base]</b> \n
+26-28: All forested hexes are Eery \n
+29: Entire megahex is Eery \n
+30-37: Anomalous [|localized|localized|localized|placebound] [@AnomalousLocalPhenomenon] \n &
+Location: <b>[@{$prompt3}Base]</b> \n
+38-40: Anomalous global [@AnomalousGlobalPhenomenon] \n
+41-75: Anomalous structure at <b>[@{$prompt3}Base]</b> \n
+76-100: Anomalous terrain feature at <b>[@{$prompt3}Base]</b> \n 
+	
+Table: BorderForestDenizenRouting
+Type: Lookup
+Roll: 1d100
+01-69:[@BorderForestDenizen]
+70-79: [@BorderForestMonsterCluster]
+80-90:<b>Overrun</b> \n[@BorderForestOverrun]
+91-100: <b>Sylvan</b> \n[@BorderForestSylvan]
+
+Table:BorderForestMonsterCluster
+Type: Lookup
+Roll: 1d10 
+1-9: \n <b> Low-level (1-3) cluster</b>: [@LowForestClusterSpecies], {1d3+1} lairs of {LairAppearing} each 
+10:  \n <b>Mid-level (4-6) cluster</b>: [@MidForestClusterSpecies], {1d3+1} lairs of {LairAppearing} each
+
+Table:BorderHillsMonsterCluster
+Type: Lookup
+Roll: 1d10 
+1-9:  \n <b>Low-level (1-3) cluster</b>: [@LowHillsClusterSpecies], {1d3+1} lairs of {LairAppearing} each 
+10: \n <b> Mid-level (4-6) cluster</b>: [@MidHillsClusterSpecies], {1d3+1} lairs of {LairAppearing} each
+
+Table:BorderMountainMonsterCluster
+Type: Lookup
+Roll: 1d10 
+1-9: \n <b>Low-level (1-3) cluster</b>: [@LowMountainClusterSpecies], {1d3+1} lairs of {LairAppearing} each 
+10: \n <b> Mid-level (4-6) cluster</b>: [@MidMountainClusterSpecies], {1d3+1} lairs of {LairAppearing} each
+
+Table:BorderSwampMonsterCluster
+Type: Lookup
+Roll: 1d10 
+1-9: \n <b>Low-level (1-3) cluster</b>: [@LowSwampClusterSpecies], {1d3+1} lairs of {LairAppearing} each 
+10: \n <b> Mid-level (4-6) cluster</b>: [@MidSwampClusterSpecies], {1d3+1} lairs of {LairAppearing} each
+
+Table:WildForestMonsterCluster
+Type: Lookup
+Roll: 1d10
+1:  \n <b>Low-level (1-3) cluster</b>: [@LowForestClusterSpecies], {1d3+1} lairs of {LairAppearing} each
+2:  \n <b>Low-level (1-3) cluster</b>: [@LowForestClusterSpecies], {1d3+1} lairs of {2* {LairAppearing}} each
+3-9: \n <b> Mid-level (4-6) cluster</b>: [@MidForestClusterSpecies], {1d3+1} lairs of {LairAppearing} each 
+10:  \n <b> High-level (7-9) cluster</b>: [@HighForestClusterSpecies], {1d3+1} lairs of {LairAppearing} each 
+
+Table:WildHillsMonsterCluster
+Type: Lookup
+Roll: 1d10
+1:  \n <b>Low-level (1-3) cluster</b>: [@LowHillsClusterSpecies], {1d3+1} lairs of {LairAppearing} each
+2:  \n <b>Low-level (1-3) cluster</b>: [@LowHillsClusterSpecies], {1d3+1} lairs of {2* {LairAppearing}} each
+3-9: \n <b> Mid-level (4-6) cluster</b>: [@MidHillsClusterSpecies], {1d3+1} lairs of {LairAppearing} each 
+10:  \n <b> High-level (7-9) cluster</b>: [@HighHillsClusterSpecies], {1d3+1} lairs of {LairAppearing} each 
+
+Table:WildMountainMonsterCluster
+Type: Lookup
+Roll: 1d10
+1:  \n <b>Low-level (1-3) cluster</b>: [@LowMountainClusterSpecies], {1d3+1} lairs of {LairAppearing} each
+2:  \n <b>Low-level (1-3) cluster</b>: [@LowMountainClusterSpecies], {1d3+1} lairs of {2* {LairAppearing}} each
+3-9: \n <b> Mid-level (4-6) cluster</b>: [@MidMountainClusterSpecies], {1d3+1} lairs of {LairAppearing} each 
+10:  \n <b> High-level (7-9) cluster</b>: [@HighMountainClusterSpecies], {1d3+1} lairs of {LairAppearing} each
+
+Table:WildSwampMonsterCluster
+Type: Lookup
+Roll: 1d10
+1:  \n <b>Low-level (1-3) cluster</b>: [@LowSwampClusterSpecies], {1d3+1} lairs of {LairAppearing} each
+2:  \n <b>Low-level (1-3) cluster</b>: [@LowSwampClusterSpecies], {1d3+1} lairs of {2* {LairAppearing}} each
+3-9: \n <b> Mid-level (4-6) cluster</b>: [@MidSwampClusterSpecies], {1d3+1} lairs of {LairAppearing} each 
+10:  \n <b> High-level (7-9) cluster</b>: [@HighSwampClusterSpecies], {1d3+1} lairs of {LairAppearing} each	
+
+Table:WildernessForestMonsterCluster
+Type: Lookup
+Roll: 1d10
+1:  \n <b> Mid-level (4-6) cluster</b>: [@MidForestClusterSpecies], {1d3+1} lairs of {LairAppearing} each
+2:  \n <b> Mid-level (4-6) cluster</b>: [@MidForestClusterSpecies], {1d3+1} lairs of {2* {LairAppearing}} each
+3-9:  \n <b> High-level (7-9) cluster</b>: [@HighForestClusterSpecies], {1d3+1} lairs of {LairAppearing} each 
+10:  \n <b> High-level (7-9) cluster</b>: [@HighForestClusterSpecies], {1d5+1} lairs of  {LairAppearing} each
+
+Table:WildernessHillsMonsterCluster
+Type: Lookup
+Roll: 1d10
+1:  \n <b> Mid-level (4-6) cluster</b>: [@MidHillsClusterSpecies], {1d3+1} lairs of {LairAppearing} each
+2:  \n <b> Mid-level (4-6) cluster</b>: [@MidHillsClusterSpecies], {1d3+1} lairs of {2* {LairAppearing}} each
+3-9:  \n <b> High-level (7-9) cluster</b>: [@HighHillsClusterSpecies], {1d3+1} lairs of {LairAppearing} each 
+10:  \n <b> High-level (7-9) cluster</b>: [@HighHillsClusterSpecies], {1d5+1} lairs of  {LairAppearing} each
+
+Table:WildernessMountainMonsterCluster
+Type: Lookup
+Roll: 1d10
+1:  \n <b> Mid-level (4-6) cluster</b>: [@MidMountainClusterSpecies], {1d3+1}lairs of {LairAppearing} each
+2:  \n <b> Mid-level (4-6) cluster</b>: [@MidMountaintClusterSpecies], {1d3+1}lairs of {2* {LairAppearing}} each
+3-9:  \n <b> High-level (7-9) cluster</b>: [@HighMountainClusterSpecies], {1d3+1} lairs of {LairAppearing} each 
+10:  \n <b> High-level (7-9) cluster</b>: [@HighMountainClusterSpecies], {1d5+1} lairs of  {LairAppearing} each
+
+Table:WildernessSwampMonsterCluster
+Type: Lookup
+Roll: 1d10
+1: \n <b> Mid-level (4-6) cluster</b>: [@MidSwampClusterSpecies], {1d3+1}lairs of {LairAppearing} each
+2: \n <b>  Mid-level (4-6) cluster</b>: [@MidSwampClusterSpecies], {1d3+1}lairs of {2* {LairAppearing}} each
+3-9:\n <b>  High-level (7-9) cluster</b>: [@HighSwampClusterSpecies], {1d3+1} lairs of {LairAppearing} each 
+10: \n <b> High-level (7-9) cluster</b>: [@HighSwampClusterSpecies], {1d5+1} lairs of  {LairAppearing} each
+
+Table: LowForestClusterSpecies
+ [LairAppearing=={1d6*5}]Dryad
+ [LairAppearing=={3d6*5}]Frog, Giant
+ [LairAppearing=={2d8*5}]Ghoul
+ [LairAppearing=={2d4*5}]Harpy
+ [LairAppearing=={1d4*5}]Nymph
+ [LairAppearing=={1d12*5}]Shadow
+ [LairAppearing=={1d8*5}]Shrew, Giant
+ [LairAppearing=={1d3*5}]Spider, Giant
+ [LairAppearing=={3d12*5}]Stirge
+ [LairAppearing=={1d4*5}]Toad, Giant
+ 
+Table: MidForestClusterSpecies
+ [LairAppearing=={2d10*5}]Centaur
+ [LairAppearing=={1d2*5}]Ettercap
+ [LairAppearing=={1d6*5}]Ghast
+ [LairAppearing=={2d6*5}]Lycanthrope, Werewolf
+ [LairAppearing=={2d8*5}]Lycanthrope, Wereboar
+ [LairAppearing=={1d4*5}]Lycanthrope, Werebear
+ [LairAppearing=={1d4*5}]Manticore
+ [LairAppearing=={1d4*5}]Medusa
+ [LairAppearing=={1d8*5}]Minotaur
+ [LairAppearing=={1d12*5}]Mummy
+ [LairAppearing=={2d4*5}]Satyr
+ [LairAppearing=={1d4*5}]Spider, Giant
+ [LairAppearing=={1d6*5}]Wight
+ [LairAppearing=={1d6*5}]Will o’ the Wisp
+ [LairAppearing=={1d8*5}]Wraith
+ [LairAppearing=={1d6*5}]Wyvern
+
+Table:HighForestClusterSpecies
+ [LairAppearing=={1d6*5}]Basilisk
+ [LairAppearing=={1d8*5}]Cockatrice
+ [LairAppearing=={1d4*5}]Gorgon
+ [LairAppearing=={1d8*5}]Treant
+ [LairAppearing=={1d6*5}]Wyvern
+	
+Table: LowHillsClusterSpecies
+ [LairAppearing=={2d8*5}]Ghoul
+ [LairAppearing=={2d4*5}]Harpy
+ [LairAppearing=={2d8*5}]Hippogriff
+ [LairAppearing=={1d12*5}]Pegasus
+ [LairAppearing=={5d6*5}]Rock Baboon
+ [LairAppearing=={1d12*5}]Shadow
+ [LairAppearing=={1d3*5}]Spider, Giant
+ [LairAppearing=={3d12*5}]Stirge
+ [LairAppearing=={1d4*5}]Toad, Giant
+
+Table:MidHillsClusterSpecies
+ [LairAppearing=={2d10*5}]Centaur
+ [LairAppearing=={1d2*5}]Ettercap
+ [LairAppearing=={1d6*5}]Ghast
+ [LairAppearing=={1d4+1}]Hydra
+ [LairAppearing=={1d4*5}]Lycanthrope, Werebear
+ [LairAppearing=={1d4*5}]Manticore
+ [LairAppearing=={1d8*5}]Minotaur
+ [LairAppearing=={1d12*5}]Mummy
+ [LairAppearing=={2d4*5}]Peryton
+ [LairAppearing=={2d4*5}]Satyr
+ [LairAppearing=={1d4*5}]Spider, Giant
+ [LairAppearing=={1d6*5}]Wight
+ [LairAppearing=={1d8*5}]Wraith
+ [LairAppearing=={1d6*5}]Wyvern
+ 
+Table:HighHillsClusterSpecies
+ [LairAppearing=={1d6*5}]Basilisk
+ [LairAppearing=={1d8*5}]CockatriceCockatrice
+ [LairAppearing=={1d4*5}]Djinni
+ [LairAppearing=={1d4*5}]Dragon
+ [LairAppearing=={1d4*5}]Efreeti
+ [LairAppearing=={2d8*5}]Griffon
+ [LairAppearing=={5}Hydra
+ [LairAppearing=={1d6*5}]Wyvern
+	
+Table: LowMountainClusterSpecies
+ [LairAppearing=={2d8*5}]Ghoul
+ [LairAppearing=={2d4*5}]Harpy
+ [LairAppearing=={2d8*5}]Hippogriff
+ [LairAppearing=={1d12*5}]Pegasus
+ [LairAppearing=={5d6*5}]Rock Baboon
+ [LairAppearing=={1d12*5}]Shadow
+ [LairAppearing=={1d3*5}]Spider, Giant
+
+Table:MidMountainClusterSpecies
+ [LairAppearing=={3d6*5}]Frost Toad
+ [LairAppearing=={1d6*5}]Ghast
+ [LairAppearing=={1d4*5}]Manticore
+ [LairAppearing=={1d8*5}]Minotaur
+ [LairAppearing=={2d4*5}]Peryton
+ [LairAppearing=={2d4*5}]Satyr
+ [LairAppearing=={1d4*5}]Spider, Giant
+ [LairAppearing=={1d6*5}]Wight
+ [LairAppearing=={1d8*5}]Wraith
+ [LairAppearing=={1d6*5}]Wyvern
+ [LairAppearing=={1d6*5}]Yeti
+
+Table:HighMountainClusterSpecies
+ [LairAppearing=={1d6*5}]Basilisk
+ [LairAppearing=={1d8*5}]CockatriceCockatrice
+ [LairAppearing=={1d4*5}]Dragon
+Griffon
+ [LairAppearing=={1d6*5}]Wyvern
+	
+Table: LowSwampClusterSpecies
+ [LairAppearing=={3d6*5}]Frog, Giant
+ [LairAppearing=={2d8*5}]Ghoul
+ [LairAppearing=={2d8*5}]Lycanthrope, Wererat
+ [LairAppearing=={1d4*5}]Nymph
+ [LairAppearing=={1d8*5}]Shrew, Giant
+ [LairAppearing=={1d3*5}]Spider, Giant
+ [LairAppearing=={1d4*5}]Toad, Giant
+
+Table:MidSwampClusterSpecies
+ [LairAppearing=={1d2*5}]Ettercap
+ [LairAppearing=={1d6*5}]Ghast
+ [LairAppearing=={1d4+1}Hydra
+ [LairAppearing=={1d4*5}Medusa
+ [LairAppearing=={1d12*5}]Mummy
+ [LairAppearing=={1d4*5}]Spider, Giant
+ [LairAppearing=={1d6*5}]Wight
+ [LairAppearing=={1d6*5}]Will o’ the Wisp
+ [LairAppearing=={1d8*5}]Wraith
+
+Table:HighSwampClusterSpecies
+ [LairAppearing=={1d6*5}]Basilisk
+ [LairAppearing=={1d3*5}]Catoblepas
+ [LairAppearing=={1d8*5}]CockatriceCockatrice
+ [LairAppearing=={1d4*5}]CockatriceGorgon
+ [LairAppearing=={5}Hydra
+2x Will o’ the Wisp
+
+Table:BorderForestDenizen
+Type:Lookup
+Roll: 1d100
+01-55: Standard \n 
+56-68: {ScatteredSettlements} Scattered Settlements \n &
+&nbsp; Total Population:{ScatteredSettlementsPop} \n &
+&nbsp; Locations: <b>[!{ScatteredSettlements} {$prompt3}Base]</b> \n
+69-73: {AverageSettlements} Average Settlements \n &
+&nbsp;Total Population:{AverageSettlementsPop} \n &
+&nbsp;Locations: <b>[!{AverageSettlements} {$prompt3}Base]</b> \n
+74-75: {DenseSettlements} Dense Settlements \n &
+&nbsp;Total Population:{DenseSettlementsPop] \n &
+&nbsp;Locations: <b>[!{DenseSettlements} {$prompt3}Base]</b> \n
+76-77: Bugbear Presence, [@BorderForestBugbearPresence] \n 
+78-88: Faction \n [@BorderForestFaction] 
+89-96: Hero, [@BorderForestHero], at <b>[@{$prompt3}Base]</b> \n 
+97-100: Apex, [@BorderForestApex]\n 
+ 
+Table: BorderForestOverrun
+Type:Lookup
+Roll: 1d100
+01-03: Goblin Village of {GoblinVillagePop} in {1d3} locations \n &
+[!{1d2} BorderForestGoblinVillageSpecial]
+04: Goblin Village of {GoblinVillagePop} in {1d3} locations and {GoblinBandWargs} wargs & \n 
+with [!{1d3} BorderForestGoblinVillageSpecial]
+//locations not specified b/c some of the hex might not be forested
+05-72: Goblin Presence of {GoblinBand} goblins
+73-89: Goblin Presence of {GoblinBand} goblins with {GoblinBandWargs} wargs
+90-100: Orc Presence of [@BorderForestOrcPresence]
+
+Table: BorderForestSylvan 
+Type:Lookup
+Roll: 1d100
+01-03: <b>[@{$prompt3}Base]</b> [@ElfVillage] 
+04-08: <b>[@{$prompt3}Base]</b> [@ElfHolding]
+09-14: <b>[@{$prompt3}Base]</b> [@ElfHolding] with [@ElfHero]
+15-89: <b>[@{$prompt3}Base]</b> Elf Presence of {ElfBand} elves 
+90-100: <b>[@{$prompt3}Base]</b> [@DwarfBand][@BorderForestDwarfPresencePurpose]
+ 
+Table:ElfVillage
+{ElfVillagePop} in {ElfVillageLocations} in the megahex & \n
+&nbsp; Locations: [!{ElfVillageLocations} {$prompt3}Base] \n &
+&nbsp; [!{ElfVillageLocations} ElfLeader] \n
+
+Table:ElfHolding
+{{ElfHoldingLocations}*{ElfBand}} elves in {ElfHoldingLocations} locations in the megahex & \n
+&nbsp; Locations: [!{ElfHoldingLocations} {$prompt3}Base] \n 
+
+Table:BorderForestDwarfPresencePurpose
+Type: Lookup
+Roll: 1d100
+01-02: in a new Holding  \n
+03-04: in a declining Holding  \n
+05-08: at a Military Outpost \n
+09-18:at a Trading Post \n
+19-44: at a [|mining|mining|mining|crafting|crafting|other] Production center \n
+45: at a Religious/Ritual/Funerary location \n
+46-100: at an Exploratory location \n
+
+Table: BorderForestGoblinVillageSpecial
+Type:Lookup
+Roll: 1d100
+01-19: \z
+20-39: {BugbearBand} bugbears at (<b>[@{$prompt3}Base]</b>) \n
+40-59: {OrcBand} orcs at (<b>[@{$prompt3}Base]</b>) \n
+60-69: [|an ogre|2 ogres|3 ogres|4 ogres|5 ogres|6 ogres] \n
+70-80: [|a troll|2 trolls|3 trolls] \n
+81-90: [@OverrunFaction] \n
+91-100: [@GoblinHero] \n
+ 
+Table: BorderForestOrcPresence
+Type:Lookup
+Roll: 1d100
+01-60: {OrcBand} orcs at (<b>[@{$prompt3}Base]</b>)
+61-100: Mixed: {OrcBand} orcs at(<b>[!{$prompt3}Base]</b>) and {GoblinBand} goblins at (<b>[!{$prompt3}Base]</b>) 
+
+Table: BorderForestBugbearPresence
+Type:Lookup
+Roll: 1d100
+01-75: {BugbearBand} bugbears (<b>[@{$prompt3}Base]</b>)
+76-86:  {1d6 +14} bugbears (<b>[@{$prompt3}Base]</b>)
+87-96: {BugbearBand} at (<b>[@{$prompt3}Base]</b>) and {BugbearBand} at &
+(<b>[@{$prompt3}Base]</b>)
+97-100:{BugbearBand} at (<b>[@{$prompt3}Base]</b>) and {BugbearBand} at  &
+(<b>[@{$prompt3}Base]</b>)and {BugbearBand} at  (<b>[@{$prompt3}Base]</b>) 
+
+Table: BorderForestApex
+Type: Lookup
+Roll: 1d100
+01-26: Bear at <b>[@{$prompt3}Base]</b> \n
+27-42: Boar at <b>[@{$prompt3}Base]</b> \n
+43-54: Cat  at <b>[@{$prompt3}Base]</b> \n
+55-70: Wolf at <b>[@{$prompt3}Base]</b> \n
+71-77: Hag  at <b>[@{$prompt3}Base]</b> \n
+78-82: Spider at <b>[@{$prompt3}Base]</b> \n
+83-87: [@BorderForestGiantkin] \n
+88: Wyvern at <b>[@{$prompt3}Base]</b> \n
+89-90: Undead at <b>[@{$prompt3}Base]</b> \n
+91-94: Eery [@BorderForestGiantkin] Giantkin
+95-99:[@ForestDragon] at <b>[@{$prompt3}Base]</b> \n
+100: Custom or Anomalous at <b>[@{$prompt3}Base]</b> \n
+
+Table:BorderForestGiantkin
+01-65: Ogre, <b>[@{$prompt3}Base]</b>
+66-85: Troll, <b>[@{$prompt3}Base]</b>
+86-95: Ettin, <b>[@{$prompt3}Base]</b>
+96-99: Hill Giant, <b>[@{$prompt3}Base]</b>
+100: Fomorian, <b>[@{$prompt3}Base]</b>
+
+Table: BorderForestFaction
+Type: Lookup
+Roll: 1d100
+01-12: <b>[@{$prompt3}Base]</b>Small Cabal led by [@CabalFactionLeader] \n 
+13-17: <b>[@{$prompt3}Base]</b>Medium Cabal led by [@CabalFactionLeader]\n 
+18-20: <b>[@{$prompt3}Base]</b>Large Cabal led by [@CabalFactionLeader]\n 
+21-33: <b>[@{$prompt3}Base]</b>Small Criminal led by [@CriminalFactionLeader]\n 
+34-36: <b>[@{$prompt3}Base]</b>Medium Criminal led by [@CriminalFactionLeader]\n 
+37: <b>[@{$prompt3}Base]</b>Large Criminal led by [@CriminalFactionLeader]\n 
+38-50: <b>[@{$prompt3}Base]</b>Small Military led by [@MilitaryFactionLeader] \n 
+51-54: <b>[@{$prompt3}Base]</b>Medium Military led by [@MilitaryFactionLeader]\n 
+55-56:<b>[@{$prompt3}Base]</b>Large Military led by [@MilitaryFactionLeader] \n 
+57-63: <b>[@{$prompt3}Base]</b>Small Political led by [@PoliticalFactionLeader]\n 
+64-66:  <b>[@{$prompt3}Base]</b>Medium Political led by [@PoliticalFactionLeader] \n 
+67: <b>[@{$prompt3}Base]</b>Large Political led by [@PoliticalFactionLeader] \n 
+68-74: <b>[@{$prompt3}Base]</b>Small Production led by [@ProductionFactionLeader] \n 
+75-77 : <b>[@{$prompt3}Base]</b>Medium Production led by [@ProductionFactionLeader] \n 
+78: <b>[@{$prompt3}Base]</b>Large Production led by [@ProductionFactionLeader] \n 
+79-92: <b>[@{$prompt3}Base]</b>Small Religious led by [@ReligiousFactionLeader] \n 
+93-96: <b>[@{$prompt3}Base]</b>Medium Religious led by [@ReligiousFactionLeader] \n 
+97-100: <b>[@{$prompt3}Base]</b>Large Religious led by [@ReligiousFactionLeader] \n 
+
+Table: BorderForestHero
+Type: Lookup
+Roll: 1d100
+01-35: Fighter 
+36-45: Magic-User
+46-60: Ranger
+61-65: Thief
+66-85: Cleric
+86-91: Druid
+92-97: Knight
+98-100: Assassin
+
+Table: WildForestSpecialHexType
+Type:Lookup
+Roll: 1d100
+01-80: \z
+81-91: [@WildForestRuins]
+92-96: <b>[@{$prompt3}Base]</b> Megadungeon \n
+97-100: [@WildForestAnomalous]
+
+Table: WildForestRuins
+Type:Lookup
+Roll: 1d100
+01-53:<b>[!{WildSmallKingdomSite} {$prompt3}Base]</b> Ruins: Lost Kingdom with {WildSmallKingdomSite} sites \n 
+54-60: <b>[!{WildMediumKingdomSite} {$prompt3}Base]</b> Ruins: Lost Kingdom with {WildMediumKingdomSite} sites \n 
+61-64: <b>[!{WildLargeKingdomSite}{$prompt3}Base]</b> Ruins: Lost Kingdom with {WildLargeKingdomSite} sites \n 
+65-75: <b>[@{$prompt3}Base]</b> Ruins: Lost City with a large central location at <b>[@{$prompt3}Base]</b> \n 
+76-79: <b>[@{$prompt3}Base]</b> Ruins: Lost Castle with {1d4} same-small-hex locations \n
+80-85: <b>[@{$prompt3}Base]</b> Ruins: Small Tomb Complex with {SmallTombComplex} tombs \n 
+86-89: <b>[@{$prompt3}Base]</b> Ruins: Medium Tomb Complex with {MediumTombComplex} tombs \n 
+90-91: <b>[@{$prompt3}Base]</b> Ruins: LargeTomb Complex with {LargeTombComplex} tombs \n 
+92-95: <b>[@{$prompt3}Base]</b> Ruins: Mass Burial Site \n
+96-99: <b>[@{$prompt3}Base]</b> Ruins: Battlefield \n
+100: <b>[@{$prompt3}Base]</b> Ruins: Megatomb \n 
+
+Table: WildForestAnomalous
+Type:Lookup
+Roll: 1d100
+01-19: Single Eery hex at [{$prompt3}Base]  \n
+21-28: {WildEery} Eery hexes  \n
+29-38: {ContiguousWildEery} contiguous Eery Hexes  \n &
+starting at [!{ContiguousWildEery} {$prompt3}Base] \n
+39-42: Entire megahex is Eery  \n
+43-47: <b>[@{$prompt3}Base]</b> Anomalous [|localized|localized|localized|placebound] [@AnomalousLocalPhenomenon] \n 
+48-50: Anomalous global [@AnomalousGlobalPhenomenon] \n &
+51-75: <b>[@{$prompt3}Base]</b> Anomalous structure \n 
+76-100: <b>[@{$prompt3}Base]</b> Anomalous terrain feature \n 
+
+Table: WildForestDenizenRouting
+Type:Lookup
+Roll: 1d100
+01-57: [@WildForestDenizen]
+58-67: [@WildForestMonsterCluster]
+68-87: [@WildForestOverrun]
+88-100: [@WildForestSylvan]
+
+Table:WildForestMonsterCluster
+Type: Lookup
+Roll: 1d10
+1-9: Low-level (1-3) cluster: [@LowForestClusterSpecies] lairs of {LairAppearing} each 
+10: Mid-level (4-6) cluster: [@MidForestClusterSpecies] {1d3+1} lairs of {LairAppearing} each 
+
+Table: WildForestDenizen
+Type:Lookup
+Roll: 1d100
+01-50: Standard
+51-60:  {ScatteredSettlements} Scattered Settlements &
+\n (total pop. {ScatteredSettlementsPop}) &
+\n Locations: [!{ScatteredSettlements} {$prompt3}Base] \n
+61-62:  {AverageSettlements} Average Settlements &
+\n (total pop. {AverageSettlementsPop}) &
+\n Locations: [!{AverageSettlements} {$prompt3}Base] \n
+63-71: {BugbearBand} Bugbears at <b>[@{$prompt3}Base]</b> \n
+72-82: [@WildForestGiantkinLairs]
+83-86: Faction, [@WildForestFaction]   
+86-90: Hero, [@WildForestHero], at <b>[@{$prompt3}Base]</b> \n 
+91-100: Apex, [@WildForestApex] \n 
+
+Table: WildForestOverrun
+Type:Lookup
+Roll: 1d100
+01-08: Goblin Village of {GoblinVillagePop} in {1d3} locations in  <b>[@{$prompt3}Base]</b> \n &
+with [@WildForestGoblinAllies] 
+9-10: Goblin Village of {GoblinVillagePop} in {1d3} locations at <b>[@{$prompt3}Base]</b> \n and {GoblinWargBasePop} wargs with [@WildForestGoblinAllies] 
+11-60: Goblin Holding of {GoblinHoldingPop} goblins in {GoblinHoldingLocations} locations &
+at <b>[!{GoblinHoldingLocations} {$prompt3}Base]</b> \n 
+61-75:  Goblin Holding of {GoblinHoldingPop} goblins &
+in {GoblinHoldingLocations} locations &
+at <b>[!{GoblinHoldingLocations} {$prompt3}Base]</b> \n with {GoblinWargHolding} wargs \n 
+76-80: Goblin Holding of {GoblinHoldingPop} goblins in {GoblinHoldingLocations} locations &
+in <b>[@{$prompt3}Base]</b> \n with {GoblinWargHolding} wargs and \n [@WildForestGoblinAllies]  \n
+81-85: Goblin Holding of {GoblinHoldingPop} goblins in {GoblinHoldingLocations} locations &
+\n in <b>[!{GoblinHoldingLocations} {$prompt3}Base]</b> with \n [@WildForestGoblinAllies]
+86-95: {{1d3}*{OrcBand}} orcs and {{MultiGoblinBands}} goblins in &
+\n [!{MultiGoblinBandLocations} {$prompt3}Base] &
+\n Goblin-orc relationship is [|allied|enslaved|suspicious|hostile] \n
+96-100: Orc Presence of {$WildOrcBandNumber} Orc bands totalling {{$WildOrcBandNumber}*{$OrcBand}} orcs &
+\n in [!{WildOrcBandNumber} {$prompt3}Base]  \n
+
+Table: WildForestGoblinAllies
+Type:Lookup
+Roll: 1d100
+01-65: {BugbearBand} Bugbears \n
+66-76: [@WildForestGiantkin] \n
+77-80: [@WildForestApex] \n          
+81-91: [@OverrunFaction] \n 
+92-100: [@GoblinHero] \n
+
+Table:WildForestGiantkin
+Type: Lookup
+Roll: 1d100
+01-65: Ogre, <b>[@{$prompt3}Base]</b>
+66-85: Troll, <b>[@{$prompt3}Base]</b>
+86-95: Ettin, <b>[@{$prompt3}Base]</b>
+96-99: Hill Giant, <b>[@{$prompt3}Base]</b>
+100: Fomorian, <b>[@{$prompt3}Base]</b>
+
+Table: WildForestSylvan 
+Type:Lookup
+Roll: 1d100
+01-04: <b>[@{$prompt3}Base]</b> [@ElfVillage]  \n [
+05-24: <b>[@{$prompt3}Base]</b> [@WildElfHolding]  \n 
+25-40: <b>[@{$prompt3}Base]</b> [@WildElfHolding] with [@ElfHero] \n 
+41-48: <b>[@{$prompt3}Base]</b> [@WildElfHolding] with [@WildElfAllies] \n
+49: <b>[@{$prompt3}Base]</b> [@WildElfHolding] with [@WildElfAllies] and \n [@ElfHero] \n 
+50-90: <b>[@{$prompt3}Base]</b> Strong Elf Presence of {{AugmentedElfBand}+{AugmentedElfBand}} elves \n  
+91-95: <b>[@{$prompt3}Base]</b> Strong Elf Presence of  {{AugmentedElfBand}+{AugmentedElfBand}} elves with \n &
+[@ElfHero] \n 
+96–100: <b>[@{$prompt3}Base]</b> Strong Elf Presence of {{AugmentedElfBand}+{AugmentedElfBand}} elves with \n &
+[@WildElfAllies] and \n [@ElfHero] 
+
+Table:WildElfHolding
+{{WildElfHoldingLocations}*{ElfBand}} elves &
+\n [!{WildElfHoldingLocations} ElfLeader] 
+
+Table: WildElfAllies
+Type: Lookup
+Roll: 1d100
+01-10: Dryad ({1d6}) 
+11-33: Pixie ({10d4}) 
+34-65: Sprite ({5d8}) 
+66-76: Treant ({1d4}) 
+77-100: Unicorn ({1d6})
+ 
+Table: WildForestGiantkinLairs
+Type: Lookup
+Roll: 1d100
+01-65: \n &nbsp;{10d6} Ogres at <b>[@{$prompt3}Base]</b> \n
+66-76: \n &nbsp;{5d8} Trolls at <b>[@{$prompt3}Base]</b> \n
+76-86: \n &nbsp;{5d4} Ettins at <b>[@{$prompt3}Base]</b> \n
+87-96: \n &nbsp;{10d4} Hill Giants at <b>[@{$prompt3}Base]</b> \n
+97-98: \n &nbsp;{5d4} Fomorians at <b>[@{$prompt3}Base]</b> \n
+99-100: \n &nbsp;{5d4} Cyclopes at <b>[@{$prompt3}Base]</b> \n
+ 
+Table: WildForestApex
+Type:Lookup
+Roll: 1d100
+01-27: Bear at <b>[@{$prompt3}Base]</b>
+28-43: Boar at <b>[@{$prompt3}Base]</b>
+44-55: Cat at <b>[@{$prompt3}Base]</b>
+56-71: Wolf at <b>[@{$prompt3}Base]</b>
+72-76: Hag at <b>[@{$prompt3}Base]</b>
+77-81: Spider at <b>[@{$prompt3}Base]</b>
+82-87: [@WildForestGiantkin]
+88: Wyvern at <b>[@{$prompt3}Base]</b>
+89: Undead at <b>[@{$prompt3}Base]</b>
+91-93: Eery [@ForestEeryGiantkin] at <b>[@{$prompt3}Base]</b>
+94-98: [@ForestDragon] at <b>[@{$prompt3}Base]</b>
+99-100: Custom or Anomalous at <b>[@{$prompt3}Base]</b>
+
+Table: WildForestFaction
+Type:Lookup
+Roll: 1d100
+01-09: <b>[@{$prompt3}Base]</b>: Small Cabal led by [@CabalFactionLeader] \n 
+10-19: <b>[@{$prompt3}Base]</b>: Medium Cabal led by [@CabalFactionLeader]\n 
+20-23: <b>[@{$prompt3}Base]</b>: Large Cabal led by [@CabalFactionLeader] \n
+24-30: <b>[@{$prompt3}Base]</b>: Small Criminal led by [@CriminalFactionLeader]\n
+31-39: <b>[@{$prompt3}Base]</b>: Medium Criminal led by [@CriminalFactionLeader]\n
+40-41: <b>[@{$prompt3}Base]</b>: Large Criminal led by [@CriminalFactionLeader] \n
+42-49: <b>[@{$prompt3}Base]</b>: Small Military led by [@MilitaryFactionLeader] \n
+50-59: <b>[@{$prompt3}Base]</b>: Medium Military led by [@MilitaryFactionLeader] \n 
+60-62: <b>[@{$prompt3}Base]</b>: Large Military led by [@MilitaryFactionLeader] \n
+63-64: <b>[@{$prompt3}Base]</b>: Small Political led by [@PoliticalFactionLeader]\n 
+65-69: <b>[@{$prompt3}Base]</b>: Medium Political led by [@PoliticalFactionLeader] \n 
+70: Large Political led by [@PoliticalFactionLeader] \n 
+71-78: <b>[@{$prompt3}Base]</b>: Small Production led by [@ProductionFactionLeader] \n 
+79-83: <b>[@{$prompt3}Base]</b>: Medium Production led by [@ProductionFactionLeader] \n 
+84: <b>[@{$prompt3}Base]</b>: Large Production led by [@ProductionFactionLeader] \n
+85-95: <b>[@{$prompt3}Base]</b>: Small Religious led by [@ReligiousFactionLeader] \n
+96-100: <b>[@{$prompt3}Base]</b>: Medium Religious led by [@ReligiousFactionLeader] \n 
+
+Table: WildForestHero
+Type:Lookup
+Roll: 1d100
+01-39: Fighter 
+40-54: Magic-User
+55-75: Ranger
+76-77: Thief
+78-85: Cleric
+86-97: Druid
+98-99: Knight
+100: Assassin
+
+Table: WildernessForestSpecialHexType
+Type:Lookup
+Roll: 1d100
+01-82: \z
+83-92: [@WildernessForestRuins]
+93-94: [{$prompt3}Base] Megadungeon
+95-100: [@WildernessForestAnomalous]
+
+Table: WildernessForestRuins
+Type:Lookup
+Roll: 1d100
+01-53: Ruins: Lost Kingdom with {WildernessSmallKingdomSite} sites \n &
+Locations: [!{WildernessSmallKingdomSite} {$prompt3}Base]\n 
+54-60: Ruins: Lost Kingdom with {WildernessMediumKingdomSite} sites \n &
+Locations: [!{WildernessMediumKingdomSite} {$prompt3}Base]\n 
+61-64: Ruins: Lost Kingdom with {WildernessLargeKingdomSite} sites \n &
+Locations: [!{WildernessLargeKingdomSite} {$prompt3}Base]\n 
+65-75: Ruins: Lost City with a large central location at <b>[@{$prompt3}Base]</b> \n 
+76-79: Ruins: Lost Castle with {1d4} contiguous small-hex locations \n
+Main Location:  <b>[@{$prompt3}Base]</b> \n 
+80-85: Ruins: Small Tomb Complex with {SmallTombComplex} tombs \n &
+Locations: [!{SmallTombComplex} {$prompt3}Base]\n
+86-89: Ruins: Medium Tomb Complex with {MediumTombComplex} tombs \n &
+Locations: [!MediumTombComplex} {$prompt3}Base]\n
+90-91: Ruins: LargeTomb Complex with {LargeTombComplex} tombs \n &
+Locations: [!{LargeTombComplex} {$prompt3}Base]\n
+92-95: Ruins: Mass Burial Site at <b>[@{$prompt3}Base]</b> \n 
+96-99: Ruins: Battlefield  at <b>[@{$prompt3}Base]</b> \n
+100: Ruins: Megatomb  at <b>[@{$prompt3}Base]</b> \n 
+
+Table: WildernessForestAnomalous
+Type: Lookup
+Roll: 1d100
+01-14: Single Eery hex [{$prompt3}Base] \n
+15-24: {WildEery} Eery hexes [@EeryOnly] \n
+25-44: {ContiguousWildEery} contiguous Eery Hexes  \n &
+Locations: [{!ContiguousWildEery} {$prompt3}Base] [@EeryOnly]\n
+45-50: Entire megahex is Eery [@EeryOnly] \n
+51-61: <b>[@{$prompt3}Base]</b> Anomalous [|localized|localized|localized|placebound] [@AnomalousLocalPhenomenon] \n 
+62-66: Anomalous global  [@AnomalousGlobalPhenomenon] \n &
+67-75: <b>[@{$prompt3}Base]</b> Anomalous structure \n 
+76-100: <b>[@{$prompt3}Base]</b>Anomalous terrain feature \n 
+
+Table: WildernessForestDenizenRouting
+Type:Lookup
+Roll: 1d100
+01-40: [@WildernessForestMonsterCluster]
+41-67: [@WildernessForestDenizen]
+68-94: [@WildernessForestOverrun]
+95-100: [@WildernessForestSylvan]
+
+Table: WildernessForestOverrun
+Type: Lookup
+Roll: 1d100
+01-12: <b>Overrun</b> \n&nbsp;Goblin Village of {GoblinVillagePop} goblins in {1d3} locations in <b>[@{$prompt3}Base]</b> \n &
+with [@WildForestGoblinAllies]
+13-15: <b>Overrun</b> \n&nbsp;Goblin Village of {GoblinVillagePop} goblins in {1d3} locations at <b>[@{$prompt3}Base]</b> &
+ \n and {GoblinWargBasePop} wargs with [@WildForestGoblinAllies]
+16-60: <b>Overrun</b> \n&nbsp;Goblin Holding of {{GoblinHoldingPop} +50} goblins in {GoblinHoldingLocations} locations at &
+<b>[!{GoblinHoldingLocations} {$prompt3}Base]</b> \n 
+61-75:  <b>Overrun</b> \n&nbsp;Goblin Holding of {{GoblinHoldingPop} +50} goblins &
+in {GoblinHoldingLocations} locations & 
+at <b>[!{GoblinHoldingLocations} {$prompt3}Base]</b> \n with {GoblinWargHolding} wargs \n
+76-80: <b>Overrun</b> \n&nbsp; Goblin Holding of {{GoblinHoldingPop} +50} goblins in {GoblinHoldingLocations} locations &
+ in <b>[@{$prompt3}Base]</b> \n with {GoblinWargHolding} wargs and & \n [@WildForestGoblinAllies] \n
+81-85: <b>Overrun</b> \n&nbsp;Goblin Holding of {{GoblinHoldingPop} +50} goblins in {GoblinHoldingLocations} locations &
+\n in <b>[!{GoblinHoldingLocations} {$prompt3}Base]</b> with \n [@WildForestGoblinAllies] \n
+86-95: <b>Overrun</b> \n&nbsp;{{1d3}*{OrcBand}} orcs and {MultiGoblinBands} goblins in &
+\n [!{MultiGoblinBandLocations} <b>[@{$prompt3}Base]</b> &
+\n Goblin-orc relationship is [|allied|enslaved|suspicious|hostile] \n
+96-100:<b>Overrun</b> \n&nbsp; Orc Presence of {WildernessOrcBandNumber} Orc bands totalling {{WildernessOrcBandNumber}*{OrcBand}} orcs &
+\n in [!{1d3} {$prompt3}Base] \n
+
+Table: WildernessForestSylvan
+Type: Lookup
+Roll: 1d100
+01-07: <b>[@{$prompt3}Base]</b> [@ElfVillage]  \n 
+08-12: <b>[@{$prompt3}Base]</b> [@ElfVillage] with [@WildernessElfAllies]   \n
+13-22: <b>[@{$prompt3}Base]</b> [@WildElfHolding]  \n 
+25-29: <b>[@{$prompt3}Base]</b> [@WildElfHolding] with [@ElfHero] \n 
+30-34: <b>[@{$prompt3}Base]</b> [@WildElfHolding] with [@WildElfAllies] \n 
+35: <b>[@{$prompt3}Base]</b> [@WildElfHolding] with [@WildElfAllies] and \n [@ElfHero] \n 
+36-92: <b>[@{$prompt3}Base]</b> Strong Elf Presence of {{AugmentedElfBand}+{AugmentedElfBand}} elves \n  
+93-97: <b>[@{$prompt3}Base]</b> Strong Elf Presence of  {{AugmentedElfBand}+{AugmentedElfBand}} elves with \n &
+[@ElfHero] \n 
+98–100: <b>[@{$prompt3}Base]</b> Strong Elf Presence of {{AugmentedElfBand}+{AugmentedElfBand}} elves with \n &
+[@WildElfAllies] and \n [@ElfHero] \n  
+
+Table: WildernessElfAllies
+Type: Lookup
+Roll: 1d100
+01-10: Dryad ({1d6}) 
+11-33: Pixie ({15d4}) 
+34-60: Sprite ({10d8})
+61-65: Human druid, level {1d4+4} 
+66-76: Treant ({1d8}) 
+77-100: Unicorn ({1d10}) 
+
+Table: WildernessForestDenizen
+Type:Lookup
+Roll: 1d100
+01-53: Standard
+54-62:  {ScatteredSettlements} Scattered Settlements &
+\n (total pop. {ScatteredSettlementsPop}) &
+\n Locations: [!{ScatteredSettlements} {$prompt3}Base] \n
+63:  {AverageSettlements} Average Settlements &
+\n (total pop. {AverageSettlementsPop}) &
+\n Locations: [!{AverageSettlements} {$prompt3}Base] \n
+64-68: {BugbearBand} Bugbears at <b>[@{$prompt3}Base]</b> \n
+69-79: [@WildernessForestGiantkinLairs]
+80-83: Faction, [@WildernessForestFaction]   
+84-88: Hero, [@WildernessForestHero] \n 
+91-100: Apex, [@WildernessForestApex] \n 
+
+Table: WildernessForestGiantkinLairs
+Type: Lookup
+Roll: 1d100
+01-50: <b>[@{$prompt3}Base]</b> {10d6} Ogres \n
+51-70: <b>[@{$prompt3}Base]</b> {5d8} Trolls \n
+71-86: <b>[@{$prompt3}Base]</b> {5d4} Ettins \n
+87-96: <b>[@{$prompt3}Base]</b> {10d4} Hill Giants \n
+97-98: <b>[@{$prompt3}Base]</b> {5d4} Fomorians \n
+99-100: <b>[@{$prompt3}Base]</b> {5d4} Cyclopes \n
+
+Table: WildernessForestFaction
+Type: Lookup
+Roll: 1d100
+01-09: <b>[@{$prompt3}Base]</b> Small Cabal led by [@CabalFactionLeader] \n 
+10-17: <b>[@{$prompt3}Base]</b> Medium Cabal led by [@CabalFactionLeader]\n 
+18-21: <b>[@{$prompt3}Base]</b> Large Cabal led by [@CabalFactionLeader]\n 
+22-28: <b>[@{$prompt3}Base]</b> Small Criminal led by [@CriminalFactionLeader]\n 
+29-37: <b>[@{$prompt3}Base]</b> Medium Criminal led by [@CriminalFactionLeader]\n 
+38-39: <b>[@{$prompt3}Base]</b> Large Criminal led by [@CriminalFactionLeader]\n 
+40-46: <b>[@{$prompt3}Base]</b> Small Military led by [@MilitaryFactionLeader] \n 
+47-56: Medium Military led by [@MilitaryFactionLeader]\n 
+57: Large Military led by [@MilitaryFactionLeader] \n 
+58-61: Small Political led by [@PoliticalFactionLeader]\n 
+62-66:  Medium Political led by [@PoliticalFactionLeader] \n 
+67: Large Political led by [@PoliticalFactionLeader] \n 
+68-75: Small Production led by [@ProductionFactionLeader] \n 
+76-80 : Medium Production led by [@ProductionFactionLeader] \n 
+81: Large Production led by [@ProductionFactionLeader] \n 
+82-92: Small Religious led by [@ReligiousFactionLeader] \n 
+93-98: Medium Religious led by [@ReligiousFactionLeader] \n 
+99-100: Large Religious led by [@ReligiousFactionLeader] \n 
+
+Table: WildernessForestHero
+Type: Lookup
+Roll: 1d100
+01-64: Fighter at <b>[@{$prompt3}Base]</b> \n
+65-75: Magic-User at <b>[@{$prompt3}Base]</b> \n
+76-87: Ranger at <b>[@{$prompt3}Base]</b> \n
+88: Cleric at <b>[@{$prompt3}Base]</b> \n
+89-99: Druid at <b>[@{$prompt3}Base]</b> \n
+100: Knight at <b>[@{$prompt3}Base]</b> \n
+
+Table: WildernessForestApex
+Type: Lookup
+Roll: 1d100
+01-14: Bear
+15-20: Cave Bear
+21-30: Dire Boar
+31-33: Cat
+34-48: Wolf
+49-60: Hag
+60-69: Spider
+70-77: [@WildernessForestGiantkin] at <b>[@{$prompt3}Base]</b> \n
+78-83: Wyvern
+84-87: Undead
+88-92: Eery[@EeryForestGiantkin] at <b>[@{$prompt3}Base]</b> \n
+93-98: [@ForestDragon] at <b>[@{$prompt3}Base]</b> \n
+99-100: Custom or Anomalous
+
+Table: WildernessForestGiantkin
+Type: Lookup
+Roll: 1d100
+01-07: Ettin
+08-60: Ogre
+61-96: Troll
+97-100: Fomorian
+
+Table:BorderHillsSpecialHexType
+Type: Lookup
+Roll: 1d100
+01-64: \z 
+65-94: [@BorderHillsRuins]
+95-98: &nbsp; <b>Megadungeon</b> at <b>[@{$prompt3}Base]</b> \n
+98-100:[@BorderHillsAnomalous]
+
+Table:BorderHillsRuins
+Type: Lookup
+Roll: 1d100
+01-49: <b>Ruins</b>: Lost Kingdom with {BorderSmallKingdomSite} sites \n &
+Locations: [!{BorderSmallKingdomSite} {$prompt3}Base]\n 
+50-57: <b>Ruins</b>: Lost Kingdom with {BorderMediumKingdomSite} sites \n &
+Locations: [!{BorderMediumKingdomSite} {$prompt3}Base]\n
+58-62: <b>Ruins</b>:Lost Kingdom with {BorderLargeKingdomSite} sites \n &
+Locations: [!{BorderLargeKingdomSite} {$prompt3}Base]\n
+63-69: <b>Ruins</b>: Lost City with a large central location at  <b> [@{$prompt3}Base]</b> \n 
+70-80: <b>Ruins</b>: Lost Castle with {1d4} contiguous small-hex locations starting at &
+<b> [@{$prompt3}Base]</b>\n 
+81: <b>Ruins</b>: Small Tomb Complex with a tomb at <b>[@{$prompt3}Base]</b> \n 
+82-86: <b>Ruins</b>: Small Tomb Complex with {SmallTombComplex} tombs \n &
+Locations: [!{SmallTombComplex} {$prompt3}Base] \n 
+87-90: <b>Ruins</b>: Medium Tomb Complex with {MediumTombComplex} tombs \n &
+Locations: [!{MediumTombComplex} {$prompt3}Base] \n 
+91-95: <b>Ruins</b>: LargeTomb Complex with {LargeTombComplex} tombs \n &
+Locations: [!{LargeTombComplex} {$prompt3}Base] \n 
+96: <b>Ruins</b>: Battlefield  at <b>[@{$prompt3}Base]</b>  \n
+97-100: <b>Ruins</b>: Megatomb at <b>[@{$prompt3}Base]</b>  \n 
+	
+Table: BorderHillsAnomalous
+Type: Lookup
+Roll: 1d100
+01-15: Single Eery hex \n
+16-20: {WildEery} hexes \n &
+Locations: [!{WildEery} {$prompt3}Base]\n
+21-25: {WildEery} contiguous Eery Hexes  \n &
+Start Location: <b>[@{$prompt3}Base]</b> \n
+26-28: All Hill hexes are Eery \n 
+29: Entire megahex is Eery [@EeryOnly] \n
+30-37: Anomalous [|localized|localized|localized|placebound] [@AnomalousLocalPhenomenon] \n &
+Location: <b>[{$prompt3}Base]</b> \n
+38-40: Anomalous global  [@AnomalousGlobalPhenomenon] \n
+41-75: Anomalous structure at <b>[@{$prompt3}Base]</b> \n
+76-100: Anomalous terrain feature at <b>[@{$prompt3}Base]</b> \n
+
+Table: BorderHillsDenizenRouting
+Type: Lookup
+Roll: 1d100
+01-64: [@BorderHillsDenizen]
+65-75: [@BorderHillsMonsterCluster]
+76-89:<b>Overrun</b> \n[@BorderHillsOverrun]
+90-100: <b>Sylvan</b> \n[@BorderHillsSylvan]
+
+Table: BorderHillsDenizen
+Type: Lookup
+Roll: 1d100
+01-10: <b>Overrun</b> \n[@BorderHillsOverrun]
+11-20: <b>Sylvan</b> \n[@BorderHillsSylvan]
+21-55: Standard \n 
+56-70: {ScatteredSettlements} Scattered Settlements \n &
+&nbsp; Total Population:{ScatteredSettlementsPop} \n &
+&nbsp; Locations: [!{ScatteredSettlements} {$prompt3}Base] \n
+71-75: {AverageSettlements} Average Settlements \n &
+&nbsp;Total Population:{AverageSettlementsPop} \n &
+&nbsp;Locations: [!{AverageSettlements} {$prompt3}Base] \n
+76-77: {DenseSettlements} Dense Settlements \n &
+&nbsp;Total Population:{DenseSettlementsPop} \n &
+&nbsp;Locations: [!{DenseSettlements} {$prompt3}Base] \n
+78-88: Faction \n [@BorderHillsFaction] 
+89-96: Hero, [@BorderHillsHero], at <b>[@{$prompt3}Base]</b> \n 
+97-100: Apex, [@BorderHillsApex], at in <b>[@{$prompt3}Base]</b> \n 
+
+Table: BorderHillsOverrun
+Type:Lookup
+Roll: 1d100
+set: HillGoblinVillageRolls={1d2}
+01-02: Goblin Village of {GoblinVillagePop} in [@{$prompt3}Base] \n &
+[!{HillGoblinVillageRolls} BorderHillsGoblinVillageSpecial] in &
+[!{HillGoblinVillageRolls} {$prompt3}Base] \n
+03-17: Goblin Presence of {GoblinBand} goblins
+18-22: Goblin Presence of {GoblinBand} goblins with {GoblinBandWargs} wargs
+23-26: Village of {OrcVillagePop} orcs in [@{$prompt3}Base]
+27-36:  [!{BorderOrcBandNumber} OrcBand] orcs and {MultiGoblinBands} goblins in &
+\n <b>[!{MultiGoblinBandLocations}{$prompt3}Base]</b> &
+\n Goblin-orc relationship is [|allied|enslaved|suspicious|hostile] \n
+37-84: Orc Presence of [!{BorderOrcBandNumber} OrcBand] &
+at [!{BorderOrcBandNumber} {$prompt3}Base] \n
+85-95: Orc Presence of [!{BorderOrcBandNumber} OrcBand] &
+at [!{BorderOrcBandNumber} {$prompt3}Base] \n &
+<b>Orc Hero Presence</b>: [@OrcHero] \n
+96-100: [@OrcBand] orcs in <b>[@{$prompt3}Base]</b>
+
+Table: BorderHillsGoblinVillageSpecial
+Type:Lookup
+Roll: 1d100
+01-10: \z
+11-20: {@BugbearBand} bugbears at (<b>[@{$prompt3}Base]</b>) \n
+21-60: {OrcBand} orcs at (<b>[@{$prompt3}Base]</b>) \n
+61-69: [|an ogre|2 ogres|3 ogres|4 ogres|5 ogres|6 ogres] \n
+70-79: [|a troll|2 trolls|3 trolls] \n
+80-90: [@OverrunFaction] \n
+91-100: [@GoblinHero] \n
+
+Table: BorderHillsSylvan 
+Type:Lookup
+Roll: 1d100
+01-02: [@ElfVillage] 
+03-07: [@ElfHolding]
+08-10: [@ElfHolding] with [@ElfHero] at [@{$prompt3}Base]
+11-20: Elf Presence of {ElfBand} elves in [@{$prompt3}Base]
+21-35: Dwarf Village of {DwarfVillagePop} dwarves in [@{$prompt3}Base]
+36-65: [!{1d2+1} DwarfBand] at [@{$prompt3}Base]
+66-90: [!{1d2+1} DwarfBand] at [@{$prompt3}Base] with {@DwarfBand} & 
+at [@{$prompt3}Base] who are [@BorderHillsDwarfPresencePurpose]
+91-100: [@DwarfBand] at [@{$prompt3}Base] [@BorderHillsDwarfPresencePurpose]
+
+Table:BorderHillsDwarfPresencePurpose
+Type: Lookup
+Roll: 1d100
+01-05: in a new Holding  \n
+06-10: in a declining Holding  \n
+11-13: at a Military Outpost \n
+14-24: at a Trading Post \n
+25-94: at a [|mining|mining|mining|crafting|crafting|other] Production center \n
+95: at a Religious/Ritual/Funerary location \n
+96-100: at an Exploratory location \n
+
+Table: BorderHillsApex
+Type: Lookup
+Roll: 1d100
+01-20: Bear at <b>[@{$prompt3}Base]</b> \n
+21-30: Boar at <b>[@{$prompt3}Base]</b> \n
+31-34: Cat  at <b>[@{$prompt3}Base]</b> \n
+35-54: Wolf at <b>[@{$prompt3}Base]</b> \n
+55-60: Hag  at <b>[@{$prompt3}Base]</b> \n
+61-64: Spider at <b>[@{$prompt3}Base]</b> \n
+65-74: [@BorderForestGiantkin] \n
+75-78: Wyvern at <b>[@{$prompt3}Base]</b> \n
+79-84: Undead at <b>[@{$prompt3}Base]</b> \n
+85-89: Eery [@EeryHillsGiantkin], <b>[@{$prompt3}Base]</b> 
+90-96:[@HillDragon] at <b>[@{$prompt3}Base]</b> \n
+97-100: Custom or Anomalous at <b>[@{$prompt3}Base]</b> \n
+
+Table:BorderHillsGiantkin
+01-60: Ogre, <b>[@{$prompt3}Base]</b>
+61-85: Troll, <b>[@{$prompt3}Base]</b>
+86-90: Ettin, <b>[@{$prompt3}Base]</b>
+91-99: Hill Giant, <b>[@{$prompt3}Base]</b>
+100: Fomorian, <b>[@{$prompt3}Base]</b>
+
+Table: BorderHillsFaction
+Type: Lookup
+Roll: 1d100
+01-12:<b>[@{$prompt3}Base]</b>Small Cabal led by [@CabalFactionLeader] \n 
+13-17:<b>[@{$prompt3}Base]</b>Medium Cabal led by [@CabalFactionLeader]\n 
+18-21:<b>[@{$prompt3}Base]</b>Large Cabal led by [@CabalFactionLeader]\n 
+22-29:<b>[@{$prompt3}Base]</b>Small Criminal led by [@CriminalFactionLeader]\n 
+30-38:<b>[@{$prompt3}Base]</b>Medium Criminal led by [@CriminalFactionLeader]\n 
+38-46:<b>[@{$prompt3}Base]</b>Large Criminal led by [@CriminalFactionLeader]\n 
+47-51:<b>[@{$prompt3}Base]</b>Small Military led by [@MilitaryFactionLeader] \n 
+52-56:<b>[@{$prompt3}Base]</b>Medium Military led by [@MilitaryFactionLeader]\n 
+57: <b>[@{$prompt3}Base]</b>Large Military led by [@MilitaryFactionLeader] \n 
+58-63:<b>[@{$prompt3}Base]</b>Small Political led by [@PoliticalFactionLeader]\n 
+64-65:<b>[@{$prompt3}Base]</b>Medium Political led by [@PoliticalFactionLeader] \n 
+66: <b>[@{$prompt3}Base]</b>Large Political led by [@PoliticalFactionLeader] \n 
+67-76:<b>[@{$prompt3}Base]</b>Small Production led by [@ProductionFactionLeader] \n 
+77-86:<b>[@{$prompt3}Base]</b>Medium Production led by [@ProductionFactionLeader] \n 
+87-90:<b>[@{$prompt3}Base]</b>Large Production led by [@ProductionFactionLeader] \n 
+91-94: <b>[@{$prompt3}Base]</b>Small Religious led by [@ReligiousFactionLeader] \n 
+95-98:<b>[@{$prompt3}Base]</b>Medium Religious led by [@ReligiousFactionLeader] \n 
+99-100:<b>[@{$prompt3}Base]</b>Large Religious led by [@ReligiousFactionLeader] \n 
+
+Table: BorderHillsHero
+Type: Lookup
+Roll: 1d100
+01-35: Fighter 
+36-50: Magic-User 
+51-60: Ranger  
+61-80: Thief 
+81-85: Cleric 
+86-91: Druid  
+92-97: Knight  
+98-100: Assassin  
+
+Table:WildHillsSpecialHexType
+Type: Lookup
+Roll: 1d100
+01-64: \z 
+65-90: [@WildHillsRuins]
+91-97: <b>Megadungeon</b> at <b>[@{$prompt3}Base]</b> \n
+97-100:[@BorderHillsAnomalous]
+
+Table:WildHillsRuins
+Type: Lookup
+Roll: 1d100
+01-45:&nbsp; <b>Ruins</b>: Lost Kingdom with {WildSmallKingdomSite} sites \n &
+&nbsp; Locations: [!{WildSmallKingdomSite} {$prompt3}Base]\n 
+46-48:&nbsp; <b>Ruins</b>: Lost Kingdom with {WildMediumKingdomSite} sites \n &
+&nbsp; Locations: [!{WildMediumKingdomSite} {$prompt3}Base]\n
+49-52:&nbsp; <b>Ruins</b>:Lost Kingdom with {WildLargeKingdomSite} sites \n &
+&nbsp; Locations: [!{WildLargeKingdomSite} {$prompt3}Base]\n
+53-57:&nbsp; <b>Ruins</b>: Lost City with a large central location at  <b> [@{$prompt3}Base]</b> \n 
+58-62:&nbsp; <b>Ruins</b>: Lost Castle with {1d4} contiguous small-hex locations \n starting at &
+<b>[@{$prompt3}Base]</b>\n 
+63-67:&nbsp; <b>Ruins</b>: Small Tomb Complex with a tomb at <b>[@{$prompt3}Base]</b> \n 
+68-75:&nbsp; <b>Ruins</b>: Small Tomb Complex with {SmallTombComplex} tombs \n &
+&nbsp; Locations: [!{SmallTombComplex} {$prompt3}Base] \n 
+76-90:&nbsp; <b>Ruins</b>: Medium Tomb Complex with {MediumTombComplex} tombs \n &
+&nbsp; Locations: [!{MediumTombComplex} {$prompt3}Base] \n 
+91-95:&nbsp; <b>Ruins</b>: LargeTomb Complex with {LargeTombComplex} tombs \n &
+&nbsp; Locations: [!{LargeTombComplex} {$prompt3}Base] \n 
+96:&nbsp; <b>Ruins</b>: Battlefield  at <b>[@{$prompt3}Base]</b>  \n
+97-100:&nbsp; <b>Ruins</b>: Megatomb at <b>[@{$prompt3}Base]</b>  \n 
+
+Table: WildHillsAnomalous
+Type: Lookup
+Roll: 1d100
+01-15: Single Eery hex \n
+16-20: {WildEery} hexes \n &
+Locations: [!{WildEery} {$prompt3}Base]\n
+21-25: {WildEery} contiguous Eery Hexes  \n &
+Start Location: <b>[@{$prompt3}Base]</b> \n
+26-28: All Hill hexes are Eery \n 
+29: Entire megahex is Eery [@EeryOnly] \n
+30-37: Anomalous [|localized|localized|localized|placebound] [@AnomalousLocalPhenomenon] \n &
+Location: <b>[{$prompt3}Base]</b> \n
+38-40: Anomalous global [@AnomalousGlobalPhenomenon] \n
+41-75: Anomalous structure at <b>[@{$prompt3}Base]</b> \n
+76-100: Anomalous terrain feature at <b>[@{$prompt3}Base]</b> \n
+
+Table: WildHillsDenizenRouting
+Type: Lookup
+Roll: 1d100
+01-58:[@WildHillsDenizen]
+59-69: [@WildHillsMonsterCluster] 
+70-84:<b>Overrun</b> \n[@WildHillsOverrun]
+85-100: <b>Sylvan</b> \n[@WildHillsSylvan]
+
+Table: WildHillsDenizen
+Type: Lookup
+Roll: 1d100
+01-70: Standard \n 
+61-70: {ScatteredSettlements} Scattered Settlements \n &
+&nbsp; Total Population:{ScatteredSettlementsPop} \n &
+&nbsp; Locations: [!{ScatteredSettlements} {$prompt3}Base] \n
+71-72: {AverageSettlements} Average Settlements \n &
+&nbsp;Total Population:{AverageSettlementsPop} \n &
+&nbsp;Locations: [!{AverageSettlements} {$prompt3}Base] \n
+73: {DenseSettlements} Dense Settlements \n &
+&nbsp;Total Population:{DenseSettlementsPop} \n &
+&nbsp;Locations: [!{DenseSettlements} {$prompt3}Base] \n
+74-87: Faction \n [@WildHillsFaction] 
+88-94: \n &nbsp; Hero, [@WildHillsHero], at <b>[@{$prompt3}Base]</b> \n 
+95-100: \n &nbsp; Apex, [@WildHillsApex] \n 
+
+Table: WildHillsOverrun
+Type:Lookup
+Roll: 1d100
+set: HillGoblinVillageRolls={1d3}
+01-02:&nbsp; Goblin Village of {GoblinVillagePop} in [@{$prompt3}Base] \n &
+[!{HillGoblinVillageRolls} WildHillsGoblinVillageSpecial] 
+03-14:&nbsp; Goblin Presence of [@GoblinBand] goblins
+15-20:&nbsp; Goblin Presence of {GoblinBaseGroup} goblins, with {.25*{GoblinBaseGroup}) wargs
+21-26:&nbsp; {OrcVillagePop} orcs in [@{$prompt3}Base]
+27-36:&nbsp; {{WildOrcBandNumber}* [@OrcBand]} orcs and {{MultiGoblinBands}*[@GoblinBand]} goblins in &
+\n [!{MultiGoblinBands} {$prompt3}Base] &
+\n Goblin-orc relationship is [|allied|enslaved|suspicious|hostile] \n
+37-80:&nbsp; Orc Presence of {{WildOrcBandNumber}*[@OrcBand]} orcs &
+at [!{WildOrcBandNumber} {$prompt3}Base] \n
+81-84: &nbsp; Orc Presence of {{WildOrcBandNumber}*[@OrcBand]} orcs &
+at [!{WildOrcBandNumber} {$prompt3}Base] \n &
+&nbsp; Allied Faction: [@OverrunFaction]
+85-89:&nbsp; Orc Presence of {{WildOrcBandNumber}*[@OrcBand]} orcs &
+at [!{WildOrcBandNumber} {$prompt3}Base] \n
+<b>Giantkin Presence</b>: [@WildHillsGiantkin] \n
+90-95:&nbsp; Orc Presence of {{WildOrcBandNumber}*[@OrcBand]} orcs &
+at [!{WildOrcBandNumber} {$prompt3}Base] & 
+\n &nbsp; <b>Hero Presence</b>: [@OrcHero] \n
+96-100:&nbsp; [@OrcBand] orcs in <b> [@{$prompt3}Base]</b>
+
+Table:WildHillsGoblinVillageSpecial
+Type:Lookup
+Roll: 1d100
+01-10: \z
+11-20:&nbsp;{BugbearBand} bugbears at (<b>[@{$prompt3}Base]</b>) \n
+21-60:&nbsp; [@OrcBand] orcs at (<b>[@{$prompt3}Base]</b>) \n
+61-69:&nbsp; [|an ogre|2 ogres|3 ogres|4 ogres|5 ogres|6 ogres] \n
+70-79:&nbsp; [|a troll|2 trolls|3 trolls] \n
+80-90:&nbsp; [@OverrunFaction] \n
+91-100:&nbsp; [@GoblinHero] \n
+
+Table: WildHillsSylvan 
+Type:Lookup
+Roll: 1d100
+01:&nbsp; [@ElfVillage] 
+03-04:&nbsp; [@ElfHolding] elves
+05-07:&nbsp; [@ElfHolding] elves with [@ElfHero] at [@{$prompt3}Base]
+08-12:&nbsp; Elf Presence of [@ElfBand] elves in [@{$prompt3}Base]
+13-30:&nbsp; Dwarf Village of {DwarfVillagePop} dwarves in [@{$prompt3}Base]
+31-70:&nbsp; {{1d2+2}* [@DwarfBand]} dwarves at [@{$prompt3}Base]
+71-90:&nbsp; {{1d2+1}*[@DwarfBand]} dwarves at <b>[@{$prompt3}Base]</b>with [@DwarfBand] dwarves &
+at[@{$prompt3}Base][@WildHillsDwarfPresencePurpose]
+91-100:&nbsp; [@DwarfBand] dwarves at [@{$prompt3}Base][@WildHillsDwarfPresencePurpose]
+
+Table:WildHillsDwarfPresencePurpose
+Type: Lookup
+Roll: 1d100
+01-10:in a new Holding  \n
+11-20:in a declining Holding  \n
+21-23:at a Military Outpost \n
+24-26:at a Trading Post \n
+27-92:at a [|mining|mining|mining|crafting|crafting|other] Production center \n
+93:at a Religious/Ritual/Funerary location \n
+94-100:at an Exploratory location \n
+
+Table:WildHillsGiantkin
+Type: Lookup
+Roll: 1d100
+01-50: Ogre, <b>[@{$prompt3}Base]</b>
+51-76: Troll, <b>[@{$prompt3}Base]</b>
+77-83: Ettin, <b>[@{$prompt3}Base]</b>
+83-97: Hill Giant, <b>[@{$prompt3}Base]</b>
+98-100: Fomorian, <b>[@{$prompt3}Base]</b>
+
+Table: WildHillsFaction
+Type: Lookup
+Roll: 1d100
+01-10:&nbsp;<b>[@{$prompt3}Base]</b>Small Cabal led by [@CabalFactionLeader] \n 
+11-15:&nbsp;<b>[@{$prompt3}Base]</b>Medium Cabal led by [@CabalFactionLeader] \n 
+16-18:&nbsp;<b>[@{$prompt3}Base]</b>Large Cabal led by [@CabalFactionLeader] \n 
+19-26:&nbsp;<b>[@{$prompt3}Base]</b>Small Criminal led by [@CriminalFactionLeader] \n 
+27-36:&nbsp;<b>[@{$prompt3}Base]</b>Medium Criminal led by [@CriminalFactionLeader] \n 
+37-45:&nbsp;<b>[@{$prompt3}Base]</b>Large Criminal led by [@CriminalFactionLeader] \n 
+46-48:&nbsp;<b>[@{$prompt3}Base]</b>Small Military led by [@MilitaryFactionLeader] \n 
+49-51:&nbsp;<b>[@{$prompt3}Base]</b>Medium Military led by [@MilitaryFactionLeader] \n 
+52-55:&nbsp;<b>[@{$prompt3}Base]</b>Small Political led by [@PoliticalFactionLeader] \n 
+56-57:&nbsp;<b>[@{$prompt3}Base]</b>Medium Political led by [@PoliticalFactionLeader] \n 
+58:&nbsp;<b>[@{$prompt3}Base]</b>Large Political led by [@PoliticalFactionLeader] \n 
+59-65:&nbsp;<b>[@{$prompt3}Base]</b>Small Production led by [@ProductionFactionLeader] \n 
+66-70:&nbsp;<b>[@{$prompt3}Base]</b>Medium Production led by [@ProductionFactionLeader] \n 
+71-72:&nbsp;<b>[@{$prompt3}Base]</b>Large Production led by [@ProductionFactionLeader] \n 
+73-77:&nbsp;<b>[@{$prompt3}Base]</b>Small Religious led by [@ReligiousFactionLeader] \n 
+78-81:&nbsp;<b>[@{$prompt3}Base]</b>Medium Religious led by [@ReligiousFactionLeader] \n 
+82-85:&nbsp;<b>[@{$prompt3}Base]</b>Large Religious led by [@ReligiousFactionLeader] \n 
+86-92:&nbsp;<b>[@{$prompt3}Base]</b>[@WildHillsHero] with Retinue \n
+93-100:&nbsp;<b>[@{$prompt3}Base] Mega-Lair
+//essentially a monster faction, though normally just a lot of 'em together
+
+Table: WildHillsApex
+Type: Lookup
+Roll: 1d100
+01-15: Bear at <b>[@{$prompt3}Base]</b> \n
+16-25: Boar at <b>[@{$prompt3}Base]</b> \n
+26-30: Cat  at <b>[@{$prompt3}Base]</b> \n
+31-40: Wolf at <b>[@{$prompt3}Base]</b> \n
+41-50: Hag  at <b>[@{$prompt3}Base]</b> \n
+51-55: Spider at <b>[@{$prompt3}Base]</b> \n
+56-70: [@WildHillsGiantkin] \n
+71-75: Wyvern at <b>[@{$prompt3}Base]</b> \n
+76-80: Undead at <b>[@{$prompt3}Base]</b> \n
+81-88: Eery [@HillEeryGiantkin], <b>[@{$prompt3}Base]</b> 
+89-96: [@HillDragon] at <b>[@{$prompt3}Base]</b> \n
+97-100: Custom or Anomalous at <b>[@{$prompt3}Base]</b> \
+
+Table: WildHillsHero
+Type: Lookup
+Roll: 1d100
+01-40: Fighter 
+41-50: Magic-User
+51-65: Ranger
+66-80: Thief
+81-85: Cleric
+86-95: Druid
+96-100: Knight
+
+Table: WildernessHillsSpecialHexType
+Type: Lookup
+Roll: 1d100
+01-64: \z 
+65-90: [@WildernessHillsRuins]
+91-97: <b>Megadungeon</b> at <b>[@{$prompt3}Base]</b> \n
+97-100: [@WildernessHillsAnomalous]
+
+Table: WildernessHillsRuins
+Type: Lookup
+Roll: 1d100
+01-45:&nbsp; <b>Ruins</b>: Lost Kingdom with {WildernessSmallKingdomSite} sites \n &
+&nbsp; Locations: [!{WildSmallKingdomSite} {$prompt3}Base]\n 
+46-48:&nbsp; <b>Ruins</b>: Lost Kingdom with {WildernessMediumKingdomSite} sites \n &
+&nbsp; Locations: [!{WildernessMediumKingdomSite} {$prompt3}Base]\n
+49-52:&nbsp; <b>Ruins</b>:Lost Kingdom with {WildernessLargeKingdomSite} sites \n &
+&nbsp; Locations: [!{WildernessLargeKingdomSite} {$prompt3}Base]\n
+53-57:&nbsp; <b>Ruins</b>: Lost City with a large central location at  <b> [@{$prompt3}Base]</b> \n 
+58-62:&nbsp; <b>Ruins</b>: Lost Castle with {1d4} contiguous small-hex locations \n starting at &
+<b>[@{$prompt3}Base]</b>\n 
+63-67:&nbsp; <b>Ruins</b>: Small Tomb Complex with a tomb at <b>[@{$prompt3}Base]</b> \n 
+68-75:&nbsp; <b>Ruins</b>: Small Tomb Complex with {SmallTombComplex} tombs \n &
+at [{$prompt3}Base] \n
+76-90:&nbsp; <b>Ruins</b>: Medium Tomb Complex with {MediumTombComplex} tombs \n &
+at [{$prompt3}Base] \n
+91-95:&nbsp; <b>Ruins</b>: LargeTomb Complex with {LargeTombComplex} tombs \n &
+at [{$prompt3}Base] \n
+96:&nbsp; <b>Ruins</b>: Battlefield  at <b>[@{$prompt3}Base]</b>  \n
+97-100:&nbsp; <b>Ruins</b>: Megatomb at <b>[@{$prompt3}Base]</b>  \n 
+
+Table: WildernessHillsAnomalous
+Type: Lookup
+Roll: 1d100
+01-15: Single Eery hex \n
+16-20: {WildernessEery} hexes \n &
+Locations: [!{WildernessEery} {$prompt3}Base]\n
+21-25: {ContiguousWildernessEery} contiguous Eery Hexes  \n &
+Start Location: <b>[@{$prompt3}Base]</b> \n
+26-29: Megahex is Eery \n
+30-37: Anomalous [|localized|localized|localized|placebound] [@AnomalousLocalPhenomenon] \n &
+Location: <b>[{$prompt3}Base]</b> \n
+38-40: Anomalous global [@AnomalousGlobalPhenomenon] \n
+41-75: Anomalous structure at <b>[@{$prompt3}Base]</b> \n
+76-100: Anomalous terrain feature at <b>[@{$prompt3}Base]</b> \n
+
+Table: WildernessHillsDenizenRouting
+Type: Lookup
+Roll: 1d100
+01-60:[@WildernessHillsDenizen] 
+61-75: [@WildernessHillsMonsterCluster]
+76-89: <b>Overrun</b> \n[@WildernessHillsOverrun]
+90-100: <b>Sylvan</b> \n[@WildernessHillsSylvan]
+
+Table: WildernessHillsDenizen
+Type: Lookup
+Roll: 1d100
+01-70: Standard \n 
+61-70: {ScatteredSettlements} Scattered Settlements \n &
+&nbsp; Total Population:{ScatteredSettlementsPop} \n &
+&nbsp; Locations: [!{ScatteredSettlements} {$prompt3}Base] \n
+71-73: {AverageSettlements} Average Settlements \n &
+&nbsp;Total Population:{AverageSettlementsPop} \n &
+&nbsp;Locations: [!{AverageSettlements} {$prompt3}Base] \n
+74-87: Faction \n [@WildernessHillsFaction] 
+88-92: \n &nbsp; Hero, [@WildernessHillsHero], at <b>[@{$prompt3}Base]</b> \n 
+93-100: \n &nbsp; Apex, [@WildernessHillsApex] \n 
+
+Table: WildernessHillsSylvan 
+Type:Lookup
+Roll: 1d100
+01:&nbsp; [@ElfVillage] 
+02-03:&nbsp; [@ElfHolding] elves
+04-05:&nbsp; [@ElfHolding] elves with [@ElfHero] at [@{$prompt3}Base]
+06-10:&nbsp; Elf Presence of [@ElfBand] elves in [@{$prompt3}Base]
+11-35: &nbsp; Dwarf Village of {DwarfVillagePop} dwarves in [@{$prompt3}Base]
+36-75:&nbsp; {{1d2+2}* [@DwarfBand]} dwarves at [@{$prompt3}Base]
+76-90:&nbsp; {{1d2+1}*[@DwarfBand]} dwarves at <b>[@{$prompt3}Base]</b>with [@DwarfBand] dwarves &
+at[@{$prompt3}Base][@WildernessHillsDwarfPresencePurpose]
+91-100:&nbsp; [@DwarfBand] dwarves at [@{$prompt3}Base][@WildernessHillsDwarfPresencePurpose]
+
+Table:WildernessHillsDwarfPresencePurpose
+Type: Lookup
+Roll: 1d100
+01-08: in a new Holding  \n
+09-15: in a declining Holding  \n
+16-17: at a Military Outpost \n
+18: at a Trading Post \n
+19-92: at \a [|mining|mining|mining|crafting|crafting|other] Production center \n
+93: at a Religious/Ritual/Funerary location \n
+94-100: at an Exploratory location \n
+
+Table: WildernessHillsOverrun
+Type:Lookup
+Roll: 1d100
+set: HillGoblinVillageRolls={1d3}
+01-02:&nbsp; Goblin Village of {GoblinVillagePop} in [@{$prompt3}Base] \n &
+[!{HillGoblinVillageRolls} WildernessHillsGoblinVillageSpecial] 
+03-14:&nbsp; Goblin Presence of [@GoblinBand] goblins
+15-20:&nbsp; Goblin Presence of {GoblinBaseGroup} goblins, with {{GoblinBaseGroup}*.25) wargs
+21-26:&nbsp; {OrcVillagePop} orcs in [@{$prompt3}Base]
+27-36:&nbsp; {{WildernessOrcBandNumber}* [@OrcBand]} orcs and {{MultiGoblinBands}*[@GoblinBand]} goblins in &
+\n [!{MultiGoblinBands} {$prompt3}Base] &
+\n Goblin-orc relationship is [|allied|enslaved|suspicious|hostile] \n
+37-80:&nbsp; Orc Presence of {{WildernessOrcBandNumber}*[@OrcBand]} orcs &
+at [!{WildOrcBandNumber} {$prompt3}Base] \n
+81-84: &nbsp; Orc Presence of {{WildernessOrcBandNumber}*[@OrcBand]} orcs &
+at [!{WildernessOrcBandNumber} {$prompt3}Base] \n &
+&nbsp; Allied Faction: [@OverrunFaction]
+85-89:&nbsp; Orc Presence of {{WildernessOrcBandNumber}*[@OrcBand]} orcs &
+at [!{WildernessOrcBandNumber} {$prompt3}Base] \n
+<b>Giantkin Presence</b>: [@WildernessHillsGiantkin] \n
+90-95:&nbsp; Orc Presence of {{WildernessOrcBandNumber}*[@OrcBand]} orcs &
+at [!{WildernessOrcBandNumber} {$prompt3}Base] & 
+\n &nbsp; <b>Hero Presence</b>: [@OrcHero] \n
+96-100:&nbsp; [@OrcBand] orcs in <b> [@{$prompt3}Base]</b>
+
+Table:WildernessHillsGoblinVillageSpecial
+Type:Lookup
+Roll: 1d100
+01-10: \z
+11-20:&nbsp;{BugbearBand} bugbears at (<b>[@{$prompt3}Base]</b>) \n
+21-60:&nbsp; [@OrcBand] orcs at (<b>[@{$prompt3}Base]</b>) \n
+61-69:&nbsp; [|an ogre|2 ogres|3 ogres|4 ogres|5 ogres|6 ogres] \n
+70-79:&nbsp; [|a troll|2 trolls|3 trolls] \n
+80-90:&nbsp; [@OverrunFaction] \n
+91-100:&nbsp; [@GoblinHero] \n
+ 
+Table:WildernessHillsGiantkin
+Type: Lookup
+Roll: 1d100
+01-40: Ogre, <b>[@{$prompt3}Base]</b>
+41-66: Troll, <b>[@{$prompt3}Base]</b>
+67-75: Ettin, <b>[@{$prompt3}Base]</b>
+76-96: Hill Giant, <b>[@{$prompt3}Base]</b>
+97-100: Fomorian, <b>[@{$prompt3}Base]</b>
+
+Table: WildernessHillsFaction
+Type: Lookup
+Roll: 1d100
+01-10:&nbsp;<b>[@{$prompt3}Base]</b>Small Cabal led by [@CabalFactionLeader] \n 
+11-15:&nbsp;<b>[@{$prompt3}Base]</b>Medium Cabal led by [@CabalFactionLeader] \n 
+16-18:&nbsp;<b>[@{$prompt3}Base]</b>Large Cabal led by [@CabalFactionLeader] \n 
+19-25:&nbsp;<b>[@{$prompt3}Base]</b>Small Criminal led by [@CriminalFactionLeader] \n 
+26-34:&nbsp;<b>[@{$prompt3}Base]</b>Medium Criminal led by [@CriminalFactionLeader] \n 
+35-41:&nbsp;<b>[@{$prompt3}Base]</b>Large Criminal led by [@CriminalFactionLeader] \n 
+42-44:&nbsp;<b>[@{$prompt3}Base]</b>Small Military led by [@MilitaryFactionLeader] \n 
+43:&nbsp;<b>[@{$prompt3}Base]</b>Medium Military led by [@MilitaryFactionLeader] \n 
+44-45:&nbsp;<b>[@{$prompt3}Base]</b>Small Political led by [@PoliticalFactionLeader] \n 
+46-47:&nbsp;<b>[@{$prompt3}Base]</b>Medium Political led by [@PoliticalFactionLeader] \n 
+48:&nbsp;<b>[@{$prompt3}Base]</b>Large Political led by [@PoliticalFactionLeader] \n 
+49-50: &nbsp;<b>[@{$prompt3}Base]</b>Small Production led by [@ProductionFactionLeader] \n 
+51-55: &nbsp;<b>[@{$prompt3}Base]</b>Small Religious led by [@ReligiousFactionLeader] \n 
+56-58: &nbsp;<b>[@{$prompt3}Base]</b>Medium Religious led by [@ReligiousFactionLeader] \n 
+59-60: &nbsp;<b>[@{$prompt3}Base]</b>Large Religious led by [@ReligiousFactionLeader] \n 
+61-70 :&nbsp;<b>[@{$prompt3}Base]</b>[@WildHillsHero] with Retinue \n
+71-100: &nbsp;<b>[@{$prompt3}Base]</b> [@HillsMegaLair]
+//essentially a monster faction, though normally just a lot of 'em together
+
+Table: HillsMegaLair
+Type: Lookup
+Roll: 1d100
+01-02: Gargoyle
+03-05: Gorgon
+06-12: Harpy
+13-15: Leucrotta
+16-25: [@LycanthropeMegaLair] 
+26-29: Manticore
+30-35: Medusa
+36-40: Minotaur
+41-43: Peryton
+44-53: Spider
+54-60: Basilisk
+61-65: Cockatrice
+66-75: Wyvern
+76-90: [@UndeadMegaLair]
+91-96: [!2 UndeadMegaLair]
+97-100: [!3 UndeadMegaLair]  
+
+Table: LycanthropeMegaLair
+Type: Lookup
+Roll: 1d100
+01-30: Werebear
+31-50: Wereboar
+51-100: Werewolf
+
+Table: UndeadMegaLair
+Type: Lookup
+Roll: 1d100
+01-30: Skeletons &nbsp;
+31-50: Zombies &nbsp;
+51-60: Ghouls &nbsp;
+61-65: Ghasts &nbsp;
+66-70: Mummies &nbsp;
+71-90: Wights &nbsp;
+91-95: Wraiths &nbsp;
+95-100: Spectres &nbsp;
+
+Table: WildernessHillsApex
+Type: Lookup
+Roll: 1d100
+01-07: Bear at <b>[@{$prompt3}Base]</b> \n
+08-16: Boar at <b>[@{$prompt3}Base]</b> \n
+17-19: Cat  at <b>[@{$prompt3}Base]</b> \n
+20-24: Wolf at <b>[@{$prompt3}Base]</b> \n
+25-34: Hag  at <b>[@{$prompt3}Base]</b> \n
+35-39: Spider at <b>[@{$prompt3}Base]</b> \n
+40-54: [@WildHillsGiantkin] \n
+55-63: Wyvern at <b>[@{$prompt3}Base]</b> \n
+64-69: Undead at <b>[@{$prompt3}Base]</b> \n
+70-79: Eery [@HillEeryGiantkin], <b>[@{$prompt3}Base]</b> 
+80-94: [@HillDragon] at <b>[@{$prompt3}Base]</b> \n
+95-100: Custom or Anomalous at <b>[@{$prompt3}Base]</b> \
+
+Table: WildernessHillsHero
+Type: Lookup
+Roll: 1d100
+01-40: Fighter 
+41-50: Magic-User
+51-60: Ranger
+61-80: Thief
+81-85: Cleric
+86-97: Druid
+98-100: Knight
+
+Table:BorderMountainSpecialHexType
+Type: Lookup
+Roll: 1d100
+01-60: \z 
+61-92: [@BorderMountainRuins]
+93-98: Megadungeon at <b>[@{$prompt3}Base]</b> \n
+98-100:[@BorderMountainAnomalous]
+
+Table:BorderMountainRuins
+Type: Lookup
+Roll: 1d100
+01-49: <b>Ruins</b>: Lost Kingdom with {BorderSmallKingdomSite} sites \n &
+Locations: [!{BorderSmallKingdomSite} {$prompt3}Base]\n 
+50-54: <b>Ruins</b>: Lost Kingdom with {BorderMediumKingdomSite} sites \n &
+Locations: [!{BorderMediumKingdomSite} {$prompt3}Base]\n
+55-60: <b>Ruins</b>:Lost Kingdom with {BorderLargeKingdomSite} sites \n &
+Locations: [!{BorderLargeKingdomSite} {$prompt3}Base]\n
+61-65 <b>Ruins</b>: Lost City with a large central location at  <b> [@{$prompt3}Base]</b> \n 
+66-75: <b>Ruins</b>: Lost Castle with {1d4} sites in &
+<b> [@{$prompt3}Base]</b>\n 
+76-79: <b>Ruins</b>: Small Tomb Complex with a tomb at <b>[@{$prompt3}Base]</b> \n 
+80-86: <b>Ruins</b>: Small Tomb Complex with {SmallTombComplex} tombs \n &
+Location: [@{$prompt3}Base] \n 
+87-90: <b>Ruins</b>: Medium Tomb Complex with {MediumTombComplex} tombs \n &
+Locations: [@{$prompt3}Base] \n 
+91-95: <b>Ruins</b>: LargeTomb Complex with {LargeTombComplex} tombs \n &
+Location: [@{$prompt3}Base] \n 
+96-100: <b>Ruins</b>: Megatomb at <b>[@{$prompt3}Base]</b>  \n 
+	
+Table: BorderMountainAnomalous
+Type: Lookup
+Roll: 1d100
+01-10: Single Eery hex \n
+11-15: {WildEery} hexes \n &
+Locations: [!{WildEery} {$prompt3}Base]\n
+16-20: {WildEery} contiguous Eery Hexes  \n &
+Start Location: <b>[@{$prompt3}Base]</b> \n
+21: All Mountain hexes are Eery \n 
+22-30: Anomalous [|localized|localized|localized|placebound] [@AnomalousLocalPhenomenon] \n &
+Location: <b>[{$prompt3}Base]</b> \n
+31-36: Anomalous global  [@AnomalousGlobalPhenomenon] \n
+37-75: Anomalous structure at <b>[@{$prompt3}Base]</b> \n
+76-100: Anomalous terrain feature at <b>[@{$prompt3}Base]</b> \n
+
+Table: BorderMountainDenizenRouting
+Type: Lookup
+Roll: 1d100
+01-50:[@BorderMountainDenizen]
+51-60: [@BorderMountainMonsterCluster] 
+61-85:<b>Overrun</b> \n[@BorderMountainOverrun]
+86-100: <b>Sylvan</b> \n[@BorderMountainSylvan]
+
+Table: BorderMountainDenizen
+Type: Lookup
+Roll: 1d100
+01-55: Standard \n 
+56-70: {ScatteredSettlements} Scattered Settlements \n &
+&nbsp; Total Population:{ScatteredSettlementsPop} \n &
+&nbsp; Locations: [!{ScatteredSettlements} {$prompt3}Base] \n
+71-75: {AverageSettlements} Average Settlements \n &
+&nbsp;Total Population:{AverageSettlementsPop} \n &
+&nbsp;Locations: [!{AverageSettlements} {$prompt3}Base] \n
+76-86: Faction \n [@BorderMountainFaction] 
+87-94: Hero, [@BorderMountainHero], at <b>[@{$prompt3}Base]</b> \n 
+95-100: Apex, [@BorderMountainApex] \n 
+
+Table: BorderMountainOverrun
+Type:Lookup
+Roll: 1d100
+set: HillGoblinVillageRolls={1d3}
+01-02:&nbsp; Goblin Village of {GoblinVillagePop} in [@{$prompt3}Base] \n &
+[!{HillGoblinVillageRolls} BorderMountainGoblinVillageSpecial] 
+03-08:&nbsp; Goblin Presence of [@GoblinBand] goblins
+09-14:&nbsp; Goblin Presence of {GoblinBaseGroup} goblins, with {{GoblinBaseGroup}*.25) wargs
+15-26:&nbsp; {OrcVillagePop} orcs in [@{$prompt3}Base]
+27-36:&nbsp; {{WildernessOrcBandNumber}* [@OrcBand]} orcs and {{MultiGoblinBands}*[@GoblinBand]} goblins in &
+\n [!{MultiGoblinBands} {$prompt3}Base] &
+\n Goblin-orc relationship is [|allied|enslaved|suspicious|hostile] \n
+37-73:&nbsp; Orc Presence of {{BorderMountainOrcBandNumber}*[@OrcBand]} orcs &
+at [!{BorderMountainOrcBandNumber} {$prompt3}Base] \n
+74-82: &nbsp; Orc Presence of {{BorderMountainOrcBandNumber}*[@OrcBand]} orcs &
+at [@{$prompt3}Base] \n &
+&nbsp; Allied Faction: [@OverrunFaction]
+83-89:&nbsp; Orc Presence of {{BorderMountainOrcBandNumber}*[@OrcBand]} orcs &
+at [@{$prompt3}Base] \n
+<b>Giantkin Presence</b>: [@BorderMountainGiantkin] \n
+89-97:&nbsp; Orc Presence of {{BorderMountainOrcBandNumber}*[@OrcBand]} orcs &
+at [!{BorderMountainOrcBandNumber} {$prompt3}Base] & 
+\n &nbsp; <b>Hero Presence</b>: [@OrcHero] \n
+98-100:&nbsp; [@OrcBand] orcs in <b> [@{$prompt3}Base]</b>
+
+
+Table: BorderMountainGoblinVillageSpecial
+Type:Lookup
+Roll: 1d100
+01-05: \z
+06-20: {@BugbearBand} bugbears at (<b>[@{$prompt3}Base]</b>) \n
+21-60: {OrcBand} orcs at (<b>[@{$prompt3}Base]</b>) \n
+61-69:{1d4+2} ogres
+70-79: [|a troll|2 trolls||2 trolls|3 trolls|3 trolls|an ettin] \n
+80-90: [@OverrunFaction] \n
+91-100: [@GoblinHero] \n
+
+Table: BorderMountainSylvan 
+Type:Lookup
+Roll: 1d100
+01-02: [@ElfVillage] 
+03-05: [@ElfHolding]
+06-08: [@ElfHolding] with [@ElfHero] at [@{$prompt3}Base]
+09-15: Elf Presence of {ElfBand} elves in [@{$prompt3}Base]
+16-35: Dwarf Village of {DwarfVillagePop} dwarves in [@{$prompt3}Base]
+36-65: [!{1d2+1} DwarfBand] dwarves at [@{$prompt3}Base]
+66-90: [!{1d3+1} DwarfBand] dwarves at [@{$prompt3}Base] with [@DwarfBand] dwarves &
+dwarves at [@{$prompt3}Base] who are[@BorderMountainDwarfPresencePurpose]
+91-100: [@DwarfBand] at [@{$prompt3}Base] [@BorderMountainDwarfPresencePurpose]
+
+Table:BorderMountainDwarfPresencePurpose
+Type: Lookup
+Roll: 1d100
+01-09: in a new Holding  \n
+10-19: in a declining Holding  \n
+20-24: at a Military Outpost \n
+25-34: at a Trading Post \n
+35-94: at a [|mining|mining|mining|crafting|crafting|other] Production center \n
+95: at a Religious/Ritual/Funerary location \n
+96-100: at an Exploratory location \n
+
+Table: BorderMountainApex
+Type: Lookup
+Roll: 1d100
+01-20: Bear at <b>[@{$prompt3}Base]</b> \n
+21-25: Boar at <b>[@{$prompt3}Base]</b> \n
+26-30: Cat  at <b>[@{$prompt3}Base]</b> \n
+31-45: Wolf at <b>[@{$prompt3}Base]</b> \n
+46-52: Griffin at  <b>[@{$prompt3}Base]</b> \n
+53-60: Hag  at <b>[@{$prompt3}Base]</b> \n
+61-64: Spider at <b>[@{$prompt3}Base]</b> \n
+65-71: [@BorderMountainGiantkin] \n
+72-78: Wyvern at <b>[@{$prompt3}Base]</b> \n
+79-82: Undead at <b>[@{$prompt3}Base]</b> \n
+83-87: Eery [@EeryHillsGiantkin], <b>[@{$prompt3}Base]</b> 
+88-96:[@HillsDragon] at <b>[@{$prompt3}Base]</b> \n
+97-100: Custom or Anomalous at <b>[@{$prompt3}Base]</b> \n
+
+Table:BorderMountainGiantkin
+Type: Lookup
+Roll: 1d100
+01-50: Ogre, <b>[@{$prompt3}Base]</b>
+51-80: Troll, <b>[@{$prompt3}Base]</b>
+81-88: Stone Giant, <b>[@{$prompt3}Base]</b>
+89-99: Hill Giant, <b>[@{$prompt3}Base]</b>
+100: Fomorian, <b>[@{$prompt3}Base]</b>
+
+Table: BorderMountainFaction
+Type: Lookup
+Roll: 1d100
+01-12: <b>[@{$prompt3}Base]</b>:Small Cabal led by [@CabalFactionLeader] \n 
+13-17: <b>[@{$prompt3}Base]</b>:Medium Cabal led by [@CabalFactionLeader]\n 
+18-21: <b>[@{$prompt3}Base]</b>:Large Cabal led by [@CabalFactionLeader]\n 
+22-29: <b>[@{$prompt3}Base]</b>:Small Criminal led by [@CriminalFactionLeader]\n 
+30-36: <b>[@{$prompt3}Base]</b>:Medium Criminal led by [@CriminalFactionLeader]\n 
+37-42: <b>[@{$prompt3}Base]</b>:Large Criminal led by [@CriminalFactionLeader]\n 
+43-50: <b>[@{$prompt3}Base]</b>:Small Military led by [@MilitaryFactionLeader] \n 
+51-56: <b>[@{$prompt3}Base]</b>:Medium Military led by [@MilitaryFactionLeader]\n 
+57-58:<b>[@{$prompt3}Base]</b>: Large Military led by [@MilitaryFactionLeader] \n 
+59-60: <b>[@{$prompt3}Base]</b>:Small Political led by [@PoliticalFactionLeader]\n 
+61-63:  <b>[@{$prompt3}Base]</b>:Medium Political led by [@PoliticalFactionLeader] \n 
+64: <b>[@{$prompt3}Base]</b>:Large Political led by [@PoliticalFactionLeader] \n 
+65-76: <b>[@{$prompt3}Base]</b>:Small Production led by [@ProductionFactionLeader] \n
+77-86 : <b>[@{$prompt3}Base]</b>:Medium Production led by [@ProductionFactionLeader] \n 
+87-90: <b>[@{$prompt3}Base]</b>:Large Production led by [@ProductionFactionLeader] \n 
+91-94: <b>[@{$prompt3}Base]</b>:Small Religious led by [@ReligiousFactionLeader] \n 
+95-98: <b>[@{$prompt3}Base]</b>:Medium Religious led by [@ReligiousFactionLeader] \n 
+99-100: <b>[@{$prompt3}Base]</b>:Large Religious led by [@ReligiousFactionLeader] \n 
+
+Table: BorderMountainHero
+Type: Lookup
+Roll: 1d100
+01-50: Fighter 
+51-70: Magic-User
+71-72: Ranger
+73-90: Thief
+91-96: Cleric
+97: Druid
+98-99: Knight
+100: Assassin
+
+//put all other tables BEFORE OverrunOrSylvan
+
+Table:OverrunOrSylvan
+\z
+
+Table: EeryOnly
+\z
+
+Table:MH1Base
+Type: Lookup
+Roll: 1d100
+01: <b>0101</b> &nbsp;
+02: <b>0103</b> &nbsp;
+03: <b>0300</b> &nbsp;
+04: <b>0304</b> &nbsp;
+05: <b>0501</b> &nbsp;
+06: <b>0503</b> &nbsp;
+07-14: 0301 &nbsp; 
+15-22: 0302 &nbsp; 
+23-30: 0303 &nbsp; 
+31-37: 0201 &nbsp;
+38-44: 0202 &nbsp;
+45-51: 0203 &nbsp;
+52-58: 0204 &nbsp;
+59-65: 0402 &nbsp;
+66-72: 0401 &nbsp;
+73-79:  0402 &nbsp;
+80-86: 0403 &nbsp;
+87-93:  0404  &nbsp;
+94-100: 0502 &nbsp;
+
+Table:MH2Base
+Type: Lookup
+Roll: 1d100
+01: <b>0105</b> &nbsp;
+02: <b>0107</b> &nbsp;
+03: <b>0304</b> &nbsp;
+04: <b>0308</b> &nbsp;
+05: <b>0505</b> &nbsp;
+06: <b>0507</b> &nbsp;
+07-14: 0305 &nbsp; 
+15-22: 0306 &nbsp; 
+23-30: 0307 &nbsp; 
+31-37: 0106 &nbsp;
+38-44: 0205 &nbsp;
+45-51: 0206 &nbsp;
+52-58: 0207 &nbsp;
+59-65: 0208 &nbsp;
+66-72: 0405 &nbsp;
+73-79: 0406 &nbsp;
+80-86: 0407 &nbsp;
+87-93: 0408 &nbsp;
+94-100: 0506 &nbsp;
+
+
+Table: MH3Base
+Type: Lookup
+Roll: 1d100
+01: <b>0109</b> &nbsp;
+02: <b>0111</b> &nbsp;
+03: <b>0308</b> &nbsp;
+04: <b>0312</b> &nbsp;
+05: <b>0509</b> &nbsp;
+06: <b>0511</b> &nbsp;
+07-14: 0309 &nbsp; 
+15-22: 0310 &nbsp; 
+23-30: 0311 &nbsp; 
+31-37: 0209 &nbsp;
+38-44: 0210 &nbsp;
+45-51: 0211 &nbsp;
+52-58: 0212 &nbsp;
+59-65: 0409 &nbsp;
+66-72: 0410 &nbsp;
+73-79:  0411 &nbsp;
+80-86: 0412 &nbsp;
+87-93: 0110 &nbsp;
+94-100: 0510&nbsp;
+
+Table: MH4Base
+Type: Lookup
+Roll: 1d100
+01: <b>0113</b> &nbsp;
+02: <b>0115</b> &nbsp;
+03: <b>0312</b> &nbsp;
+04: <b>0316</b> &nbsp;
+05: <b>0513</b> &nbsp;
+06: <b>0515</b> &nbsp;
+07-14: 0313 &nbsp; 
+15-22: 0314 &nbsp; 
+23-30: 0315 &nbsp; 
+31-37: 0114 &nbsp;
+38-44: 0213 &nbsp;
+45-51: 0214 &nbsp;
+52-58: 0215 &nbsp;
+59-65: 0216 &nbsp;
+66-72: 0413 &nbsp;
+73-79: 0414 &nbsp;
+80-86: 0415 &nbsp;
+87-93: 0416 &nbsp;
+94-100: 0514 &nbsp;
+
+Table: MH4aBase
+Type: Lookup
+Roll: 1d100
+01-06: <b>501</b> &nbsp;
+07-12: <b>0702</b> &nbsp;
+12-18: <b>0901</b> &nbsp;
+19-35: 0601 &nbsp;
+36-52: 0602 &nbsp;
+53-68: 0701 &nbsp;
+69-84: 0801 &nbsp; 
+85-100: 0802 &nbsp;
+
+
+Table: MH5Base
+Type: Lookup
+Roll: 1d100
+01: <b>0503</b> &nbsp;
+02: <b>0505</b> &nbsp;
+03: <b>0702</b> &nbsp;
+04: <b>0706</b> &nbsp;
+05: <b>0903</b> &nbsp;
+06: <b>0905</b> &nbsp;
+07-14: 0703 &nbsp; 
+15-22: 0704 &nbsp; 
+23-30: 0705 &nbsp; 
+31-37: 0504 &nbsp;
+38-44: 0603 &nbsp;
+45-51: 0604 &nbsp;
+52-58: 0605 &nbsp;
+59-65: 0606 &nbsp;
+66-72: 0803 &nbsp;
+73-79: 0804  &nbsp;
+80-86: 0805 &nbsp;
+87-93: 0806 &nbsp;
+94-100: 0904 &nbsp;
+ 
+Table: MH6Base
+Type: Lookup
+Roll: 1d100
+01: <b>0507</b> &nbsp;
+02: <b>0509</b> &nbsp;
+03: <b>0706</b> &nbsp;
+04:  <b>0710</b> &nbsp;
+05:  <b>0907</b> &nbsp;
+06:  <b>0909</b> &nbsp;
+07-14: 0707 &nbsp; 
+15-22: 0708 &nbsp; 
+23-30: 0709 &nbsp; 
+31-37: 0508 &nbsp;
+38-44: 0607 &nbsp;
+45-51: 0608 &nbsp;
+52-58: 0609 &nbsp;
+59-65: 0610 &nbsp;
+66-72: 0807 &nbsp;
+73-79:  0808 &nbsp;
+80-86: 0809 &nbsp;
+87-93:  0810 &nbsp;
+94-100: 0908 &nbsp;
+
+Table: MH7Base
+Type: Lookup
+Roll: 1d100
+01: <b>0511</b> &nbsp;
+02: <b>0513</b>  &nbsp;
+03: <b>0710</b>  &nbsp;
+04:  <b>0714</b> &nbsp;
+05:  <b>0911</b> &nbsp;
+06:  <b>0913</b> &nbsp;
+07-14: 0711 &nbsp; 
+15-22: 0712 &nbsp; 
+23-30: 0713 &nbsp; 
+31-37: 0512 &nbsp;
+38-44: 0611 &nbsp;
+45-51: 0612 &nbsp;
+52-58: 0613 &nbsp;
+59-65: 0614 &nbsp;
+66-72: 0811 &nbsp;
+73-79:  0812 &nbsp;
+80-86: 0813 &nbsp;
+87-93: 0814 &nbsp;
+94-100: 0912 &nbsp;
+
+Table: MH7bBase
+Type: Lookup
+Roll: 1d100
+01-03: <b>0515</b>  &nbsp;
+04-06: <b>0516 </b>  &nbsp;
+07-09: <b>0714 </b> &nbsp;
+10-12: <b>0716</b> &nbsp;
+13-15: <b>0915</b> &nbsp;
+16-18: <b>0916</b> &nbsp;
+19-34: 0615  &nbsp;
+35-50: 0616 &nbsp;
+51-68: 0715 &nbsp;
+69-85: 0815  &nbsp;
+86-100: 0816  &nbsp;
+
+Table: MH8Base
+Type: Lookup
+Roll: 1d100
+;fixed 6-4-26
+01: <b>0901</b> &nbsp;
+02: <b>0509</b>  &nbsp;
+03: <b>0903</b>  &nbsp;
+04:  <b>1104</b>  &nbsp;
+05:  <b>1301</b>  &nbsp;
+06:  <b>1302</b>  &nbsp;
+07-14: 1001 &nbsp; 
+15-22: 01002 &nbsp; 
+23-30: 1003 &nbsp; 
+31-37: 1004 &nbsp;
+38-44:: 1101 &nbsp;
+45-51: 1102 &nbsp;
+52-58: 1103 &nbsp;
+59-65: 1104 &nbsp;
+66-72: 1201 &nbsp;
+73-79: 1202 &nbsp;
+80-86: 1203 &nbsp;
+87-93:  0930 &nbsp;
+94-100: 0904 &nbsp;
+
+Table: MH9Base
+Type: Lookup
+Roll: 1d100
+01: <b>0905</b> &nbsp;
+02: <b>0907</b> &nbsp;
+03: <b>1104</b> &nbsp;
+04: <b>1108</b> &nbsp;
+05: <b>1305</b> &nbsp;
+06: <b>1307</b> &nbsp;
+07-14: 1105 &nbsp; 
+15-22: 1106 &nbsp; 
+23-30: 1107 &nbsp; 
+31-37: 0906 &nbsp;
+38-44: 1005 &nbsp;
+45-51: 1006 &nbsp;
+52-58: 1007 &nbsp;
+59-65: 1008 &nbsp;
+66-72: 1205 &nbsp;
+73-79:  1206 &nbsp;
+80-86: 1207 &nbsp;
+87-93: 1208 &nbsp;
+94-100: 1306 &nbsp;
+
+Table: MH10Base
+Type: Lookup
+Roll: 1d100
+01:<b>0909</b> &nbsp;
+02:<b>0911</b> &nbsp;
+03:<b>1108</b> &nbsp;
+04:<b>1112</b> &nbsp;
+05:<b>1309</b> &nbsp;
+06:<b>1311</b> &nbsp;
+07-14: 1109 &nbsp; 
+15-22: 1110 &nbsp; 
+23-30: 1111 &nbsp; 
+31-37: 0910 &nbsp;
+38-44: 1009 &nbsp;
+45-51: 1010 &nbsp;
+52-58: 1011 &nbsp;
+59-65: 1012 &nbsp;
+66-72: 1209 &nbsp;
+73-79:  1210 &nbsp;
+80-86: 1211 &nbsp;
+87-93:  1212 &nbsp;
+94-100: 1310 &nbsp;
+
+Table: MH11Base
+Type: Lookup
+Roll: 1d100
+01: <b>0913</b> &nbsp;
+02: <b>0915</b> &nbsp;
+03: <b>1112</b> &nbsp;
+04: <b>1116</b> &nbsp;
+05: <b>1313</b> &nbsp;
+06: <b>1315</b> &nbsp;
+07-14: 1113 &nbsp; 
+15-22: 1114 &nbsp; 
+23-30: 1115 &nbsp; 
+31-37: 0914 &nbsp;
+38-44: 1013 &nbsp;
+45-51: 1014 nbsp;
+52-58: 1015 &nbsp;
+59-65: 1016 &nbsp;
+66-72: 1213 &nbsp;
+73-79: 1214 &nbsp;
+80-86: 1215 &nbsp;
+87-93: 1216 &nbsp;
+94-100: 1314 &nbsp;
+
+Table: MH11aBase
+Type: Lookup
+Roll: 1d100
+01-06: <b>1301</b> &nbsp;
+07-12: <b>1502</b> &nbsp;
+12-18: <b>1701</b> &nbsp;
+19-35: 1401 &nbsp; 
+36-52: 1402 &nbsp;
+53-68: 1501 &nbsp;
+69-84: 1601 &nbsp; 
+85-100: 1602 &nbsp;
+
+Table: MH12Base
+Type: Lookup
+Roll: 1d100
+01: <b>1303</b> &nbsp;
+02: <b>1305</b>  &nbsp;
+03: <b>1502</b>  &nbsp;
+04:  <b>1506</b>  &nbsp;
+05:  <b>1703</b>  &nbsp;
+06:  <b>1705</b>  &nbsp;
+07-14: 1503 &nbsp; 
+15-22: 1504 &nbsp; 
+23-30: 1505 &nbsp; 
+31-37: 1304 &nbsp;
+38-44: 1403 &nbsp;
+45-51: 1404 &nbsp;
+52-58: 1405 &nbsp;
+59-65:1406  &nbsp;
+66-72: 1603 &nbsp;
+73-79: 1604  &nbsp;
+80-86: 1605 &nbsp;
+87-93:  1606 &nbsp;
+94-100: 1704 &nbsp;
+
+Table: MH13Base
+Type: Lookup
+Roll: 1d100
+01: <b>1307</b> &nbsp;
+02: <b>1309</b> &nbsp;
+03: <b>1506</b> &nbsp;
+04: <b>1510</b> &nbsp;
+05: <b>1707</b> &nbsp;
+06: <b>1709</b> &nbsp;
+07-14: 1507 &nbsp; 
+15-22: 1508 &nbsp; 
+23-30: 1509 &nbsp; 
+31-37: 1308 &nbsp;
+38-44: 1407 &nbsp;
+45-51: 1408 &nbsp;
+52-58: 1409 &nbsp;
+59-65: 1410 &nbsp;
+66-72: 1607 &nbsp;
+73-79: 1608 &nbsp;
+80-86: 1609 &nbsp;
+87-93: 1610 &nbsp;
+94-100:1708 &nbsp;
+
+Table: MH14Base
+Type: Lookup
+Roll: 1d100
+01: <b>1311</b> &nbsp;
+02: <b>1313</b> &nbsp;
+03: <b>1510</b> &nbsp;
+04: <b>1514</b> &nbsp;
+05: <b>1711</b> &nbsp;
+06: <b>1712</b> &nbsp;
+07-14: 1511 &nbsp; 
+15-22: 1512 &nbsp; 
+23-30: 1513 &nbsp; 
+31-37: 1312 &nbsp;
+38-44: 1411 &nbsp;
+45-51: 1412 &nbsp;
+52-58: 1413 &nbsp;
+59-65: 1414 &nbsp;
+66-72: 1611 &nbsp;
+73-79:  1612 &nbsp;
+80-86: 1613 &nbsp;
+87-93:  1614 &nbsp;
+94-100: 1712 &nbsp;
+
+Table: MH14bBase
+Type: Lookup
+Roll: 1d100
+01-03: <b>1315</b> &nbsp;
+04-06: <b>1316 </b> &nbsp;
+07-09: <b>1514 </b> &nbsp;
+10-12: <b>1516</b> &nbsp;
+13-15: <b>1715</b> &nbsp;
+16-18: <b>1716</b> &nbsp;
+19-34: 1415 &nbsp; 
+35-50: 1416 &nbsp;
+51-68: 1515 &nbsp;
+69-85: 1615 &nbsp;
+86-100:1616 &nbsp; 
+
+Table: MH15Base
+Type: Lookup
+Roll: 1d100
+01: <b></b> &nbsp;
+02: <b></b>  &nbsp;
+03: <b>1900</b> &nbsp;
+04: <b>1904</b> &nbsp;
+05: <b>2101</b> &nbsp;
+06: <b>2103</b> &nbsp;
+07-14: 1901 &nbsp; 
+15-22: 1902 &nbsp; 
+23-30: 1903 &nbsp; 
+31-37: 1702 &nbsp;
+38-44: 1801 &nbsp;
+45-51: 1802 &nbsp;
+52-58: 1803 &nbsp;
+59-65: 1804 &nbsp;
+66-72: 2001 &nbsp;
+73-79:  2002 &nbsp;
+80-86: 2003 &nbsp;
+87-93: 2004 &nbsp;
+94-100: 2102 &nbsp;
+
+Table: MH16Base
+Type: Lookup
+Roll: 1d100
+01: <b>1705</b> &nbsp;
+02: <b>1707</b> &nbsp;
+03: <b>1904</b> &nbsp;
+04:<b>1908</b> &nbsp;
+05:<b>2105</b> &nbsp;
+06: <b>2107</b> &nbsp;
+07-14: 1905 &nbsp; 
+15-22: 1906 &nbsp; 
+23-30: 1907 &nbsp; 
+31-37: 1706 &nbsp;
+38-44: 1805 &nbsp;
+45-51: 1806 &nbsp;
+52-58: 1807 &nbsp;
+59-65: 1808 &nbsp;
+66-72: 2005 &nbsp;
+73-79:  2006 &nbsp;
+80-86: 2007 &nbsp;
+87-93:  2008 &nbsp;
+94-100: 2106 &nbsp;
+
+Table: MH17Base
+Type: Lookup
+Roll: 1d100
+01: <b>1709</b> &nbsp;
+02: <b>1711</b> &nbsp;
+03: <b>1908</b> &nbsp;
+04: <b>1912</b> &nbsp;
+05: <b>2109</b> &nbsp;
+06: <b>2111</b> &nbsp;
+07-14: 1910 &nbsp; 
+15-22: 1919 &nbsp; 
+23-30: 1920 &nbsp; 
+31-37: 1710 &nbsp;
+38-44: 1809 &nbsp;
+45-51: 1810 &nbsp;
+52-58: 1811 &nbsp;
+59-65: 1812 &nbsp;
+66-72: 2009 &nbsp;
+73-79: 2010  &nbsp;
+80-86: 2011 &nbsp;
+87-93:  2012 &nbsp;
+94-100: 2110 &nbsp;
+
+Table: MH18Base
+Type: Lookup
+Roll: 1d100
+01: <b>1713</b> &nbsp;
+02: <b>1715</b> &nbsp;
+03: <b>1912</b> &nbsp;
+04: <b>1916</b> &nbsp;
+05: <b>2113</b> &nbsp;
+06: <b>2115</b> &nbsp;
+07-14: 1913 &nbsp; 
+15-22: 1914 &nbsp; 
+23-30: 1915 &nbsp; 
+31-37: 1714 &nbsp;
+38-44: 1813 &nbsp;
+45-51: 1814 &nbsp;
+52-58: 1815  &nbsp;
+59-65: 1816 &nbsp;
+66-72: 2013 &nbsp;
+73-79:  2014 &nbsp;
+80-86: 2015 &nbsp;
+87-93:  2016 &nbsp;
+94-100: 2114 &nbsp;
+
+Table: MH18aBase
+Type: Lookup
+Roll: 1d100
+01-06: <b>2101</b> &nbsp;
+07-12: <b>2302</b> &nbsp;
+12-18: <b>2501</b> &nbsp;
+19-35: 2201 &nbsp; 
+36-52: 2202 &nbsp;
+53-68: 2301 &nbsp;
+69-84: 2401 &nbsp;
+85-100: 2402 &nbsp;
+
+Table: MH19Base
+Type: Lookup
+Roll: 1d100
+01: <b>2103</b> &nbsp;
+02: <b>2105</b> &nbsp;
+03: <b>2302</b> &nbsp;
+04: <b>2306</b> &nbsp;
+05: <b>2503</b> &nbsp;
+06: <b>2505</b> &nbsp;
+07-14: 2303 &nbsp; 
+15-22: 2304 &nbsp; 
+23-30: 2305 &nbsp; 
+31-37: 2104 &nbsp;
+38-44: 2203 &nbsp;
+45-51: 2204 &nbsp;
+52-58: 2205 &nbsp;
+59-65: 2206 &nbsp;
+66-72: 2403 &nbsp;
+73-79:  2404 &nbsp;
+80-86: 2405 &nbsp;
+87-93: 2406 &nbsp;
+94-100: 2504 &nbsp;
+
+Table: MH20Base
+Type: Lookup
+Roll: 1d100
+01: <b>2107</b> &nbsp;
+02: <b>2109</b> &nbsp;
+03: <b>2306</b> &nbsp;
+04: <b>2310</b> &nbsp;
+05: <b>2507</b> &nbsp;
+06: <b>2509</b> &nbsp;
+07-14: 2307 &nbsp; 
+15-22: 2308 &nbsp; 
+23-30: 2309 &nbsp; 
+31-37: 2108 &nbsp;
+38-44: 2207 &nbsp;
+45-51: 2208 &nbsp;
+52-58: 2209 &nbsp;
+59-65: 2210 &nbsp;
+66-72: 2407 &nbsp;
+73-79: 2408 &nbsp;
+80-86: 2409 &nbsp;
+87-93:  2410 &nbsp;
+94-100: 2508 &nbsp;
+
+Table: MH21Base
+Type: Lookup
+Roll: 1d100
+01:<b>2111</b> &nbsp;
+02:<b>2113</b> &nbsp;
+03:<b>2310</b> &nbsp;
+04:<b>2314</b> &nbsp;
+05:<b>2511</b> &nbsp;
+06:<b>2513</b> &nbsp;
+07-14: 2311 &nbsp; 
+15-22: 2312 &nbsp; 
+23-30: 2313 &nbsp; 
+31-37: 2112 &nbsp;
+38-44: 2211 &nbsp;
+45-51: 2212 &nbsp;
+52-58: 2213 &nbsp;
+59-65: 2214 &nbsp;
+66-72: 2411 &nbsp;
+73-79: 2412 &nbsp;
+80-86: 2413 &nbsp;
+87-93: 2414 &nbsp;
+94-100: 2512 &nbsp;
+
+Table: MH21bBase
+Type: Lookup
+Roll: 1d100
+01-03: <b>2115</b> &nbsp;
+04-06: <b>2116</b> &nbsp;
+07-09: <b>2314</b> &nbsp;
+10-12: <b>2316</b> &nbsp;
+13-15: <b>2416</b> &nbsp;
+16-18: <b>2516</b> &nbsp;
+19-34: 2215 &nbsp;
+35-50: 2216 &nbsp;
+51-68: 2315 &nbsp;
+69-85: 2415 &nbsp;
+86-100: 2416 &nbsp;
+
+Table:MUScrollLevel
+Type:Lookup
+Roll: 1d100
+Scroll (MU):
+01-25: [@1stMUSpells]
+26-50: [@2ndMUSpells]
+51-70: [@3rdMUSpells]
+71-85: [@4thMUSpells]
+86-95: [@5thMUSpells]
+96-100: [@6thMUSpells]
+
+Table:1stMUSpells
+Type: Lookup
+Roll: 1d12
+1: (MU) Charm Person
+2: (MU) Detect Magic
+3: (MU) Floating Disc
+4: (MU)Hold Portal
+5: (MU) Light (Darkness)
+6: (MU) Magic Missile
+7: (MU) Protection from Evil
+8: (MU) Read Languages
+9: (MU) Read Magic
+10: (MU) Shield
+11: (MU) Sleep
+12: (MU) Ventriloquism
+
+Table:2ndMUSpells
+Type: Lookup
+Roll: 1d12
+1: (MU) Continual Light (Continual Darkness)
+2: (MU) Detect Evil
+3: (MU) Detect Invisible
+4: (MU) ESP
+5: (MU) Invisibility
+6: (MU) Knock
+7: (MU) Levitate
+8: (MU) Locate Object
+9: (MU) Mirror Image
+10: (MU) Phantasmal Force
+11: (MU) Web
+12: (MU) Wizard Lock
+
+Table:3rdMUSpells
+Type:Lookup
+Roll:1d12
+1: (MU) Clairvoyance
+2: (MU) Dispel Magic
+3: (MU) Fireball
+4: (MU) Fly
+5: (MU) Haste
+6: (MU) Hold Person
+7: (MU) Infravision
+8: (MU) Invisibility 10' Radius
+9: (MU) Lightning Bolt
+10: (MU) Protection from Evil 10' Radius
+11: (MU) Protection from Normal Missiles
+12: (MU) Water Breathing
+
+Table:4thMUSpells
+Type:Lookup
+Roll:1d12
+1: (MU) Charm Monster
+2: (MU) Confusion
+3: (MU) Dimension Door
+4: (MU) Growth of Plants
+5: (MU) Hallucinatory Terrain
+6: (MU) Massmorph
+7: (MU) Polymorph Others
+8: (MU) Polymorph Self
+9: (MU) Remove Curse
+10: (MU) Wall of Fire
+11: (MU) Wall of Ice
+12: (MU) Wizard Eye
+
+
+Table:5thMUSpells
+Type:Lookup
+Roll:1d12
+1: (MU) Animate Dead
+2: (MU) Cloudkill
+3:(MU) Conjure Elemental
+4: (MU) Contact Higher Plane
+5: (MU) Feeblemind
+6: (MU) Hold Monster
+7: (MU) Magic Jar
+8: (MU) Pass-Wall
+9: (MU) Telekinesis
+10: (MU) Teleport
+
+Table:6thMUSpells
+Type:Lookup
+Roll:1d12
+1: (MU) Anti-Magic Spell
+2: (MU) Control Weather
+3: (MU) Death Spell 
+4: (MU) Disintegrate
+5: (MU) Geas (Remove Geas)
+6: (MU) Invisible Stalker
+7: (MU)Lower Water
+8: (MU)Move Earth
+9: (MU) Part Water
+10: (MU) Projected Image
+11: (MU) Reincarnation
+12: (MU) Stone to Flesh (Flesh to Stone)
